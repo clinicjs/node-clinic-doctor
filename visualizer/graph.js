@@ -190,7 +190,7 @@ class SubGraph extends EventEmitter {
   }
 
   hoverUpdate (point) {
-    if (!this.hover.showen) return;
+    if (!this.hover.showen) return
 
     // get position of curve there is at the top
     const xInGraphPositon = this.xScale(point.x)
@@ -281,7 +281,7 @@ class HoverBox {
   }
 
   setPoint (point) {
-    this.point = point;
+    this.point = point
   }
 
   setPosition (x, y) {
@@ -291,7 +291,7 @@ class HoverBox {
   }
 
   setDate (date) {
-    this.title.text(d3.timeFormat("%H:%M:%S.%L")(date))
+    this.title.text(d3.timeFormat('%H:%M:%S.%L')(date))
   }
 
   setData (data) {

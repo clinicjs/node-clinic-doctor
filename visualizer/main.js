@@ -4,7 +4,7 @@ const loaddata = require('./data.js')
 
 const menu = require('./menu.js')
 const graph = require('./graph.js')
-const recomendation = require('./recomendation.js')
+const recommendation = require('./recommendation.js')
 
 menu.on('toggle-theme', function () {
   document.documentElement.classList.toggle('light-theme')
@@ -19,12 +19,15 @@ graph.on('hover-show', () => graph.hoverShow())
 graph.on('hover-hide', () => graph.hoverHide())
 graph.on('hover-update', (unitX) => graph.hoverUpdate(unitX))
 
+recommendation.on('open', () => recommendation.open())
+recommendation.on('close', () => recommendation.close())
+
 loaddata(function maybeDone (err, data) {
   if (err) throw err
 
   graph.setData(data)
   graph.draw()
-  recomendation.draw(data)
+  recommendation.draw(data)
 
   window.addEventListener('resize', function () {
     graph.draw()

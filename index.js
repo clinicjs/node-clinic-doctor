@@ -79,7 +79,7 @@ class ClinicDoctor {
       <div id="banner"></div>
       <div id="menu"></div>
       <div id="graph"></div>
-      <div id="recomendation"></div>
+      <div id="recommendation"></div>
 
       <script>${scriptFile}</script>
     `

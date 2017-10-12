@@ -19,14 +19,15 @@ html {
   --hover-bg-color: rgb(82, 87, 111);
   --hover-line-color: rgb(100, 107, 127);
 
-  --recomendbar-text-color: rgb(255, 255, 255);
-  --recomendbar-top-line-color: rgb(96, 147, 208);
-  --recomendbar-bg-color: rgb(63, 125, 198);
+  --recommendbar-text-color: rgb(255, 255, 255);
+  --recommendbar-arrow-color: rgb(231, 239, 248);
+  --recommendbar-top-line-color: rgb(96, 147, 208);
+  --recommendbar-bg-color: rgb(63, 125, 198);
 
-  --recomend-link-color: rgb(62, 167, 244);
-  --recomend-text-color: rgb(255, 255, 255);
-  --recomend-close-color: rgb(62, 167, 244);
-  --recomend-bg-color: rgb(59, 68, 90);
+  --recommend-link-color: rgb(62, 167, 244);
+  --recommend-text-color: rgb(255, 255, 255);
+  --recommend-close-color: rgb(62, 167, 244);
+  --recommend-bg-color: rgba(59, 68, 90, 0.99);
 }
 
 html.light-theme {
@@ -42,6 +43,10 @@ html.light-theme {
 }
 
 /* Main layout */
+
+/* z-index: 1; is the hover boxes */
+/* z-index: 2; is the recommendation view */
+
 html, body {
   border: 0;
   margin: 0;
@@ -50,6 +55,7 @@ html, body {
 
 body {
   background: var(--main-bg-color);
+  padding-bottom: 64px; /* space for the recommendation bar */
 }
 
 #graph {
@@ -175,6 +181,68 @@ html.grid-layout.light-theme #toggle-grid {
 
 html.light-theme #toggle-theme {
   background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjN2I4MDkyIiB3aWR0aD0iMjdweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjcgMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0iTTI2LjgwNjI4MjcsMTAgQzI2LjgwNjI4MjcsMTAuMzkzNTIwNSAyNi43MDY1NTgsMTAuNzkyODIyIDI2LjUwNzEwNTUsMTEuMTk3OTE2NyBDMjUuMTEwOTM3OSwxMy44NTk5NjcgMjMuMjMzNjE5NCwxNS45OTI0Njg4IDIwLjg3NTA5MzUsMTcuNTk1NDg2MSBDMTguNTE2NTY3NiwxOS4xOTg1MDM0IDE2LjAyNTk0MTgsMjAgMTMuNDAzMTQxNCwyMCBDMTAuNzgwMzQwOSwyMCA4LjI4OTcxNTExLDE5LjE5NTYwOTkgNS45MzExODkyMywxNy41ODY4MDU2IEMzLjU3MjY2MzM1LDE1Ljk3ODAwMTIgMS42OTUzNDQ4LDEzLjg0ODM5MjkgMC4yOTkxNzcyNjMsMTEuMTk3OTE2NyBDMC4wOTk3MjQ3NTY5LDEwLjc5MjgyMiAwLDEwLjM5MzUyMDUgMCwxMCBDMCw5LjYwNjQ3OTUxIDAuMDk5NzI0NzU2OSw5LjIwNzE3Nzk1IDAuMjk5MTc3MjYzLDguODAyMDgzMzMgQzEuNjk1MzQ0OCw2LjE1MTYwNzEyIDMuNTcyNjYzMzUsNC4wMjE5OTg3OCA1LjkzMTE4OTIzLDIuNDEzMTk0NDQgQzguMjg5NzE1MTEsMC44MDQzOTAxMDQgMTAuNzgwMzQwOSwwIDEzLjQwMzE0MTQsMCBDMTYuMDI1OTQxOCwwIDE4LjUxNjU2NzYsMC44MDQzOTAxMDQgMjAuODc1MDkzNSwyLjQxMzE5NDQ0IEMyMy4yMzM2MTk0LDQuMDIxOTk4NzggMjUuMTEwOTM3OSw2LjE1MTYwNzEyIDI2LjUwNzEwNTUsOC44MDIwODMzMyBDMjYuNzA2NTU4LDkuMjA3MTc3OTUgMjYuODA2MjgyNyw5LjYwNjQ3OTUxIDI2LjgwNjI4MjcsMTAgWiBNMTMuNDU1NDk3NCwxNi41NDQ1MDI2IEMxNy4wNjk5MjY0LDE2LjU0NDUwMjYgMjAsMTMuNjE0NDI5IDIwLDEwIEMyMCw2LjM4NTU3MTAxIDE3LjA2OTkyNjQsMy40NTU0OTczOCAxMy40NTU0OTc0LDMuNDU1NDk3MzggQzkuODQxMDY4MzksMy40NTU0OTczOCA2LjkxMDk5NDc2LDYuMzg1NTcxMDEgNi45MTA5OTQ3NiwxMCBDNi45MTA5OTQ3NiwxMy42MTQ0MjkgOS44NDEwNjgzOSwxNi41NDQ1MDI2IDEzLjQ1NTQ5NzQsMTYuNTQ0NTAyNiBaIiBpZD0iQ29tYmluZWQtU2hhcGUiPjwvcGF0aD4KICA8Y2lyY2xlIGN4PSIxMy40NTU0OTc0IiBjeT0iOS44OTUyODc5NiIgcj0iMy4yOTg0MjkzMiI+PC9jaXJjbGU+Cjwvc3ZnPgo=");
+}
+
+/* recommendation layout */
+#recommendation {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+#recommendation .bar {
+  height: 64px;
+  border-top: 1px solid var(--recommendbar-top-line-color);
+  background: var(--recommendbar-bg-color);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+#recommendation .bar .text::after {
+  display: block;
+  margin-left: 37px;
+  float: left;
+  content: 'recommendations';
+  font-variant: small-caps;
+  font-size: 14pt;
+  line-height: 64px;
+  color: var(--recommendbar-text-color);
+}
+
+#recommendation .bar .arrow {
+  float: left;
+  margin-left: 10px;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZTdlZmY4IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik03LjQxIDE1LjQxTDEyIDEwLjgzbDQuNTkgNC41OEwxOCAxNGwtNi02LTYgNnoiLz4KICAgIDxwYXRoIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz4KPC9zdmc+Cg==");
+  height: 64px;
+  width: 38px;
+  background-size: 38px 38px;
+  background-repeat: no-repeat;
+  background-position: center 15px;
+}
+
+#recommendation.open .bar .arrow {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZTdlZmY4IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik03LjQxIDcuODRMMTIgMTIuNDJsNC41OS00LjU4TDE4IDkuMjVsLTYgNi02LTZ6Ii8+CiAgICA8cGF0aCBkPSJNMC0uNzVoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz4KPC9zdmc+Cg==");
+}
+
+#recommendation .content {
+  display: none;
+  position: absolute;
+  bottom: 64px;
+  width: 100%;
+  background-color: var(--recommend-bg-color);
+}
+
+#recommendation.open .content {
+  display: block;
+}
+
+#recommendation .content .close {
+  height: 24px;
+  width: 24px;
+  margin: 18px 32px 7px auto;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjM2VhN2Y0IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0xOSA2LjQxTDE3LjU5IDUgMTIgMTAuNTkgNi40MSA1IDUgNi40MSAxMC41OSAxMiA1IDE3LjU5IDYuNDEgMTkgMTIgMTMuNDEgMTcuNTkgMTkgMTkgMTcuNTkgMTMuNDEgMTJ6Ii8+CiAgICA8cGF0aCBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+Cjwvc3ZnPgo=");
+  cursor: pointer;
 }
 
 /* Graph layout */
