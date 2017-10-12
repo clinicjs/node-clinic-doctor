@@ -1,33 +1,32 @@
 
 /* Define colors */
 html {
-  --main-bg-color: rgb(27, 29, 39);
+  --main-bg-color: rgb(27, 30, 39);
 
   --banner-text-color: rgb(255, 255, 255);
-  --banner-bg-color: rgb(41, 44, 57);
+  --banner-bg-color: rgb(41, 45, 57);
 
   --menu-button-color: rgb(200, 201, 203);
 
   --graph-text-color: rgb(255, 255, 255);
-  --graph-bg-color: rgb(27, 29, 39);
+  --graph-bg-color: rgb(27, 30, 39);
   --graph-axis-color: rgb(89, 90, 95);
   --graph-tick-color: rgb(151, 151, 151);
-  --graph-good-line-color: rgb(62, 138, 229);
-  --graph-bad-line-color: rgb(255, 0, 88);
+  --graph-good-line-color: rgb(74, 144, 226);
+  --graph-bad-line-color: rgb(233, 67, 100);
 
   --hover-text-color: rgb(255, 255, 255);
-  --hover-bg-color: rgb(82, 87, 112);
-  --hover-line-color: rgb(100, 106, 127);
+  --hover-bg-color: rgb(82, 87, 111);
+  --hover-line-color: rgb(100, 107, 127);
 
-  --recomendbar-text-color: rgb(230, 239, 249);
-  --recomendbar-top-line-color: rgb(87, 143, 211);
-  --recomendbar-top-bg-color: rgb(51, 119, 199);
-  --recomendbar-bottom-bg-color: rgb(52, 120, 201);
+  --recomendbar-text-color: rgb(255, 255, 255);
+  --recomendbar-top-line-color: rgb(96, 147, 208);
+  --recomendbar-bg-color: rgb(63, 125, 198);
 
-  --recomend-link-color: rgb(0, 163, 248);
+  --recomend-link-color: rgb(62, 167, 244);
   --recomend-text-color: rgb(255, 255, 255);
-  --recomend-close-color: rgb(0, 163, 248);
-  --recomend-bg-color: rgb(59, 66, 92);
+  --recomend-close-color: rgb(62, 167, 244);
+  --recomend-bg-color: rgb(59, 68, 90);
 }
 
 html.light-theme {
@@ -37,7 +36,7 @@ html.light-theme {
 
   --menu-button-color: rgb(123, 128, 146);
 
-  --graph-text-color: rgb(102, 102, 102);
+  --graph-text-color: rgb(101, 101, 101);
   --graph-bg-color: rgb(227, 227, 227);
   --graph-axis-color: rgb(189, 189, 189);
 }
