@@ -355,7 +355,7 @@ class Graph extends EventEmitter {
 
     this.handles = new SubGraph(this.container, {
       className: 'handles',
-      name: 'Alive Handles',
+      name: 'Active Handles',
       unit: '',
       shortLegend: ['Handles'],
       showLegend: false,
