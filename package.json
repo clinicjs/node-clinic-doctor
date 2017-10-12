@@ -1,14 +1,11 @@
 {
-  "name": "node-clinic",
-  "description": "Aggregate stats from the Node VM",
-  "repository": "nearform/node-clinic",
+  "name": "node-clinic-doctor",
+  "description": "Programmable interface to clinic doctor",
+  "repository": "nearform/node-clinic-doctor",
   "version": "1.0.0",
-  "bin": {
-    "clinic": "./bin/clinic.js"
-  },
   "scripts": {
-    "test": "standard | snazzy && tap --no-cov doctor/test/*.test.js",
-    "ci": "standard | snazzy && tap --cov doctor/test/*.test.js"
+    "test": "standard | snazzy && tap --no-cov test/*.test.js",
+    "ci": "standard | snazzy && tap --cov test/*.test.js"
   },
   "dependencies": {
     "base64-stream": "^0.1.3",
