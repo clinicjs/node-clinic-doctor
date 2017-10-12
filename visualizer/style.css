@@ -55,7 +55,6 @@ html, body {
 
 body {
   background: var(--main-bg-color);
-  padding-bottom: 64px; /* space for the recommendation bar */
 }
 
 #graph {
@@ -184,7 +183,11 @@ html.light-theme #toggle-theme {
 }
 
 /* recommendation layout */
-#recommendation {
+#recommendation .space {
+  margin-bottom: 65px;
+}
+
+#recommendation .content {
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -225,19 +228,20 @@ html.light-theme #toggle-theme {
   background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZTdlZmY4IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik03LjQxIDcuODRMMTIgMTIuNDJsNC41OS00LjU4TDE4IDkuMjVsLTYgNi02LTZ6Ii8+CiAgICA8cGF0aCBkPSJNMC0uNzVoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz4KPC9zdmc+Cg==");
 }
 
-#recommendation .content {
+#recommendation .details {
   display: none;
   position: absolute;
   bottom: 64px;
   width: 100%;
   background-color: var(--recommend-bg-color);
+  height: 200px; /* demo hack, not required when it actually contains something */
 }
 
-#recommendation.open .content {
+#recommendation.open .details {
   display: block;
 }
 
-#recommendation .content .close {
+#recommendation .details .close {
   height: 24px;
   width: 24px;
   margin: 18px 32px 7px auto;
