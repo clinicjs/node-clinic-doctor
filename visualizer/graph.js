@@ -291,7 +291,7 @@ class HoverBox {
   }
 
   setDate (date) {
-    this.title.text(d3.timeFormat('%H:%M:%S.%L')(date))
+    this.title.text(d3.timeFormat('%I:%M:%S.%L %p')(date))
   }
 
   setData (data) {
