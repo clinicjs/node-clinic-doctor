@@ -33,7 +33,7 @@ function saveSample () {
 // start sampler
 scheduleSample()
 
-// before process exists, flush the encoded data to the sample file
+// before process exits, flush the encoded data to the sample file
 process.once('beforeexit', function () {
   clearTimeout(timer)
   encoder.end()
