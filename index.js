@@ -11,12 +11,24 @@ const streamTemplate = require('stream-template')
 const getSampleFilename = require('./collect/get-sample-filename.js')
 
 class ClinicDoctor {
+  constructor(settings = {}) {
+    // define default parameters
+    const {
+      sampleInterval = 10
+    } = settings
+
+    this.sampleInterval = sampleInterval
+  }
+
   collect (args, callback) {
     const samplerPath = path.resolve(__dirname, 'sampler.js')
 
     // run program, but inject the sampler
     const proc = spawn(args[0], ['-r', samplerPath].concat(args.slice(1)), {
-      stdio: 'inherit'
+      stdio: 'inherit',
+      env: Object.assign({
+        'NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL': this.sampleInterval
+      }, process.env)
     })
 
     // relay SIGINT to process

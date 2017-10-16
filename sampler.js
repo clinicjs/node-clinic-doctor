@@ -13,7 +13,9 @@ encoder.pipe(
 )
 
 // sample every 10ms
-const state = new ProcessState(10)
+const state = new ProcessState(parseInt(
+  process.env.NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL, 10
+))
 
 // keep sample time unrefed such it doesn't interfer too much
 let timer = null
