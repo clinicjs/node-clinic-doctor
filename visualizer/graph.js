@@ -333,7 +333,7 @@ class Graph extends EventEmitter {
     this.memory = new SubGraph(this.container, {
       className: 'memory',
       name: 'Memory Usage',
-      unit: 'GB',
+      unit: 'MB',
       longLegend: ['RSS', 'Total Heap Allocated', 'Heap Used'],
       shortLegend: ['RSS', 'THA', 'HU'],
       showLegend: true,

@@ -36,13 +36,13 @@ class Data {
       y: [point.delay]
     }))
 
-    const GB = Math.pow(1024, 3)
+    const MB = Math.pow(1024, 2)
     this.memory = data.map((point) => ({
       x: new Date(point.timestamp),
       y: [
-        point.memory.rss / GB,
-        point.memory.heapTotal / GB,
-        point.memory.heapUsed / GB
+        point.memory.rss / MB,
+        point.memory.heapTotal / MB,
+        point.memory.heapUsed / MB
       ]
     }))
 
