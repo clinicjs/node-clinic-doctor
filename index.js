@@ -3,12 +3,13 @@
 const fs = require('fs')
 const path = require('path')
 const pump = require('pump')
-const stream = require('stream')
 const browserify = require('browserify')
 const { spawn } = require('child_process')
 const base64stream = require('base64-stream')
 const streamTemplate = require('stream-template')
 const getSampleFilename = require('./collect/get-sample-filename.js')
+const ProcessStateDecoder = require('./format/decoder.js')
+const ProcessStateAnalysis = require('./analysis/index.js')
 
 class ClinicDoctor {
   constructor(settings = {}) {
@@ -54,15 +55,22 @@ class ClinicDoctor {
     const stylePath = path.join(__dirname, 'visualizer', 'style.css')
     const scriptPath = path.join(__dirname, 'visualizer', 'main.js')
 
+    // construct the data file
+    const dataSource = fs.createReadStream(dataFilename)
     // encode the datafile as a base64 JSON string
-    const datafile = stream.PassThrough()
-    datafile.write('"')
-    fs.createReadStream(dataFilename)
+    const dataBase64 = dataSource
       .pipe(base64stream.encode())
-      .once('end', function () {
-        datafile.end('"')
-      })
-      .pipe(datafile, { end: false })
+    // analyse datafile and output issue list and recommendation
+    const analysis = dataSource
+      .pipe(new ProcessStateDecoder())
+      .pipe(new ProcessStateAnalysis())
+
+    const dataFile = streamTemplate`
+      {
+        "file": "${dataBase64}",
+        "analysis": ${analysis}
+      }
+    `
 
     // create script-file stream
     const b = browserify({
@@ -71,7 +79,7 @@ class ClinicDoctor {
       'noParse': [fakeDataPath]
     })
     b.transform('brfs')
-    b.require(datafile, {
+    b.require(dataFile, {
       'file': fakeDataPath
     })
     b.add(scriptPath)

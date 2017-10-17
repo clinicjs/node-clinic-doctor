@@ -6,36 +6,38 @@ const ProcessStateDecoder = require('../format/decoder.js')
 function loaddata (callback) {
   const parsed = []
 
-  startpoint(Buffer.from(data, 'base64'))
+  startpoint(Buffer.from(data.file, 'base64'))
     .pipe(new ProcessStateDecoder())
     .on('data', function (state) {
       parsed.push(state)
     })
     .once('end', function () {
-      callback(null, new Data(parsed))
+      callback(null, new Data(data.analysis, parsed))
     })
 }
 module.exports = loaddata
 
-// Analyse parsed data
+// Construct data container
 class Data {
-  constructor (parsed) {
-    this.data = parsed
+  constructor (analysis, data) {
+    console.log(this)
+    this.analysis = analysis
+    this.data = data
 
-    this.rawTimestamp = parsed.map((point) => point.timestamp)
+    this.rawTimestamp = data.map((point) => point.timestamp)
 
-    this.cpu = parsed.map((point) => ({
+    this.cpu = data.map((point) => ({
       x: new Date(point.timestamp),
       y: [point.cpu * 100]
     }))
 
-    this.delay = parsed.map((point) => ({
+    this.delay = data.map((point) => ({
       x: new Date(point.timestamp),
       y: [point.delay]
     }))
 
     const GB = Math.pow(1024, 3)
-    this.memory = parsed.map((point) => ({
+    this.memory = data.map((point) => ({
       x: new Date(point.timestamp),
       y: [
         point.memory.rss / GB,
@@ -44,7 +46,7 @@ class Data {
       ]
     }))
 
-    this.handles = parsed.map((point) => ({
+    this.handles = data.map((point) => ({
       x: new Date(point.timestamp),
       y: [point.handles]
     }))
