@@ -1,31 +1,29 @@
 'use strict'
 
 const fs = require('fs')
-const path = require('path')
 const test = require('tap').test
-const rimraf = require('rimraf')
 const ClinicDoctor = require('../index.js')
 const ProcessStateDecoder = require('../format/decoder.js')
 
-function diff(data) {
-  const output = [];
-  let last = data[0];
+function diff (data) {
+  const output = []
+  let last = data[0]
   for (let i = 1; i < data.length; i++) {
-    output.push(data[i] - last);
-    last = data[i];
+    output.push(data[i] - last)
+    last = data[i]
   }
-  return output;
+  return output
 }
 
-function mean(data) {
-  let mean = data[0];
+function mean (data) {
+  let mean = data[0]
   for (let i = 1; i < data.length; i++) {
-    mean += (data[i] - mean) / (i + 1);
+    mean += (data[i] - mean) / (i + 1)
   }
-  return mean;
+  return mean
 }
 
-function collect(tool, callback) {
+function collect (tool, callback) {
   tool.collect(
     [process.execPath, '-e', 'setTimeout(() => {}, 200)'],
     function (err, filename) {
@@ -54,7 +52,7 @@ function collect(tool, callback) {
 test('default collect command', function (t) {
   const tool = new ClinicDoctor()
   collect(tool, function (err, filename, output) {
-    t.ifError(err);
+    t.ifError(err)
     t.ok(filename.match(/^[0-9]+\.clinic-doctor-sample$/),
          'filename is correct')
 
@@ -72,7 +70,7 @@ test('custom sample interval', function (t) {
     sampleInterval: 1
   })
   collect(tool, function (err, filename, output) {
-    t.ifError(err);
+    t.ifError(err)
     t.ok(filename.match(/^[0-9]+\.clinic-doctor-sample$/),
          'filename is correct')
 
