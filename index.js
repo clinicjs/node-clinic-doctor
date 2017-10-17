@@ -12,7 +12,7 @@ const ProcessStateDecoder = require('./format/decoder.js')
 const ProcessStateAnalysis = require('./analysis/index.js')
 
 class ClinicDoctor {
-  constructor(settings = {}) {
+  constructor (settings = {}) {
     // define default parameters
     const {
       sampleInterval = 10
