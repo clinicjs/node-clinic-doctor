@@ -1,2 +1,4 @@
-node_modules/
+node_modules
+
 *.clinic-doctor-sample
+*.log
