@@ -1,6 +1,7 @@
 'use strict'
 
 const stream = require('stream')
+const guessInterval = require('./guess-interval.js')
 
 class ProcessStateDecoder extends stream.Transform {
   constructor (options) {
@@ -12,16 +13,14 @@ class ProcessStateDecoder extends stream.Transform {
     this.data = []
   }
 
-  _transform (chunk, encoding, callback) {
-    this.data.push(chunk)
+  _transform (datum, encoding, callback) {
+    this.data.push(datum)
     callback(null)
   }
 
   _flush (callback) {
-    const interval = [
-      Math.floor(0.2 * this.data.length),
-      Math.floor(0.8 * this.data.length)
-    ]
+    const interval = guessInterval(this.data)
+    console.log(interval)
 
     this.push(JSON.stringify({
       'issues': {
