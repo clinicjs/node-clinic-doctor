@@ -16,7 +16,8 @@
     "protocol-buffers": "^3.2.1",
     "pump": "^1.0.2",
     "startpoint": "^0.3.2",
-    "stream-template": "0.0.4"
+    "stream-template": "0.0.4",
+    "summary": "^0.3.2"
   },
   "devDependencies": {
     "rimraf": "^2.6.2",
