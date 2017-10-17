@@ -33,8 +33,8 @@ class ProcessStateDecoder extends stream.Transform {
         'heapUsed': false
       },
       // Handles don't really indicate that anything is wrong, especially
-      // the values depends on the benchmark settings. The handles data is
-      // currently just used to guess the time interval.
+      // because the values depends on the benchmark settings. The handles data
+      // is currently just used to guess the time interval.
       'handles': false
     }
 
