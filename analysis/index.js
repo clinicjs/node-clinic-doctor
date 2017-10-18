@@ -5,6 +5,7 @@ const guessInterval = require('./guess-interval.js')
 const analyseCPU = require('./analyse-cpu.js')
 const analyseDelay = require('./analyse-delay.js')
 const analyseMemory = require('./analyse-memory.js')
+const issueCategory = require('./issue-category.js')
 
 class ProcessStateDecoder extends stream.Transform {
   constructor (options) {
@@ -34,8 +35,7 @@ class ProcessStateDecoder extends stream.Transform {
       // is currently just used to guess the time interval.
       'handles': false
     }
-
-    console.log(issues)
+    const category = issueCategory(issues)
 
     this.push(JSON.stringify({
       'interval': [
@@ -43,7 +43,7 @@ class ProcessStateDecoder extends stream.Transform {
         this.data[interval[1]].timestamp
       ],
       'issues': issues,
-      'issueCategory': 'gc'
+      'issueCategory': category
     }))
     callback(null)
   }
