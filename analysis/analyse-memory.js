@@ -14,7 +14,6 @@ function analyseMemory (data) {
   const delay = data.map((d) => d.delay).slice(1)
   // Compute statistics
   const heapUsedStat = summary(heapUsed)
-  const heapTotalStat = summary(heapTotal)
   const heapTotalAllocationStat = summary(heapTotalAllocation)
   const delayStat = summary(delay)
 
@@ -34,7 +33,7 @@ function analyseMemory (data) {
   const delayDeallocationCorrelation = correlation(
     heapTotalAllocationStat, delayStat
   )
-  const stopTheWorldIssue = delayDeallocationCorrelation < -0.3;
+  const stopTheWorldIssue = delayDeallocationCorrelation < -0.3
 
   // The max "old space" size is 1400 MB, if the memory usage is close to
   // that it can cause an "stop-the-world-gc" issue.
@@ -45,7 +44,7 @@ function analyseMemory (data) {
   // the issue on deallocation or to much space. In that case just detect
   // if we have seen a huge increase in used memory.
   const heapUsedDiff = heapUsedStat.max() - heapUsed[0]
-  const hugeHeapUsedIncreaseIssue = heapUsedDiff > 500 * MB;
+  const hugeHeapUsedIncreaseIssue = heapUsedDiff > 500 * MB
 
   return {
     // We are currently not using the external memory data
@@ -64,7 +63,7 @@ function analyseMemory (data) {
 
 module.exports = analyseMemory
 
-function diff(memory) {
+function diff (memory) {
   const allocations = []
   let lastUsage = memory[0]
   for (let i = 1; i < memory.length; i++) {
@@ -74,17 +73,17 @@ function diff(memory) {
   return allocations
 }
 
-function correlation(xStat, yStat) {
+function correlation (xStat, yStat) {
   const cov = covariance(xStat, yStat)
   const cor = cov / (xStat.sd() * yStat.sd())
   return cor
 }
 
-function covariance(xStat, yStat) {
+function covariance (xStat, yStat) {
   const x = xStat.data()
   const y = yStat.data()
 
-  let sse = 0;
+  let sse = 0
   for (let i = 0; i < xStat.size(); i++) {
     sse += (x[i] - xStat.mean()) * (y[i] - yStat.mean())
   }
