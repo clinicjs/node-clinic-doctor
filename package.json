@@ -17,7 +17,7 @@
     "pump": "^1.0.2",
     "startpoint": "^0.3.2",
     "stream-template": "0.0.4",
-    "summary": "^0.3.2"
+    "summary": "^1.0.0"
   },
   "devDependencies": {
     "rimraf": "^2.6.2",

@@ -4,6 +4,7 @@ const stream = require('stream')
 const guessInterval = require('./guess-interval.js')
 const analyseCPU = require('./analyse-cpu.js')
 const analyseDelay = require('./analyse-delay.js')
+const analyseMemory = require('./analyse-memory.js')
 
 class ProcessStateDecoder extends stream.Transform {
   constructor (options) {
@@ -27,11 +28,7 @@ class ProcessStateDecoder extends stream.Transform {
     const issues = {
       'delay': analyseDelay(subset),
       'cpu': analyseCPU(subset),
-      'memory': {
-        'rss': false,
-        'heapTotal': false,
-        'heapUsed': false
-      },
+      'memory': analyseMemory(subset),
       // Handles don't really indicate that anything is wrong, especially
       // because the values depends on the benchmark settings. The handles data
       // is currently just used to guess the time interval.
