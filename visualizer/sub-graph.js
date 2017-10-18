@@ -152,17 +152,19 @@ class SubGraph extends EventEmitter {
     this.yScale.domain([ymin, ymax])
 
     // Attach data
+    let foundIssue = false
     for (let i = 0; i < this.setup.numLines; i++) {
       this.lineElements[i].data([data])
 
-      // Modify css classes for lines, title icon and legends.
-      if (issues[i]) {
-        this.lineElements[i].classed('bad', issues[i])
-        this.setup.showLegend && this.legendItems[i].classed('bad', issues[i])
-
-        this.alert.classed('alert-visible', true)
+      // Modify css classes for lines, title icon
+      this.lineElements[i].classed('bad', issues[i])
+      if (this.setup.showLegend) {
+        this.legendItems[i].classed('bad', issues[i])
       }
+
+      if (issues[i]) foundIssue = true
     }
+    this.alert.classed('visible', foundIssue)
   }
 
   draw () {
