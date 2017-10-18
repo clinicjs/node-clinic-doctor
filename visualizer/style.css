@@ -276,7 +276,6 @@ html.light-theme #toggle-theme {
   height: 28px;
   width: 28px;
   background-repeat: no-repeat;
-  content: ' ';
 }
 
 .graph .header .title .name::after {

@@ -154,7 +154,7 @@ class SubGraph extends EventEmitter {
 
       // Modify line and legend line colors where there is an issue.
       if (issues) {
-        const issue = (typeof issues === 'boolean') 
+        const issue = (typeof issues === 'boolean')
           ? issues
           : issues[Object.keys(issues)[i]]
 
