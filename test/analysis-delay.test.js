@@ -23,32 +23,16 @@ function generateProcessStateFromDelay (delay, noise) {
   }))
 }
 
-test('analyse delay - no noise', function (t) {
-  const goodDelay = generateProcessStateFromDelay([1, 2, 1, 1, 2, 2, 3, 1], 0)
-  t.strictEqual(analyseDelay(goodDelay), false)
+test('analyse delay - to high', function (t) {
+  for (const noise of [0, 1, 10]) {
+    const goodDelay = generateProcessStateFromDelay(
+      [1, 2, 1, 1, 2, 2, 3, 1], noise)
+    t.strictEqual(analyseDelay(goodDelay), false)
 
-  const badDelay = generateProcessStateFromDelay([10, 8, 6, 10, 15, 10, 4], 0)
-  t.strictEqual(analyseDelay(badDelay), true)
-
-  t.end()
-})
-
-test('analyse delay - low noise', function (t) {
-  const goodDelay = generateProcessStateFromDelay([1, 2, 1, 1, 2, 2, 3, 1], 1)
-  t.strictEqual(analyseDelay(goodDelay), false)
-
-  const badDelay = generateProcessStateFromDelay([10, 8, 6, 10, 15, 10, 4], 1)
-  t.strictEqual(analyseDelay(badDelay), true)
-
-  t.end()
-})
-
-test('analyse delay - high noise', function (t) {
-  const goodDelay = generateProcessStateFromDelay([1, 2, 1, 1, 2, 2, 3, 1], 10)
-  t.strictEqual(analyseDelay(goodDelay), false)
-
-  const badDelay = generateProcessStateFromDelay([10, 8, 6, 10, 15, 10, 4], 10)
-  t.strictEqual(analyseDelay(badDelay), true)
+    const badDelay = generateProcessStateFromDelay(
+      [10, 8, 6, 10, 15, 10, 4], noise)
+    t.strictEqual(analyseDelay(badDelay), true)
+  }
 
   t.end()
 })

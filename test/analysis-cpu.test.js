@@ -23,44 +23,18 @@ function generateProcessStateFromCPU (cpu, noise) {
   }))
 }
 
-test('analyse cpu - no noise', function (t) {
-  const goodCPU = generateProcessStateFromCPU(
-    [1.0, 1.0, 1.2, 0.9, 1.1, 1.0, 0.8, 1.1, 0.9, 1.1], 0
-  )
-  t.strictEqual(analyseCPU(goodCPU), false)
+test('analyse cpu', function (t) {
+  for (const noise of [0, 0.1, 0.3]) {
+    const goodCPU = generateProcessStateFromCPU(
+      [1.0, 1.0, 1.2, 0.9, 1.1, 1.0, 0.8, 1.1, 0.9, 1.1], noise
+    )
+    t.strictEqual(analyseCPU(goodCPU), false)
 
-  const badDelay = generateProcessStateFromCPU(
-    [0.5, 0.4, 0.1, 0.1, 1, 0.5, 0.4, 0.1, 0.1, 0.3, 0.1], 0
-  )
-  t.strictEqual(analyseCPU(badDelay), true)
-
-  t.end()
-})
-
-test('analyse cpu - low noise', function (t) {
-  const goodCPU = generateProcessStateFromCPU(
-    [1.0, 1.0, 1.2, 0.9, 1.1, 1.0, 0.8, 1.1, 0.9, 1.1], 0.1
-  )
-  t.strictEqual(analyseCPU(goodCPU), false)
-
-  const badDelay = generateProcessStateFromCPU(
-    [0.5, 0.4, 0.1, 0.1, 1, 0.5, 0.4, 0.1, 0.1, 0.3, 0.1], 0.1
-  )
-  t.strictEqual(analyseCPU(badDelay), true)
-
-  t.end()
-})
-
-test('analyse cpu - high noise', function (t) {
-  const goodCPU = generateProcessStateFromCPU(
-    [1.0, 1.0, 1.2, 0.9, 1.1, 1.0, 0.8, 1.1, 0.9, 1.1], 0.3
-  )
-  t.strictEqual(analyseCPU(goodCPU), false)
-
-  const badDelay = generateProcessStateFromCPU(
-    [0.5, 0.4, 0.1, 0.1, 1, 0.5, 0.4, 0.1, 0.1, 0.3, 0.1], 0.3
-  )
-  t.strictEqual(analyseCPU(badDelay), true)
+    const badCPU = generateProcessStateFromCPU(
+      [0.5, 0.4, 0.1, 0.1, 1, 0.5, 0.4, 0.1, 0.1, 0.3, 0.1], noise
+    )
+    t.strictEqual(analyseCPU(badCPU), true)
+  }
 
   t.end()
 })

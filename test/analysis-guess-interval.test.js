@@ -23,29 +23,14 @@ function generateProcessStateFromHandles (handles, noise) {
   }))
 }
 
-test('guess interval - no noise', function (t) {
-  const handlesData = [3, 3, 3, 3, 3, 13, 13, 13, 13, 13, 13, 13, 3, 3, 3]
-  const data = generateProcessStateFromHandles(handlesData, 0)
+test('guess interval', function (t) {
+  for (const noise of [0, 1, 10]) {
+    const handlesData = [3, 3, 3, 3, 3, 13, 13, 13, 13, 13, 13, 13, 3, 3, 3]
+    const data = generateProcessStateFromHandles(handlesData, noise)
 
-  const interval = guessInterval(data)
-  t.strictDeepEqual(interval, [5, 12])
-  t.end()
-})
+    const interval = guessInterval(data)
+    t.strictDeepEqual(interval, [5, 12])
+  }
 
-test('guess interval - low noise', function (t) {
-  const handlesData = [3, 3, 3, 3, 3, 13, 13, 13, 13, 13, 13, 13, 3, 3, 3]
-  const data = generateProcessStateFromHandles(handlesData, 1)
-
-  const interval = guessInterval(data)
-  t.strictDeepEqual(interval, [5, 12])
-  t.end()
-})
-
-test('guess interval - high noise', function (t) {
-  const handlesData = [3, 3, 3, 3, 3, 13, 13, 13, 13, 13, 13, 13, 3, 3, 3]
-  const data = generateProcessStateFromHandles(handlesData, 15)
-
-  const interval = guessInterval(data)
-  t.strictDeepEqual(interval, [5, 12])
   t.end()
 })
