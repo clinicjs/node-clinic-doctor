@@ -269,6 +269,21 @@ html.light-theme #toggle-theme {
   margin-right: 20px;
 }
 
+.graph .header .title .alert {
+  float: right;
+  margin-left: 10px;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjMDAwMDAwIiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCiAgICA8cGF0aCBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+DQogICAgPHBhdGggZmlsbD0iI2U5NDM2NCIgZD0iTTEgMjFoMjJMMTIgMiAxIDIxem0xMi0zaC0ydi0yaDJ2MnptMC00aC0ydi00aDJ2NHoiLz4NCjwvc3ZnPg==");
+  height: 18px;
+  width: 18px;
+  background-size: 18px 18px;
+  background-repeat: no-repeat;
+  visibility: hidden;
+}
+
+.graph .header .title .alert.visible {
+  visibility: visible;
+}
+
 .graph .header .title .name::after {
   content: ' ';
 }
@@ -294,6 +309,10 @@ html.light-theme #toggle-theme {
 .graph .header .legend .legend-item svg line {
   stroke-width: 2px;
   stroke: var(--graph-good-line-color);
+}
+
+.graph .header .legend .legend-item.bad svg line {
+  stroke: var(--graph-bad-line-color);
 }
 
 .graph .header .legend .legend-item span {
@@ -373,6 +392,10 @@ html.light-theme #toggle-theme {
   fill: none;
   stroke: var(--graph-good-line-color);
   stroke-width: 2px;
+}
+
+.graph .chart .line.bad {
+  stroke: var(--graph-bad-line-color);
 }
 
 .graph .chart .tick line {

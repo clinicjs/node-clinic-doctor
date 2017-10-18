@@ -22,16 +22,23 @@ class SubGraph extends EventEmitter {
     // add headline
     this.header = this.container.append('div')
       .classed('header', true)
+
     this.title = this.header.append('div')
       .classed('title', true)
+
     this.title.append('span')
       .classed('name', true)
       .text(this.setup.name)
+
     this.title.append('span')
       .classed('unit', true)
       .text(this.setup.unit)
 
+    this.alert = this.title.append('div')
+      .classed('alert', true)
+
     // add legned
+    this.legendItems = []
     if (setup.showLegend) {
       const legend = this.header.append('div')
         .classed('legend', true)
@@ -56,6 +63,8 @@ class SubGraph extends EventEmitter {
         legendItem.append('span')
           .classed('short-legend', true)
           .text(this.setup.shortLegend[i])
+
+        this.legendItems.push(legendItem)
       }
     }
 
@@ -113,6 +122,7 @@ class SubGraph extends EventEmitter {
       const lineElement = this.graph.append('path')
           .attr('class', 'line')
           .attr('stroke-dasharray', this.setup.lineStyle[i])
+
       this.lineElements.push(lineElement)
     }
   }
@@ -125,7 +135,7 @@ class SubGraph extends EventEmitter {
     }
   }
 
-  setData (data) {
+  setData (data, issues) {
     // Update domain of scales
     this.xScale.domain(d3.extent(data, function (d) { return d.x }))
 
@@ -142,9 +152,19 @@ class SubGraph extends EventEmitter {
     this.yScale.domain([ymin, ymax])
 
     // Attach data
+    let foundIssue = false
     for (let i = 0; i < this.setup.numLines; i++) {
       this.lineElements[i].data([data])
+
+      // Modify css classes for lines, title icon
+      this.lineElements[i].classed('bad', issues[i])
+      if (this.setup.showLegend) {
+        this.legendItems[i].classed('bad', issues[i])
+      }
+
+      if (issues[i]) foundIssue = true
     }
+    this.alert.classed('visible', foundIssue)
   }
 
   draw () {
