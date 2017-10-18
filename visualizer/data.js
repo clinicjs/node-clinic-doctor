@@ -20,7 +20,6 @@ module.exports = loaddata
 // Construct data container
 class Data {
   constructor (analysis, data) {
-    console.log(this)
     this.analysis = analysis
     this.data = data
 
