@@ -18,17 +18,12 @@ class HoverBox {
       pointHeight: 10
     }
 
-    const lengedTopOffset = 
-      size.titleHeight + 
-      size.lineWidth +
-      size.marginTop
+    const lengedTopOffset = size.titleHeight + size.lineWidth +
+                            size.marginTop
 
-    const hoverBoxHeight = 
-      lengedTopOffset + 
-      size.marginBottom +
-      this.setup.numLines * 
-      size.lengedHeight
-      
+    const hoverBoxHeight = lengedTopOffset + size.marginBottom +
+                           this.setup.numLines * size.lengedHeight
+
     this.height = hoverBoxHeight + size.pointHeight
     this.width = 136
 

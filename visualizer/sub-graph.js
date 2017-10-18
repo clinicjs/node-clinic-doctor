@@ -1,4 +1,4 @@
-'use strict' 
+'use strict'
 
 const d3 = require('d3')
 const EventEmitter = require('events')
