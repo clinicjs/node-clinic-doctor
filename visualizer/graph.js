@@ -102,10 +102,10 @@ class Graph extends EventEmitter {
   setData (data) {
     this.data = data
 
-    this.cpu.setData(data.cpu)
-    this.memory.setData(data.memory)
-    this.delay.setData(data.delay)
-    this.handles.setData(data.handles)
+    this.cpu.setData(data.cpu, data.analysis.issues.cpu)
+    this.memory.setData(data.memory, data.analysis.issues.memory)
+    this.delay.setData(data.delay, data.analysis.issues.delay)
+    this.handles.setData(data.handles, data.analysis.issues.handles)
   }
 
   draw () {
