@@ -34,6 +34,9 @@ class SubGraph extends EventEmitter {
       .classed('unit', true)
       .text(this.setup.unit)
 
+    this.alert = this.title.append('div')
+      .classed('alert', true)
+
     // add legned
     this.legendItems = []
     if (setup.showLegend) {
@@ -152,21 +155,13 @@ class SubGraph extends EventEmitter {
     for (let i = 0; i < this.setup.numLines; i++) {
       this.lineElements[i].data([data])
 
-      // Modify line and legend line colors where there is an issue.
-      if (issues) {
-        const issue = (typeof issues === 'boolean')
-          ? issues
-          : issues[Object.keys(issues)[i]]
+      // Modify css classes for lines, title icon and legends.
+      if (issues[i]) {
+        this.lineElements[i].classed('bad', issues[i])
+        this.setup.showLegend && this.legendItems[i].classed('bad', issues[i])
 
-        console.log(issues, issue)
-        this.lineElements[i].classed('bad', issue)
-        this.setup.showLegend && this.legendItems[i].classed('bad', issue)
+        this.alert.classed('alert-visible', true)
       }
-    }
-
-    if (issues) {
-      this.title.append('div')
-        .classed('alert', true)
     }
   }
 
