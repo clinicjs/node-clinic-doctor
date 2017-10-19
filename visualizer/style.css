@@ -101,7 +101,7 @@ html {
   font-family: sans-serif;
 }
 
-html #banner, html #menu, html #graph, #graph .hover text {
+html #banner, html #menu, html #graph, #graph .hover text, .details {
   /* light text on dark background doesn't look so good in the browser compared
      to graphical design tools. This is because graphical design tools uses
      antialiasing, where browsers uses subpixel rendering. To make it look
@@ -113,7 +113,7 @@ html #banner, html #menu, html #graph, #graph .hover text {
   -moz-osx-font-smoothing: grayscale;
 }
 
-html.light-theme #menu, html.light-theme #graph {
+html.light-theme #menu, html.light-theme #graph .details {
   -webkit-font-smoothing: unset;
   -moz-osx-font-smoothing: unset;
 }
@@ -231,10 +231,11 @@ html.light-theme #toggle-theme {
 #recommendation .details {
   display: none;
   position: absolute;
+  padding-left: 15px;
   bottom: 64px;
   width: 100%;
   background-color: var(--recommend-bg-color);
-  height: 200px; /* demo hack, not required when it actually contains something */
+  color: var(--graph-text-color);
 }
 
 #recommendation.open .details {
@@ -247,6 +248,62 @@ html.light-theme #toggle-theme {
   margin: 18px 32px 7px auto;
   background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjM2VhN2Y0IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0xOSA2LjQxTDE3LjU5IDUgMTIgMTAuNTkgNi40MSA1IDUgNi40MSAxMC41OSAxMiA1IDE3LjU5IDYuNDEgMTkgMTIgMTMuNDEgMTcuNTkgMTkgMTkgMTcuNTkgMTMuNDEgMTJ6Ii8+CiAgICA8cGF0aCBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+Cjwvc3ZnPgo=");
   cursor: pointer;
+}
+
+#recommendation .details a {
+  color: var(--recommend-link-color);
+}
+
+#recommendation .details .summary {
+  color: var(--recommendbar-text-color);
+}
+
+#recommendation .more-section .more {
+  color: var(--recommendbar-text-color);
+  visibility: hidden;
+  height: 0px;
+  margin-bottom: 0px;
+}
+
+#recommendation .more-section.open .more {
+  visibility: visible;
+  height: auto;
+  margin-bottom: 24px;
+}
+
+#recommendation .more-bar {
+  height: 64px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+#recommendation .more-bar .text::after {
+  display: block;
+  float: left;
+  content: 'read more';
+  font-variant: small-caps;
+  font-size: 14pt;
+  line-height: 64px;
+  color: var(--recommendbar-text-color);
+}
+
+#recommendation .more-section.open .more-bar .text::after {
+  content: 'read less';
+}
+
+#recommendation .more-section .more-bar .arrow {
+  float: left;
+  margin-left: 10px;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZTdlZmY4IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik03LjQxIDE1LjQxTDEyIDEwLjgzbDQuNTkgNC41OEwxOCAxNGwtNi02LTYgNnoiLz4KICAgIDxwYXRoIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz4KPC9zdmc+Cg==");
+  height: 64px;
+  width: 38px;
+  background-size: 38px 38px;
+  background-repeat: no-repeat;
+  background-position: center 15px;
+}
+
+#recommendation .more-section.open .more-bar .arrow {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZTdlZmY4IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik03LjQxIDcuODRMMTIgMTIuNDJsNC41OS00LjU4TDE4IDkuMjVsLTYgNi02LTZ6Ii8+CiAgICA8cGF0aCBkPSJNMC0uNzVoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz4KPC9zdmc+Cg==");
 }
 
 /* Graph layout */
@@ -416,4 +473,21 @@ html.light-theme #toggle-theme {
 
 .graph .chart .background {
   fill: var(--graph-bg-color);
+}
+
+table {
+	color:var(--recommend-text-color);
+}
+
+table th {
+	padding: 12px;
+}
+
+table tr {
+	text-align: left;
+	padding-left: 20px;
+}
+
+table td {
+	padding: 12px;
 }

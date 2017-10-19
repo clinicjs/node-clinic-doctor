@@ -10,6 +10,7 @@ const streamTemplate = require('stream-template')
 const getSampleFilename = require('./collect/get-sample-filename.js')
 const ProcessStateDecoder = require('./format/decoder.js')
 const ProcessStateAnalysis = require('./analysis/index.js')
+const createRecommendation = require('./recommendations/index.js')
 
 class ClinicDoctor {
   constructor (settings = {}) {
@@ -65,10 +66,13 @@ class ClinicDoctor {
       .pipe(new ProcessStateDecoder())
       .pipe(new ProcessStateAnalysis())
 
+    const recommendation = JSON.stringify(createRecommendation(analysis.issueCategory))
+
     const dataFile = streamTemplate`
       {
         "file": "${dataBase64}",
-        "analysis": ${analysis}
+        "analysis": ${analysis},
+        "recommendation": ${recommendation}
       }
     `
 

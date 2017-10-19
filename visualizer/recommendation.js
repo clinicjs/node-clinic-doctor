@@ -7,6 +7,8 @@ class Recomendation extends EventEmitter {
     super()
 
     this.opened = false
+    this.showingMore = false
+
     this.container = d3.select('#recommendation')
       .classed('open', this.opened)
 
@@ -30,9 +32,32 @@ class Recomendation extends EventEmitter {
     this.details.append('div')
       .classed('close', true)
       .on('click', () => this.emit('close'))
+
+    this.summary = this.details.append('div')
+      .classed('summary', true)
+
+    this.readMore = this.details.append('div')
+      .classed('more-section', true)
+
+    this.moreBar = this.readMore.append('div')
+      .classed('more-bar', true)
+    this.moreBar.append('div')
+      .classed('text', true)
+    this.moreBar.append('div')
+      .classed('arrow', true)
+
+    this.moreBar.on('click', () => this.emit(this.showingMore ? 'less' : 'more'))
+
+    this.more = this.readMore.append('div')
+      .classed('more', true)
   }
 
-  draw (data) {
+  setData (data) {
+    this.summary.html(data.summary)
+    this.more.html(data.readMore)
+  }
+
+  draw () {
 
   }
 
@@ -62,6 +87,16 @@ class Recomendation extends EventEmitter {
     if (atBottom && !atTop) {
       window.scrollTo(window.scrollX, html.scrollHeight - window.innerHeight)
     }
+  }
+
+  showMore () {
+    this.showingMore = true
+    this.readMore.classed('open', true)
+  }
+
+  showLess () {
+    this.showingMore = false
+    this.readMore.classed('open', false)
   }
 }
 
