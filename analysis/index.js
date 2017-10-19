@@ -1,6 +1,11 @@
 'use strict'
 
 const stream = require('stream')
+const guessInterval = require('./guess-interval.js')
+const analyseCPU = require('./analyse-cpu.js')
+const analyseDelay = require('./analyse-delay.js')
+const analyseMemory = require('./analyse-memory.js')
+const issueCategory = require('./issue-category.js')
 
 class ProcessStateDecoder extends stream.Transform {
   constructor (options) {
@@ -12,33 +17,33 @@ class ProcessStateDecoder extends stream.Transform {
     this.data = []
   }
 
-  _transform (chunk, encoding, callback) {
-    this.data.push(chunk)
+  _transform (datum, encoding, callback) {
+    this.data.push(datum)
     callback(null)
   }
 
   _flush (callback) {
-    const interval = [
-      Math.floor(0.2 * this.data.length),
-      Math.floor(0.8 * this.data.length)
-    ]
+    // guess the interval for where the benchmarker ran
+    const interval = guessInterval(this.data)
+    const subset = this.data.slice(interval[0], interval[1])
+    const issues = {
+      'delay': analyseDelay(subset),
+      'cpu': analyseCPU(subset),
+      'memory': analyseMemory(subset),
+      // Handles don't really indicate that anything is wrong, especially
+      // because the values depends on the benchmark settings. The handles data
+      // is currently just used to guess the time interval.
+      'handles': false
+    }
+    const category = issueCategory(issues)
 
     this.push(JSON.stringify({
-      'issues': {
-        'delay': true,
-        'cpu': false,
-        'memory': {
-          'rss': false,
-          'heapTotal': true,
-          'heapUsed': true
-        },
-        'handles': false
-      },
       'interval': [
         this.data[interval[0]].timestamp,
         this.data[interval[1]].timestamp
       ],
-      'issueCategory': 'gc'
+      'issues': issues,
+      'issueCategory': category
     }))
     callback(null)
   }
