@@ -46,7 +46,7 @@ test('delay usage', function (t) {
 test('cpu usage', function (t) {
   const state = new ProcessState(10)
   state.refresh()
-  sleep(20)
+  sleep(100)
   const sample = state.sample()
   t.ok(sample.cpu >= 0.6 && sample.cpu <= 1, 'sleep has high usage')
 
@@ -55,5 +55,5 @@ test('cpu usage', function (t) {
     const sample = state.sample()
     t.ok(sample.cpu >= 0 && sample.cpu <= 0.4, 'timeout has low usage')
     t.end()
-  }, 10)
+  }, 100)
 })
