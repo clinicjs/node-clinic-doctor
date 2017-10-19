@@ -28,12 +28,17 @@ recommendation.on('close', function () {
   recommendation.close()
 })
 
+recommendation.on('more', () => recommendation.showMore())
+recommendation.on('less', () => recommendation.showLess())
+
 loaddata(function maybeDone (err, data) {
   if (err) throw err
 
   graph.setData(data)
   graph.draw()
-  recommendation.draw(data)
+
+  recommendation.setData(data.recommendation)
+  recommendation.draw()
 
   window.addEventListener('resize', function () {
     graph.draw()

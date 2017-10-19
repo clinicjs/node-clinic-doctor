@@ -15,6 +15,7 @@
     "d3": "^4.11.0",
     "protocol-buffers": "^3.2.1",
     "pump": "^1.0.2",
+    "showdown": "^1.7.6",
     "startpoint": "^0.3.2",
     "stream-template": "0.0.4",
     "summary": "^1.0.0"
