@@ -66,7 +66,8 @@ class ClinicDoctor {
       .pipe(new ProcessStateDecoder())
       .pipe(new ProcessStateAnalysis())
 
-    const recommendation = JSON.stringify(createRecommendation(analysis.issueCategory))
+    const recommendation = analysis
+      .pipe(new createRecommendation())
 
     const dataFile = streamTemplate`
       {
