@@ -61,7 +61,7 @@ class GenerateRecommendation extends stream.Transform {
     callback(null)
   }
 
-  _generate(category, callback) {
+  _generate (category, callback) {
     const files = recommendations[category]
 
     async.mapValues(
