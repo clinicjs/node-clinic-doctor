@@ -81,7 +81,6 @@ class GenerateRecommendation extends stream.Transform {
       this.analysis.issueCategory,
       (err, recommendation) => {
         if (err) return callback(err)
-        console.log(recommendation)
 
         this.push(JSON.stringify(recommendation))
         callback(null)
