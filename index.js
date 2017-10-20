@@ -10,7 +10,7 @@ const streamTemplate = require('stream-template')
 const getSampleFilename = require('./collect/get-sample-filename.js')
 const ProcessStateDecoder = require('./format/decoder.js')
 const ProcessStateAnalysis = require('./analysis/index.js')
-const createRecommendation = require('./recommendations/index.js')
+const CreateRecommendation = require('./recommendations/index.js')
 const stream = require('stream')
 
 class ClinicDoctor {
@@ -68,13 +68,13 @@ class ClinicDoctor {
       .pipe(new ProcessStateAnalysis())
 
     const recommendation = analysis
-      .pipe(new createRecommendation())
+      .pipe(new CreateRecommendation())
 
     const analysisStringified = analysis
       .pipe(new stream.Transform({
         readableObjectMode: false,
         writableObjectMode: true,
-        transform(data, encoding, callback) {
+        transform (data, encoding, callback) {
           callback(null, JSON.stringify(data))
         }
       }))

@@ -24,8 +24,6 @@ const md = new Showdown.Converter({
 
 md.setFlavor('github')
 
-
-
 class GenerateRecommendation extends stream.Transform {
   constructor (options) {
     super(Object.assign({
@@ -44,7 +42,7 @@ class GenerateRecommendation extends stream.Transform {
         readMore: md.makeHtml(gc.readMore)
       }
     }
-  
+
     if (issueCategory === 'event-loop') {
       return {
         category: 'event-loop',
@@ -52,7 +50,7 @@ class GenerateRecommendation extends stream.Transform {
         readMore: md.makeHtml(ev.readMore)
       }
     }
-  
+
     if (issueCategory === 'io') {
       return {
         category: 'io',
@@ -60,7 +58,7 @@ class GenerateRecommendation extends stream.Transform {
         readMore: md.makeHtml(io.readMore)
       }
     }
-  
+
     if (issueCategory === 'none') {
       return {
         category: 'none',
@@ -68,7 +66,7 @@ class GenerateRecommendation extends stream.Transform {
         readMore: md.makeHtml(none.readMore)
       }
     }
-  
+
     return {
       category: 'unknown',
       summary: md.makeHtml(unknown.summary),
