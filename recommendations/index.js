@@ -26,7 +26,7 @@ md.setFlavor('github')
 
 
 
-class Rec extends stream.Transform {
+class GenerateRecommendation extends stream.Transform {
   constructor (options) {
     super(Object.assign({
       readableObjectMode: false,
@@ -77,15 +77,14 @@ class Rec extends stream.Transform {
   }
 
   _transform (datum, encoding, callback) {
-    this.data.push(datum)
+    this.data = datum
     callback(null)
   }
 
   _flush (callback) {
-    this.push(JSON.stringify(this._generate(this.data[0].issueCategory)))
+    this.push(JSON.stringify(this._generate(this.data.issueCategory)))
     callback(null)
   }
 }
 
-module.exports = Rec
-
+module.exports = GenerateRecommendation

@@ -115,6 +115,11 @@ html #banner, html #menu, html #graph, #graph .hover text, #recommendation .deta
   -moz-osx-font-smoothing: grayscale;
 }
 
+-html.light-theme #menu, html.light-theme #graph {
+  -webkit-font-smoothing: unset;
+  -moz-osx-font-smoothing: unset;
+}
+
 /* Banner layout */
 #banner {
   height: 65px;
@@ -490,21 +495,4 @@ html.light-theme #toggle-theme {
 
 html.recommendation-open .graph .chart .interval {
   display: block;
-}
-
-table {
-	color:var(--recommend-text-color);
-}
-
-table th {
-	padding: 12px;
-}
-
-table tr {
-	text-align: left;
-	padding-left: 20px;
-}
-
-table td {
-	padding: 12px;
 }
