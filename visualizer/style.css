@@ -115,7 +115,7 @@ html #banner, html #menu, html #graph, #graph .hover text, #recommendation .deta
   -moz-osx-font-smoothing: grayscale;
 }
 
--html.light-theme #menu, html.light-theme #graph {
+html.light-theme #menu, html.light-theme #graph {
   -webkit-font-smoothing: unset;
   -moz-osx-font-smoothing: unset;
 }
