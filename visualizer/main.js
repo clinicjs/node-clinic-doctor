@@ -19,8 +19,14 @@ graph.on('hover-show', () => graph.hoverShow())
 graph.on('hover-hide', () => graph.hoverHide())
 graph.on('hover-update', (unitX) => graph.hoverUpdate(unitX))
 
-recommendation.on('open', () => recommendation.open())
-recommendation.on('close', () => recommendation.close())
+recommendation.on('open', function () {
+  document.documentElement.classList.toggle('recommendation-open')
+  recommendation.open()
+})
+recommendation.on('close', function () {
+  document.documentElement.classList.toggle('recommendation-open')
+  recommendation.close()
+})
 
 loaddata(function maybeDone (err, data) {
   if (err) throw err

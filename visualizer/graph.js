@@ -102,10 +102,16 @@ class Graph extends EventEmitter {
   setData (data) {
     this.data = data
 
-    this.cpu.setData(data.cpu, [data.analysis.issues.cpu])
-    this.delay.setData(data.delay, [data.analysis.issues.delay])
-    this.handles.setData(data.handles, [data.analysis.issues.handles])
-    this.memory.setData(data.memory, [
+    this.cpu.setData(data.cpu, data.analysis.interval, [
+      data.analysis.issues.cpu
+    ])
+    this.delay.setData(data.delay, data.analysis.interval, [
+      data.analysis.issues.delay
+    ])
+    this.handles.setData(data.handles, data.analysis.interval, [
+      data.analysis.issues.handles
+    ])
+    this.memory.setData(data.memory, data.analysis.interval, [
       data.analysis.issues.memory.rss,
       data.analysis.issues.memory.heapTotal,
       data.analysis.issues.memory.heapUsed

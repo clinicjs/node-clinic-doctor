@@ -99,6 +99,11 @@ class SubGraph extends EventEmitter {
       .attr('x', 0)
       .attr('y', 0)
 
+    this.interval = this.graph.append('rect')
+      .classed('interval', true)
+      .attr('x', 0)
+      .attr('y', 0)
+
     // define scales
     this.xScale = d3.scaleTime()
     this.yScale = d3.scaleLinear()
@@ -135,7 +140,7 @@ class SubGraph extends EventEmitter {
     }
   }
 
-  setData (data, issues) {
+  setData (data, interval, issues) {
     // Update domain of scales
     this.xScale.domain(d3.extent(data, function (d) { return d.x }))
 
@@ -150,6 +155,9 @@ class SubGraph extends EventEmitter {
       ymax = Math.max(ymax, this.setup.ymax)
     }
     this.yScale.domain([ymin, ymax])
+
+    // Save interval
+    this.interval.data([interval])
 
     // Attach data
     let foundIssue = false
@@ -183,6 +191,12 @@ class SubGraph extends EventEmitter {
     // set the ranges
     this.xScale.range([0, width])
     this.yScale.range([height, 0])
+
+    // set interval size
+    this.interval
+      .attr('x', (d) => this.xScale(d[0]))
+      .attr('width', (d) => this.xScale(d[1]) - this.xScale(d[0]))
+      .attr('height', height)
 
     // update axis
     this.xAxisElement

@@ -10,6 +10,7 @@ html {
 
   --graph-text-color: rgb(255, 255, 255);
   --graph-bg-color: rgb(27, 30, 39);
+  --graph-interval-color: rgba(255, 255, 255, 0.05);
   --graph-axis-color: rgb(89, 90, 95);
   --graph-tick-color: rgb(151, 151, 151);
   --graph-good-line-color: rgb(74, 144, 226);
@@ -39,6 +40,7 @@ html.light-theme {
 
   --graph-text-color: rgb(101, 101, 101);
   --graph-bg-color: rgb(227, 227, 227);
+  --graph-interval-color: rgba(0, 0, 0, 0.1);
   --graph-axis-color: rgb(189, 189, 189);
 }
 
@@ -416,4 +418,13 @@ html.light-theme #toggle-theme {
 
 .graph .chart .background {
   fill: var(--graph-bg-color);
+}
+
+.graph .chart .interval {
+  fill: var(--graph-interval-color);
+  display: none;
+}
+
+html.recommendation-open .graph .chart .interval {
+  display: block;
 }
