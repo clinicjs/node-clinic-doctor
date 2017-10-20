@@ -1,12 +1,3 @@
-'use strict'
-
-const summary = `
-Potential __Garabage Collection__ issue detected:
-- Run [Tool X](http://google.com) to assess the issue.
-- The machine's resources may be under spec for the application.
-`
-
-const readMore = `
 ### Understanding the analysis
 Morbi in sem quis dui placerat ornare. Pellentesque odio nisi, euismod in, pharetra a, ultricies in, diam. Sed arcu. Cras consequat.
 
@@ -28,9 +19,3 @@ We can pretty much use any _sort_ of __styling__ we like. ~~even strike-through~
 |Point A      |82%                     |
 |Point A      |104%                    |
 |Point C      |32%                     |
-`
-
-module.exports = {
-  summary: summary,
-  readMore: readMore
-}
