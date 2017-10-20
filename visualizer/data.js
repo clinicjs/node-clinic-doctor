@@ -12,15 +12,16 @@ function loaddata (callback) {
       parsed.push(state)
     })
     .once('end', function () {
-      callback(null, new Data(data.analysis, parsed))
+      callback(null, new Data(data.analysis, parsed, data.recommendation))
     })
 }
 module.exports = loaddata
 
 // Construct data container
 class Data {
-  constructor (analysis, data) {
+  constructor (analysis, data, recommendation) {
     this.analysis = analysis
+    this.recommendation = recommendation
     this.data = data
 
     this.rawTimestamp = data.map((point) => point.timestamp)
