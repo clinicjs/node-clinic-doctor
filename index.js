@@ -11,6 +11,7 @@ const getSampleFilename = require('./collect/get-sample-filename.js')
 const ProcessStateDecoder = require('./format/decoder.js')
 const ProcessStateAnalysis = require('./analysis/index.js')
 const createRecommendation = require('./recommendations/index.js')
+const stream = require('stream')
 
 class ClinicDoctor {
   constructor (settings = {}) {
@@ -69,10 +70,19 @@ class ClinicDoctor {
     const recommendation = analysis
       .pipe(new createRecommendation())
 
+    const analysisStringified = analysis
+      .pipe(new stream.Transform({
+        readableObjectMode: false,
+        writableObjectMode: true,
+        transform(data, encoding, callback) {
+          callback(null, JSON.stringify(data))
+        }
+      }))
+
     const dataFile = streamTemplate`
       {
         "file": "${dataBase64}",
-        "analysis": ${analysis},
+        "analysis": ${analysisStringified},
         "recommendation": ${recommendation}
       }
     `

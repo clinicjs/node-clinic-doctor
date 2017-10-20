@@ -10,7 +10,7 @@ const issueCategory = require('./issue-category.js')
 class ProcessStateDecoder extends stream.Transform {
   constructor (options) {
     super(Object.assign({
-      readableObjectMode: false,
+      readableObjectMode: true,
       writableObjectMode: true
     }, options))
 
@@ -37,14 +37,14 @@ class ProcessStateDecoder extends stream.Transform {
     }
     const category = issueCategory(issues)
 
-    this.push(JSON.stringify({
+    this.push({
       'interval': [
         this.data[interval[0]].timestamp,
         this.data[interval[1]].timestamp
       ],
       'issues': issues,
       'issueCategory': category
-    }))
+    })
     callback(null)
   }
 }

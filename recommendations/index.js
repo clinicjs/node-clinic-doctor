@@ -30,7 +30,7 @@ class Rec extends stream.Transform {
   constructor (options) {
     super(Object.assign({
       readableObjectMode: false,
-      writableObjectMode: false
+      writableObjectMode: true
     }, options))
 
     this.data = []
@@ -82,8 +82,7 @@ class Rec extends stream.Transform {
   }
 
   _flush (callback) {
-    const issueCategory = JSON.parse(this.data).issueCategory
-    this.push(JSON.stringify(this._generate(issueCategory)))
+    this.push(JSON.stringify(this._generate(this.data[0].issueCategory)))
     callback(null)
   }
 }
