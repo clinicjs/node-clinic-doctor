@@ -6,6 +6,7 @@ const ev = require('./ev')
 const io = require('./io')
 const none = require('./none')
 const unknown = require('./unknown')
+const stream = require('stream')
 
 // Common markdown converter. Only one recommendation
 // per report will get proccessed from markdown to html.
@@ -23,44 +24,69 @@ const md = new Showdown.Converter({
 
 md.setFlavor('github')
 
-function generate (issueCategory) {
-  if (issueCategory === 'gc') {
+
+
+class Rec extends stream.Transform {
+  constructor (options) {
+    super(Object.assign({
+      readableObjectMode: false,
+      writableObjectMode: false
+    }, options))
+
+    this.data = []
+  }
+
+  _generate (issueCategory) {
+    if (issueCategory === 'gc') {
+      return {
+        category: 'gc',
+        summary: md.makeHtml(gc.summary),
+        readMore: md.makeHtml(gc.readMore)
+      }
+    }
+  
+    if (issueCategory === 'event-loop') {
+      return {
+        category: 'event-loop',
+        summary: md.makeHtml(ev.summary),
+        readMore: md.makeHtml(ev.readMore)
+      }
+    }
+  
+    if (issueCategory === 'io') {
+      return {
+        category: 'io',
+        summary: md.makeHtml(io.summary),
+        readMore: md.makeHtml(io.readMore)
+      }
+    }
+  
+    if (issueCategory === 'none') {
+      return {
+        category: 'none',
+        summary: md.makeHtml(none.summary),
+        readMore: md.makeHtml(none.readMore)
+      }
+    }
+  
     return {
-      category: 'gc',
-      summary: md.makeHtml(gc.summary),
-      readMore: md.makeHtml(gc.readMore)
+      category: 'unknown',
+      summary: md.makeHtml(unknown.summary),
+      readMore: md.makeHtml(unknown.readMore)
     }
   }
 
-  if (issueCategory === 'event-loop') {
-    return {
-      category: 'event-loop',
-      summary: md.makeHtml(ev.summary),
-      readMore: md.makeHtml(ev.readMore)
-    }
+  _transform (datum, encoding, callback) {
+    this.data.push(datum)
+    callback(null)
   }
 
-  if (issueCategory === 'io') {
-    return {
-      category: 'io',
-      summary: md.makeHtml(io.summary),
-      readMore: md.makeHtml(io.readMore)
-    }
-  }
-
-  if (issueCategory === 'none') {
-    return {
-      category: 'none',
-      summary: md.makeHtml(none.summary),
-      readMore: md.makeHtml(none.readMore)
-    }
-  }
-
-  return {
-    category: 'unknown',
-    summary: md.makeHtml(unknown.summary),
-    readMore: md.makeHtml(unknown.readMore)
+  _flush (callback) {
+    const issueCategory = JSON.parse(this.data).issueCategory
+    this.push(JSON.stringify(this._generate(issueCategory)))
+    callback(null)
   }
 }
 
-module.exports = generate
+module.exports = Rec
+
