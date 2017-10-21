@@ -1,8 +1,8 @@
 {
-  "name": "clinic-doctor",
+  "name": "@nearform/clinic-doctor",
   "description": "Programmable interface to clinic doctor",
   "repository": "nearform/node-clinic-doctor",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "scripts": {
     "test": "standard | snazzy && tap --no-cov test/*.test.js",
     "ci": "standard | snazzy && tap --cov test/*.test.js",
