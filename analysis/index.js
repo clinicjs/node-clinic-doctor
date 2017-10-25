@@ -7,7 +7,7 @@ const analyseDelay = require('./analyse-delay.js')
 const analyseMemory = require('./analyse-memory.js')
 const issueCategory = require('./issue-category.js')
 
-class ProcessStateDecoder extends stream.Transform {
+class Analyse extends stream.Transform {
   constructor (options) {
     super(Object.assign({
       readableObjectMode: true,
@@ -40,7 +40,7 @@ class ProcessStateDecoder extends stream.Transform {
     this.push({
       'interval': [
         this.data[interval[0]].timestamp,
-        this.data[interval[1]].timestamp
+        this.data[interval[1] - 1].timestamp
       ],
       'issues': issues,
       'issueCategory': category
@@ -49,4 +49,4 @@ class ProcessStateDecoder extends stream.Transform {
   }
 }
 
-module.exports = ProcessStateDecoder
+module.exports = Analyse
