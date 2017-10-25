@@ -2,14 +2,15 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
+defaults: &defaults
+  working_directory: ~/workspace
+  docker:
+    - image: circleci/node:latest
+
 version: 2
 jobs:
   build:
-    docker:
-      - image: circleci/node:latest
-
-    working_directory: ~/repo
-
+    <<: *defaults
     steps:
       - checkout
 
@@ -27,22 +28,23 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - workspace
+
   lint:
-    docker:
-      - image: circleci/node:latest
-
-    working_directory: ~/repo
-
+    <<: *defaults
     steps:
+      - attach_workspace:
+          at: ~/
       - run: npm run ci-lint
 
   test:
-    docker:
-      - image: circleci/node:latest
-
-    working_directory: ~/repo
-
+    <<: *defaults
     steps:
+      - attach_workspace:
+          at: ~/
       - run: npm run ci-test
 
 workflows:
