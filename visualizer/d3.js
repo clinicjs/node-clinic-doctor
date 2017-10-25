@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 // Reduce file size by only including the d3 modules that are used
 Object.assign(
