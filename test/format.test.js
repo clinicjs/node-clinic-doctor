@@ -43,7 +43,7 @@ test('partial decoding', function (t) {
 
   // No data, chunk is too small
   decoder.write(sampleEncoded.slice(0, 20))
-  t.strictEqual(t.read(), null)
+  t.strictEqual(decoder.read(), null)
 
   // Ended previuse sample, but a partial remains
   decoder.write(Buffer.concat([
@@ -51,7 +51,7 @@ test('partial decoding', function (t) {
     sampleEncoded.slice(0, 30)
   ]))
   t.strictDeepEqual(decoder.read(), sample)
-  t.strictDeepEqual(decoder.read(), null)
+  t.strictEqual(decoder.read(), null)
 
   // Ended previuse, no partial remains
   decoder.write(Buffer.concat([
@@ -60,6 +60,7 @@ test('partial decoding', function (t) {
   ]))
   t.strictDeepEqual(decoder.read(), sample)
   t.strictDeepEqual(decoder.read(), sample)
+  t.strictEqual(decoder.read(), null)
 
   // No previuse ended
   decoder.write(sampleEncoded)
