@@ -9,54 +9,53 @@ class Recomendation extends EventEmitter {
     this.opened = false
     this.showingMore = false
 
+    this.space = d3.select('#recommendation-space')
+
     this.container = d3.select('#recommendation')
       .classed('open', this.opened)
 
-    this.space = this.container.append('div')
-      .classed('space', true)
+    this.wrapper = this.container.append('div')
+      .classed('wrapper', true)
 
-    this.content = this.container.append('div')
-      .classed('content', true)
-
-    this.bar = this.content.append('div')
-      .classed('bar', true)
-    this.bar.append('div')
-      .classed('text', true)
-    this.bar.append('div')
-      .classed('arrow', true)
-
-    this.bar.on('click', () => this.emit(this.opened ? 'close' : 'open'))
-
-    this.details = this.content.append('div')
+    this.details = this.wrapper.append('div')
       .classed('details', true)
     this.details.append('div')
       .classed('close', true)
       .on('click', () => this.emit('close'))
 
-    this.summary = this.details.append('div')
+    this.content = this.details.append('div')
+      .classed('content', true)
+
+    this.summary = this.content.append('div')
       .classed('summary', true)
 
-    this.more = this.details.append('div')
+    this.more = this.content.append('div')
       .classed('hidden', true)
       .classed('more', true)
 
     this.moreBar = this.more.append('div')
       .classed('more-bar', true)
+      .on('click', () => this.emit(this.showingMore ? 'less' : 'more'))
     this.moreBar.append('div')
       .classed('text', true)
     this.moreBar.append('div')
       .classed('arrow', true)
 
-    this.moreBar.on('click', () => this.emit(this.showingMore ? 'less' : 'more'))
-
     this.moreContent = this.more.append('div')
       .classed('more-content', true)
+
+    this.bar = this.wrapper.append('div')
+      .classed('bar', true)
+      .on('click', () => this.emit(this.opened ? 'close' : 'open'))
+    this.bar.append('div')
+      .classed('text', true)
+    this.bar.append('div')
+      .classed('arrow', true)
   }
 
   setData (data) {
     this.summary.html(data.summary)
 
-    console.log(data)
     if (data.readMore) {
       this.more
         .classed('hidden', false)
