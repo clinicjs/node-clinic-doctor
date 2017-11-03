@@ -36,6 +36,7 @@ class SubGraph extends EventEmitter {
 
     this.alert = this.title.append('div')
       .classed('alert', true)
+      .on('click', () => this.emit('alert-click'))
 
     // add legned
     this.legendItems = []

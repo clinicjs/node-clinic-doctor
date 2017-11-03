@@ -367,6 +367,7 @@ html.light-theme #toggle-theme {
   background-size: 18px 18px;
   background-repeat: no-repeat;
   visibility: hidden;
+  cursor: pointer;
 }
 
 .graph .header .title .alert.visible {

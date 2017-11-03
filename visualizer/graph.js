@@ -62,6 +62,7 @@ class Graph extends EventEmitter {
       subgraph.on('hover-update', (unitX) => this.emit('hover-update', unitX))
       subgraph.on('hover-show', () => this.emit('hover-show'))
       subgraph.on('hover-hide', () => this.emit('hover-hide'))
+      subgraph.on('alert-click', () => this.emit('alert-click'))
     }
   }
 

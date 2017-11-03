@@ -19,12 +19,17 @@ graph.on('hover-show', () => graph.hoverShow())
 graph.on('hover-hide', () => graph.hoverHide())
 graph.on('hover-update', (unitX) => graph.hoverUpdate(unitX))
 
+graph.on('alert-click', function () {
+  document.documentElement.classList.add('recommendation-open')
+  recommendation.open()
+})
+
 recommendation.on('open', function () {
-  document.documentElement.classList.toggle('recommendation-open')
+  document.documentElement.classList.add('recommendation-open')
   recommendation.open()
 })
 recommendation.on('close', function () {
-  document.documentElement.classList.toggle('recommendation-open')
+  document.documentElement.classList.remove('recommendation-open')
   recommendation.close()
 })
 
