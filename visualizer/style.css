@@ -241,9 +241,7 @@ html.light-theme #toggle-theme {
 #recommendation .details {
   display: none;
   padding: 0 37px;
-  margin: 0 auto;
   max-height: calc(100% - 65px);
-  max-width: 1000px;
   box-sizing: border-box;
   background-color: var(--recommend-bg-color);
   color: var(--recommendbar-text-color);
@@ -268,6 +266,7 @@ html.light-theme #toggle-theme {
 #recommendation .details .content {
   grid-area: content;
   overflow-y: scroll;
+  max-width: 1000px;
 }
 
 #recommendation .content a {
