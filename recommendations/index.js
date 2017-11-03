@@ -21,12 +21,10 @@ const recommendations = {
     readMore: path.resolve(__dirname, 'io-readmore.md')
   },
   'none': {
-    summary: path.resolve(__dirname, 'none-summary.md'),
-    readMore: path.resolve(__dirname, 'none-readmore.md')
+    summary: path.resolve(__dirname, 'none-summary.md')
   },
   'unknown': {
-    summary: path.resolve(__dirname, 'unknown-summary.md'),
-    readMore: path.resolve(__dirname, 'unknown-readmore.md')
+    summary: path.resolve(__dirname, 'unknown-summary.md')
   }
 }
 

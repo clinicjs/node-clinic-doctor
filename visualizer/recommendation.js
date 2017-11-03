@@ -36,10 +36,11 @@ class Recomendation extends EventEmitter {
     this.summary = this.details.append('div')
       .classed('summary', true)
 
-    this.readMore = this.details.append('div')
-      .classed('more-section', true)
+    this.more = this.details.append('div')
+      .classed('hidden', true)
+      .classed('more', true)
 
-    this.moreBar = this.readMore.append('div')
+    this.moreBar = this.more.append('div')
       .classed('more-bar', true)
     this.moreBar.append('div')
       .classed('text', true)
@@ -48,13 +49,20 @@ class Recomendation extends EventEmitter {
 
     this.moreBar.on('click', () => this.emit(this.showingMore ? 'less' : 'more'))
 
-    this.more = this.readMore.append('div')
-      .classed('more', true)
+    this.moreContent = this.more.append('div')
+      .classed('more-content', true)
   }
 
   setData (data) {
     this.summary.html(data.summary)
-    this.more.html(data.readMore)
+
+    console.log(data)
+    if (data.readMore) {
+      this.more
+        .classed('hidden', false)
+      this.moreContent
+        .html(data.readMore)
+    }
   }
 
   draw () {
@@ -91,12 +99,12 @@ class Recomendation extends EventEmitter {
 
   showMore () {
     this.showingMore = true
-    this.readMore.classed('open', true)
+    this.more.classed('open', true)
   }
 
   showLess () {
     this.showingMore = false
-    this.readMore.classed('open', false)
+    this.more.classed('open', false)
   }
 }
 
