@@ -1,3 +1,4 @@
 Potential __I/O__ issue detected:
-- Run [Tool X](http://google.com) to assess the issue.
-- The machine's resources may be under spec for the application.
+- There may be long-running asynchronous activities
+- This can mean that the bottleneck is not the Node process at all, but rather an I/O operation
+- The simplest current approach to solving this problem is by reasoning about external infrastructure
