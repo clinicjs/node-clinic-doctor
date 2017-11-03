@@ -1,24 +1,24 @@
 ### Understanding the analysis
 
-JavaScript is a single-threaded event-driven non-blocking language. 
+JavaScript is a single-threaded event-driven non-blocking language.
 
 In Node.js I/O tasks are delegated to the Operating System, JavaScript functions (callbacks)
-are invoked once a related I/O operation is complete. At a rudimentary level, the process of 
-queueing events and later handling results in-thread is conceptually achieved with the 
-"Event Loop" abstraction. 
+are invoked once a related I/O operation is complete. At a rudimentary level, the process of
+queueing events and later handling results in-thread is conceptually achieved with the
+"Event Loop" abstraction.
 
 At a (very) basic level the following pseudo-code demonstrates the Event Loop:
 `while (event) handle(event)`
 
-The Event Loop paradigm leads to an ergonomic development experience for high concurrency programming 
+The Event Loop paradigm leads to an ergonomic development experience for high concurrency programming
 (relative to the multi-threaded paradigm).
 
-However, since the Event Loop operates on a single thread this is essentially a shared 
-execution environment for every potentially concurrent action. This means that if the 
-execution time of any line of code exceeds an acceptable threshold it interferes with 
+However, since the Event Loop operates on a single thread this is essentially a shared
+execution environment for every potentially concurrent action. This means that if the
+execution time of any line of code exceeds an acceptable threshold it interferes with
 processing of future events (for instance, an incoming HTTP request); new events cannot
-be processed because the same thread that would be processing the event is currently 
-blocked by a long-running synchronous operation. 
+be processed because the same thread that would be processing the event is currently
+blocked by a long-running synchronous operation.
 
 Asynchronous operations are those which queue an event for later handling, they tend to be
 identified by an API that requires a callback, or uses promises (or async/await).
@@ -27,20 +27,19 @@ Whereas synchronous operations simply return a value. Long running synchronous o
 functions that perform blocking I/O (such as `fs.readFileSync`) or potentially resource intensive
 algorithms (such as `JSON.stringify` or `react.renderToString`).
 
-To solve the Event Loop issue, we need to find out where the synchronous bottleneck is. 
-This may (commonly) be identified as a single long-running synchronous function, or 
+To solve the Event Loop issue, we need to find out where the synchronous bottleneck is.
+This may (commonly) be identified as a single long-running synchronous function, or
 the bottleneck may be distributed which would take rather more detective work.
 
 ### Next Steps
-- If the system is already deployed, mitigate the issue immediately by implementing 
+- If the system is already deployed, mitigate the issue immediately by implementing
   HTTP 503 Service Unavailable functionality (see [Reference](#reference))
   - This should allow the deployments Load Balance to route traffic to a different service instance
   - In the worse case the user receives the 503 in which case they must retry (this is still preferable to waiting for a timeout)
-- Use the [0x](https://www.npmjs.com/package/0x) tool to generate a flamegraph (see [Reference](#reference)). 
+- Use the [0x](https://www.npmjs.com/package/0x) tool to generate a flamegraph (see [Reference](#reference)).
 - Look for "hot" blocks, these are functions that are observed (at a higher relative frequency) to be at the top the stack per CPU sample – in other words, such functions are blocking the event loop
   - (In the case of a distributed bottleneck, start by looking for lots of wide tips at the top of the Flamegraph)
 
-<a name=reference></a>
 ### Reference
 
 - [Concurrency model and Event Loop
