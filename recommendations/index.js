@@ -33,16 +33,13 @@ const recommendations = {
 // Options: https://github.com/showdownjs/showdown#valid-options
 const md = new Showdown.Converter({
   noHeaderId: true,
-  parseImgDimensions: true,
   simplifiedAutoLink: true,
   excludeTrailingPunctuationFromURLs: true,
-  literalMidWordUnderscores: true,
   strikethrough: true,
   tables: true,
-  ghCodeBlocks: true
+  ghCodeBlocks: true,
+  simpleLineBreaks: false
 })
-
-md.setFlavor('github')
 
 class GenerateRecommendation extends stream.Transform {
   constructor (options) {
