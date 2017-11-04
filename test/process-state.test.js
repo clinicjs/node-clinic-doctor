@@ -48,12 +48,14 @@ test('cpu usage', function (t) {
   state.refresh()
   sleep(200)
   const sample = state.sample()
-  t.ok(sample.cpu >= 0.5 && sample.cpu <= 1, 'sleep has high usage')
+  t.ok(sample.cpu >= 0.5 && sample.cpu <= 1,
+       'sleep has high usage, usage was: ' + sample.cpu)
 
   state.refresh()
   setTimeout(function () {
     const sample = state.sample()
-    t.ok(sample.cpu >= 0 && sample.cpu <= 0.5, 'timeout has low usage')
+    t.ok(sample.cpu >= 0 && sample.cpu <= 0.5,
+         'timeout has low usage, usage was: ' + sample.cpu)
     t.end()
   }, 200)
 })
