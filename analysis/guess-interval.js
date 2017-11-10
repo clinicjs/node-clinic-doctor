@@ -1,3 +1,4 @@
+'use strict'
 
 function guessInterval (data) {
   // This function seperates handle sequence up into three partitions.

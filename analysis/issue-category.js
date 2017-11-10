@@ -1,3 +1,4 @@
+'use strict'
 
 function issueCategory (issues) {
   const memoryIssue = (issues.memory.external || issues.memory.rss ||
