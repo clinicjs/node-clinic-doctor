@@ -34,7 +34,7 @@ function analyseHandles (data) {
   // distributed the distribution will typically be skewed, thus more
   // observation will be seen on one of the extream sides. This kind of
   // distribution is also an indicator of something being odd.
-  return belowRatio < 0.05 || aboveRatio > 0.05
+  return belowRatio > 0.05 || aboveRatio > 0.05
 }
 
 module.exports = analyseHandles
