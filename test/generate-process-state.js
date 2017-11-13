@@ -48,7 +48,7 @@ function generateProcessState (data, noiseLevel) {
         heapUsed: !flat.heapUsed ? 0 : (flat.heapUsed[i] + noise()) * MB,
         external: !flat.external ? 0 : (flat.external[i] + noise()) * MB
       },
-      handles: !flat.handles ? 0 : flat.handles[i]
+      handles: !flat.handles ? 0 : (flat.handles[i] + noise())
     })
   }
 
