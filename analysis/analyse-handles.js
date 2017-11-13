@@ -49,7 +49,7 @@ function analyseHandles (data) {
   // 1. It is apparently expensive and complicated to implement.
   //    See: https://github.com/scipy/scipy/blob/master/scipy/stats/morestats.py
   //         look for `binom_test`
-  // 2. We currently have no understand of what a consistent sign change
+  // 2. We currently have don't understand of what a consistent sign change
   //    indicates. Thus we will treat `properbility > 0.5` as being fine.
   const binomial = new distributions.Binomial(0.5, data.length)
   const pvalue = binomial.cdf(numSignChanges)
