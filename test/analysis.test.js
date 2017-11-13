@@ -62,48 +62,46 @@ test('normal interval - cpu issue', function (t) {
 })
 
 test('full interval - flat data', function (t) {
-  for (const noise of [0, 0.1, 0.3]) {
-    const goodCPU = generateProcessState({
-      handles: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-      cpu: [100, 100, 120, 90, 110, 100, 80, 110, 90, 110]
-    }, noise)
-    t.strictDeepEqual(analyse(goodCPU), {
-      interval: [ 0, 90 ],
-      issues: {
-        delay: false,
-        cpu: false,
-        memory: {
-          external: false,
-          rss: false,
-          heapTotal: false,
-          heapUsed: false
-        },
-        handles: false
+  const goodCPU = generateProcessState({
+    handles: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    cpu: [100, 100, 120, 90, 110, 100, 80, 110, 90, 110]
+  }, 0)
+  t.strictDeepEqual(analyse(goodCPU), {
+    interval: [ 0, 90 ],
+    issues: {
+      delay: false,
+      cpu: false,
+      memory: {
+        external: false,
+        rss: false,
+        heapTotal: false,
+        heapUsed: false
       },
-      issueCategory: 'none'
-    })
+      handles: false
+    },
+    issueCategory: 'none'
+  })
 
-    const badCPU = generateProcessState({
-      handles: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-      cpu: [50, 40, 10, 10, 100, 50, 40, 10, 10, 10]
-    }, noise)
+  const badCPU = generateProcessState({
+    handles: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    cpu: [50, 40, 10, 10, 100, 50, 40, 10, 10, 10]
+  }, 0)
 
-    t.strictDeepEqual(analyse(badCPU), {
-      interval: [ 0, 90 ],
-      issues: {
-        delay: false,
-        cpu: true,
-        memory: {
-          external: false,
-          rss: false,
-          heapTotal: false,
-          heapUsed: false
-        },
-        handles: false
+  t.strictDeepEqual(analyse(badCPU), {
+    interval: [ 0, 90 ],
+    issues: {
+      delay: false,
+      cpu: true,
+      memory: {
+        external: false,
+        rss: false,
+        heapTotal: false,
+        heapUsed: false
       },
-      issueCategory: 'io'
-    })
-  }
+      handles: false
+    },
+    issueCategory: 'io'
+  })
 
   t.end()
 })

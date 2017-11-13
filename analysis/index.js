@@ -5,6 +5,7 @@ const guessInterval = require('./guess-interval.js')
 const analyseCPU = require('./analyse-cpu.js')
 const analyseDelay = require('./analyse-delay.js')
 const analyseMemory = require('./analyse-memory.js')
+const analyseHandles = require('./analyse-handles.js')
 const issueCategory = require('./issue-category.js')
 
 class Analyse extends stream.Transform {
@@ -30,10 +31,7 @@ class Analyse extends stream.Transform {
       'delay': analyseDelay(subset),
       'cpu': analyseCPU(subset),
       'memory': analyseMemory(subset),
-      // Handles don't really indicate that anything is wrong, especially
-      // because the values depends on the benchmark settings. The handles data
-      // is currently just used to guess the time interval.
-      'handles': false
+      'handles': analyseHandles(subset)
     }
     const category = issueCategory(issues)
 

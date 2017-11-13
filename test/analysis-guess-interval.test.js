@@ -18,14 +18,12 @@ test('guess interval - expected data', function (t) {
 })
 
 test('guess interval - flat data', function (t) {
-  for (const noise of [0, 1, 10]) {
-    const data = generateProcessState({
-      handles: [3, 3, 3, 3, 3, 3, 3, 3]
-    }, noise)
+  const data = generateProcessState({
+    handles: [3, 3, 3, 3, 3, 3, 3, 3]
+  }, 0)
 
-    const interval = guessInterval(data)
-    t.strictDeepEqual(interval, [0, 8])
-  }
+  const interval = guessInterval(data)
+  t.strictDeepEqual(interval, [0, 8])
 
   t.end()
 })
