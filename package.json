@@ -20,7 +20,7 @@
     "d3-selection": "^1.1.0",
     "d3-shape": "^1.2.0",
     "d3-time-format": "^2.1.0",
-    "distributions": "^1.0.0",
+    "distributions": "^1.1.0",
     "protocol-buffers": "^3.2.1",
     "pump": "^1.0.2",
     "showdown": "^1.7.6",
