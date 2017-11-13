@@ -26,6 +26,14 @@ function analyseHandles (data) {
   // To test this, perform a sign change test on the differential.
   const handles = data.map((d) => d.handles)
 
+  // check for stochasticity, otherwise the following is mathmatical nosense.
+  // This might be somewhat problematic, because there are could be cases
+  // where the handles increase intially and then stay constant. In this
+  // case, they are not stocastic but the standard deviation is also not zero.
+  if (summary(handles).sd() === 0) {
+    return false
+  }
+
   // Calculate the changes in handles (differential)
   const changes = diff(handles)
   // Determin if the change was an increase or a decrease
@@ -53,7 +61,6 @@ function analyseHandles (data) {
 }
 
 module.exports = analyseHandles
-
 
 function diff (handles) {
   const changes = []
