@@ -70,11 +70,16 @@ class ClinicDoctor {
     const recommendation = analysis
       .pipe(new CreateRecommendation())
 
+    // TODO refactor to not wrap the analysis
+    // as a stream
+    let analysisData = null
     const analysisStringified = analysis
       .pipe(new stream.Transform({
         readableObjectMode: false,
         writableObjectMode: true,
         transform (data, encoding, callback) {
+          // this is invoked only once
+          analysisData = data
           callback(null, JSON.stringify(data))
         }
       }))
@@ -123,7 +128,12 @@ class ClinicDoctor {
     pump(
       outputFile,
       fs.createWriteStream(outputFilename),
-      callback
+      (err) => {
+        if (err) {
+          return callback(err)
+        }
+        callback(null, analysisData)
+      }
     )
   }
 }
