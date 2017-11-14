@@ -44,6 +44,8 @@ root cause behind the high memory consumption.
 
 ### Next Steps
 
+- If the system is already deployed, mitigate the issue immediately by implementing
+  HTTP 503 Service Unavailable functionality (see *Load Shedding* in **Reference**)
 - Run `node --inspect <FILENAME>`
 - Open Chrome and navigate to [chrome://inspect](chrome://inspect)
 - Under the **Remote Target** heading, there should be a target with the official Node.js icon
@@ -70,11 +72,15 @@ a core dump analysis tool to list all JS objects in a core dump file (this appro
 
 ### Reference
 
-* [Chrome Devtools Docs: Fix Memory Problems](https://developers.google.com/web/tools/chrome-devtools/memory-problems/)
-* [Chrome Devtools Docs: Memory Terminology](https://developers.google.com/web/tools/chrome-devtools/memory-problems/memory-101)
-* [Chrome Devtools Docs: How to record heap snapshots](https://developers.google.com/web/tools/chrome-devtools/memory-problems/heap-snapshots)
-
-* [Node Docs: Inspector](https://nodejs.org/en/docs/inspector/)
-* **Advanced**: [Core dump analysis tool for Linux: llnode](https://github.com/nodejs/llnode)
-* **Advanced**: [Core dump analysis tool for SmartOS: mdb_v8](https://github.com/joyent/mdb_v8)
-* **Advanced**: [Core dump analysis tool for Linux which wraps SmartOS mdb](https://www.npmjs.com/package/autopsy)
+- Load Shedding
+  - Express, Koa, Restify, `http`: [overload-protection](https://www.npmjs.com/package/overload-protection)
+  - Hapi: [Server load sampleInterval option](https://hapijs.com/api#new-serveroptions) & [Server connections load maxEventLoopDelay](https://hapijs.com/api#new-serveroptions)
+  - Fastify: [under-pressure](https://www.npmjs.com/package/under-pressure)
+  - General: [loopbench](https://www.npmjs.com/package/loopbench)
+- [Chrome Devtools Docs: Fix Memory Problems](https://developers.google.com/web/tools/chrome-devtools/memory-problems/)
+- [Chrome Devtools Docs: Memory Terminology](https://developers.google.com/web/tools/chrome-devtools/memory-problems/memory-101)
+- [Chrome Devtools Docs: How to record heap snapshots](https://developers.google.com/web/tools/chrome-devtools/memory-problems/heap-snapshots)
+- [Node Docs: Inspector](https://nodejs.org/en/docs/inspector/)
+- **Advanced**: [Core dump analysis tool for Linux: llnode](https://github.com/nodejs/llnode)
+- **Advanced**: [Core dump analysis tool for SmartOS: mdb_v8](https://github.com/joyent/mdb_v8)
+- **Advanced**: [Core dump analysis tool for Linux which wraps SmartOS mdb](https://www.npmjs.com/package/autopsy)
