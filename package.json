@@ -26,7 +26,8 @@
     "showdown": "^1.7.6",
     "startpoint": "^0.3.2",
     "stream-template": "0.0.4",
-    "summary": "^1.0.0"
+    "summary": "^1.0.0",
+    "ttest": "^1.1.0"
   },
   "devDependencies": {
     "rimraf": "^2.6.2",

@@ -1,5 +1,8 @@
 'use strict'
 
+const ttest = require('ttest')
+const atol = 1e-9
+
 function guessInterval (data) {
   // This function seperates handle sequence up into three partitions.
   // This is to guess the benchmarking interval, in a typical benchmark the
@@ -41,18 +44,13 @@ function guessInterval (data) {
   // Brute force all valid combinations of leftIndex and rightIndex
   // Middle should always include at least one value, so don't scan to
   // the end but instead `handles.length - 1`.
-  for (let leftIndex = 0; leftIndex < handles.length - 1; leftIndex++) {
+  for (let leftIndex = -1; leftIndex < handles.length - 1; leftIndex++) {
     // set interval to [leftIndex, handles.length]
-    left.add(handles[leftIndex])
-    middle.remove(handles[leftIndex])
-    right.reset()
-
-    // check for improvement
-    if (bestTotalError > left.sse + middle.sse + right.sse) {
-      bestTotalError = left.sse + middle.sse + right.sse
-      bestLeftIndex = leftIndex + 1
-      bestRightIndex = handles.length
+    if (leftIndex >= 0) {
+      left.add(handles[leftIndex])
+      middle.remove(handles[leftIndex])
     }
+    right.reset()
 
     // try all valid rightIndex values
     // because the middle is going to mutate as we scan from the right, save
@@ -60,13 +58,18 @@ function guessInterval (data) {
     const oldMiddleState = middle.save()
     // Middle should always include at least one value, so don't scan to
     // leftIndex but instead `leftIndex + 1`.
-    for (let rightIndex = handles.length - 1; rightIndex > leftIndex + 1; rightIndex--) {
+    for (let rightIndex = handles.length; rightIndex > leftIndex + 1; rightIndex--) {
       // set interval to [leftIndex, rightIndex]
-      right.add(handles[rightIndex])
-      middle.remove(handles[rightIndex])
+      if (rightIndex < handles.length) {
+        right.add(handles[rightIndex])
+        middle.remove(handles[rightIndex])
+      }
 
-      // check for improvement
-      if (bestTotalError > left.sse + middle.sse + right.sse) {
+      // check for improvement, improvement must exceede the absolute tolerance
+      if (middle.size >= 2 &&
+          bestTotalError > left.sse + middle.sse + right.sse + atol &&
+          statisticallyLessThan(left, middle) &&
+          statisticallyLessThan(right, middle)) {
         bestTotalError = left.sse + middle.sse + right.sse
         bestLeftIndex = leftIndex + 1
         bestRightIndex = rightIndex
@@ -83,6 +86,30 @@ function guessInterval (data) {
 
 module.exports = guessInterval
 
+function statisticallyLessThan (leftSide, rightSide) {
+  // Since handles are in steps of 1, looking for differences less than
+  // 1 doesn't really make sense. The intervals are of course means and thus
+  // the a valid difference could be less than one. But in practice we are
+  // at a benchmarked server, thus the difference will always be much larger.
+  const mindiff = 1
+
+  // if the variance is very small or couldn't be estimated, just default
+  // to a naive mean comparison.
+  if (leftSide.variance < atol || rightSide.variance < atol ||
+      Number.isNaN(leftSide.variance) || Number.isNaN(rightSide.variance)) {
+    return leftSide.mean + mindiff < rightSide.mean
+  }
+
+  // variance is high, use a statistical t-test to check if there is a
+  // difference
+  const t = ttest(leftSide, rightSide, {
+    alpha: 0.01,
+    alternative: 'less',
+    mu: -mindiff
+  })
+  return !t.valid()
+}
+
 // If you need to brush up on your online mean variance algorithms then take
 // a look at:
 //  https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance
@@ -94,21 +121,21 @@ class OnlineMeanVariance {
   }
 
   reset () {
-    this.observations = 0
+    this.size = 0
     this.mean = 0
     this.sse = 0 // sum of square errors
   }
 
   save () {
     return {
-      observations: this.observations,
+      size: this.size,
       mean: this.mean,
       sse: this.sse
     }
   }
 
   load (save) {
-    this.observations = save.observations
+    this.size = save.size
     this.mean = save.mean
     this.sse = save.sse
   }
@@ -128,9 +155,9 @@ class OnlineMeanVariance {
   // S_n = S_{n-1} + (x_n - µ_{n-1}) * (x_n - µ_n)
   // S_n = S_{n-1} + δ_1 * δ_2
   add (x) {
-    this.observations += 1
+    this.size += 1
     const delta1 = x - this.mean
-    this.mean += delta1 / this.observations
+    this.mean += delta1 / this.size
     const delta2 = x - this.mean
     this.sse += delta1 * delta2
   }
@@ -149,24 +176,23 @@ class OnlineMeanVariance {
   // S_{n-1} = S_n - (x_n - µ_{n-1}) * (x_n - µ_n)
   // S_{n-1} = S_n - δ_1 * δ_2
   remove (x) {
-    this.observations -= 1
+    this.size -= 1
     const delta2 = x - this.mean
-    this.mean -= delta2 / this.observations
+    this.mean -= delta2 / this.size
     const delta1 = x - this.mean
     this.sse -= delta2 * delta1
   }
 
-  // This function is not currently used. We want to minimize the MSE of the
-  // curve fit. Since the number of observations stays constant, there is no
-  // need calculate the extra divition. Thus the SSE can be used directly.
-  // The variance function is current just included for completeness and
-  // debugging.
+  // This function is only used for the t-test. We want to minimize the MSE of
+  // the curve fit. Since the number of observations stays constant, there is no
+  // need calculate the extra divition in the scans. Thus the SSE can be used
+  // directly.
   // σ_n = S_n / (n - 1)
   get variance () {
-    if (this.observations < 2) {
+    if (this.size < 2) {
       return NaN
     } else {
-      return this.sse / (this.observations - 1)
+      return this.sse / (this.size - 1)
     }
   }
 }

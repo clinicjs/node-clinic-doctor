@@ -27,9 +27,6 @@ function analyseHandles (data) {
   const handles = data.map((d) => d.handles)
 
   // check for stochasticity, otherwise the following is mathmatical nosense.
-  // This might be somewhat problematic, because there are could be cases
-  // where the handles increase intially and then stay constant. In this
-  // case, they are not stocastic but the standard deviation is also not zero.
   if (summary(handles).sd() === 0) {
     return false
   }
@@ -38,9 +35,21 @@ function analyseHandles (data) {
   const changes = diff(handles)
   // Determin if the change was an increase or a decrease
   const direction = changes.map(Math.sign)
+  const notConstant = direction.map((v) => v !== 0)
   // Count the number of sign changes
   const signChanges = diff(direction).map((v) => v !== 0)
   const numSignChanges = summary(signChanges).sum()
+
+  // In cases where the number of handles is somewhat constant, it looks
+  // like there are unsually few sign changes. But this is actually fine if
+  // the server doesn't do anything asynchronously at all. To not see this
+  // as a handle issue, compare not the number of sign changes with
+  // `data.length` but instead with the number of observations where changes
+  // were observed.
+  // There can be an off-by-one error were there are more sign changes than
+  // non constant observations. Simply round the number of non constant
+  // observations up to fit.
+  const numNotConstant = Math.max(numSignChanges, summary(notConstant).sum())
 
   // Sign changes on a symetric distribution will follow a binomial distribution
   // where the properbility of sign change equals 0.5. Thus, perform a binomial
@@ -51,7 +60,7 @@ function analyseHandles (data) {
   //         look for `binom_test`
   // 2. We currently have don't understand of what a consistent sign change
   //    indicates. Thus we will treat `properbility > 0.5` as being fine.
-  const binomial = new distributions.Binomial(0.5, data.length)
+  const binomial = new distributions.Binomial(0.5, numNotConstant)
   const pvalue = binomial.cdf(numSignChanges)
 
   // If is is very unlikely that the sign change properbility is greater than

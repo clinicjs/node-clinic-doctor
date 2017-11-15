@@ -33,7 +33,7 @@ the bottleneck may be distributed which would take rather more detective work.
 
 ### Next Steps
 - If the system is already deployed, mitigate the issue immediately by implementing
-  HTTP 503 Service Unavailable functionality (see [Reference](#reference))
+  HTTP 503 Service Unavailable functionality (see *Load Shedding* in **Reference**)
   - This should allow the deployments Load Balance to route traffic to a different service instance
   - In the worse case the user receives the 503 in which case they must retry (this is still preferable to waiting for a timeout)
 - Use the [0x](https://www.npmjs.com/package/0x) tool to generate a flamegraph (see [Reference](#reference)).
@@ -42,11 +42,12 @@ the bottleneck may be distributed which would take rather more detective work.
 
 ### Reference
 
+- Load Shedding
+  - Express, Koa, Restify, `http`: [overload-protection](https://www.npmjs.com/package/overload-protection)
+  - Hapi: [Server load sampleInterval option](https://hapijs.com/api#new-serveroptions) & [Server connections load maxEventLoopDelay](https://hapijs.com/api#new-serveroptions)
+  - Fastify: [under-pressure](https://www.npmjs.com/package/under-pressure)
+  - General: [loopbench](https://www.npmjs.com/package/loopbench)
 - [Concurrency model and Event Loop
 ](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop)
 - [Overview of Blocking vs Non-Blocking](https://nodejs.org/en/docs/guides/blocking-vs-non-blocking/)
-- Event-loop blocking detection and 503 functionality libraries
-  - Express: [loopbusy](https://www.npmjs.com/package/loopbusy)
-  - Hapi: [Server load sampleInterval option](https://hapijs.com/api#new-serveroptions) & [Server connections load maxEventLoopDelay](https://hapijs.com/api#new-serveroptions)
-  - General: [loopbench](https://www.npmjs.com/package/loopbench)
 - Understanding Flamegraphs and how to use 0x: [Tuning Node.js app performance with autocannon and 0x](https://www.nearform.com/blog/tuning-node-js-app-performance-with-autocannon-and-0x/)
