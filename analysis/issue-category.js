@@ -3,7 +3,8 @@
 function issueCategory (issues) {
   const memoryIssue = (issues.memory.external || issues.memory.rss ||
                        issues.memory.heapTotal || issues.memory.heapUsed)
-  let category
+
+  let category = 'unknown'
 
   if (memoryIssue && !issues.cpu && !issues.handles) {
     category = 'gc'
