@@ -108,10 +108,7 @@ function printIssues (argv, analysis) {
   }
 }
 
-module.exports = {
-  run,
-  printHelp
-}
+module.exports = run
 
 if (require.main === module) {
   run(process.argv.slice(2))
