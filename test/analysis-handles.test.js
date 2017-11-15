@@ -34,3 +34,14 @@ test('analyse handles - expected data', function (t) {
 
   t.end()
 })
+
+test('analyse handles - almost constant', function (t) {
+  const goodHandles = generateProcessState({
+    handles: [
+      100, 100, 100, 100, 100, 100, 100, 100, 100,
+      101, 101, 101, 101, 101, 101, 101, 101, 101]
+  }, 0)
+  t.strictEqual(analyseHandles(goodHandles), false)
+
+  t.end()
+})
