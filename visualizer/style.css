@@ -266,6 +266,7 @@ html.light-theme #toggle-theme {
 #recommendation .details .content {
   grid-area: content;
   overflow-y: scroll;
+  overscroll-behavior-y: contain; /* prevent scolling the main window */
   max-width: 1000px;
 }
 
