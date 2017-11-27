@@ -1,15 +1,15 @@
 'use strict'
 
 const test = require('tap').test
-const ProcessState = require('../collect/process-state.js')
-const ProcessStateDecoder = require('../format/decoder.js')
-const ProcessStateEncoder = require('../format/encoder.js')
+const ProcessStat = require('../collect/process-stat.js')
+const ProcessStatDecoder = require('../format/process-stat-decoder.js')
+const ProcessStatEncoder = require('../format/process-stat-encoder.js')
 
 test('basic encoder-decoder works', function (t) {
-  const state = new ProcessState(1)
+  const stat = new ProcessStat(1)
 
-  const encoder = new ProcessStateEncoder()
-  const decoder = new ProcessStateDecoder()
+  const encoder = new ProcessStatEncoder()
+  const decoder = new ProcessStatDecoder()
   encoder.pipe(decoder)
 
   const outputSamples = []
@@ -17,7 +17,7 @@ test('basic encoder-decoder works', function (t) {
 
   const inputSamples = []
   for (let i = 0; i < 1; i++) {
-    const sample = state.sample()
+    const sample = stat.sample()
     encoder.write(sample)
     inputSamples.push(sample)
   }
@@ -31,13 +31,13 @@ test('basic encoder-decoder works', function (t) {
 })
 
 test('partial decoding', function (t) {
-  const state = new ProcessState(1)
+  const stat = new ProcessStat(1)
 
-  const encoder = new ProcessStateEncoder()
-  const decoder = new ProcessStateDecoder()
+  const encoder = new ProcessStatEncoder()
+  const decoder = new ProcessStatDecoder()
 
   // encode a sample
-  const sample = state.sample()
+  const sample = stat.sample()
   encoder.write(sample)
   const sampleEncoded = encoder.read()
 

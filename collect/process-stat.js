@@ -4,7 +4,7 @@ function hrtime2ms (time) {
   return time[0] * 1e3 + time[1] * 1e-6
 }
 
-class ProcessState {
+class ProcessStat {
   constructor (sampleInterval) {
     if (typeof sampleInterval !== 'number') {
       throw TypeError('sample interval must be a number')
@@ -47,4 +47,4 @@ class ProcessState {
   }
 }
 
-module.exports = ProcessState
+module.exports = ProcessStat

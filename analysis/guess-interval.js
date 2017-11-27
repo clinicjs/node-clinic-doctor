@@ -54,7 +54,7 @@ function guessInterval (data) {
 
     // try all valid rightIndex values
     // because the middle is going to mutate as we scan from the right, save
-    // the middle state for the interval [leftIndex, handles.length]
+    // the middle stat for the interval [leftIndex, handles.length]
     const oldMiddleState = middle.save()
     // Middle should always include at least one value, so don't scan to
     // leftIndex but instead `leftIndex + 1`.
@@ -76,7 +76,7 @@ function guessInterval (data) {
       }
     }
 
-    // In prepeation for next iteration, restore the middle state to the
+    // In prepeation for next iteration, restore the middle stat to the
     // interval [leftIndex, handles.length]
     middle.load(oldMiddleState)
   }

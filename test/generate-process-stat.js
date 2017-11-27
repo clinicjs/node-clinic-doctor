@@ -2,7 +2,7 @@
 const xorshift = require('xorshift')
 const MB = Math.pow(1024, 2)
 
-function generateProcessState (data, noiseLevel) {
+function generateProcessStat (data, noiseLevel) {
   const rng = new xorshift.constructor([
     294915, 70470, 145110, 287911 // from random.org :)
   ])
@@ -35,7 +35,7 @@ function generateProcessState (data, noiseLevel) {
     throw new Error('provided arrays are not equally long')
   }
 
-  // create a process state array of length `maxLength === minLength`
+  // create a process stat array of length `maxLength === minLength`
   const output = []
   for (let i = 0; i < maxLength; i++) {
     output.push({
@@ -55,4 +55,4 @@ function generateProcessState (data, noiseLevel) {
   return output
 }
 
-module.exports = generateProcessState
+module.exports = generateProcessStat

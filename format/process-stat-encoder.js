@@ -6,10 +6,10 @@ const stream = require('stream')
 const protobuf = require('protocol-buffers')
 
 const messages = protobuf(
-  fs.readFileSync(path.resolve(__dirname, 'process-state.proto'))
+  fs.readFileSync(path.resolve(__dirname, 'process-stat.proto'))
 )
 
-class ProcessStateEncoder extends stream.Transform {
+class ProcessStatEncoder extends stream.Transform {
   constructor (options) {
     super(Object.assign({
       readableObjectMode: false,
@@ -17,9 +17,9 @@ class ProcessStateEncoder extends stream.Transform {
     }, options))
   }
 
-  _transform (state, encoding, callback) {
-    callback(null, messages.ProcessState.encode(state))
+  _transform (stat, encoding, callback) {
+    callback(null, messages.ProcessStat.encode(stat))
   }
 }
 
-module.exports = ProcessStateEncoder
+module.exports = ProcessStatEncoder

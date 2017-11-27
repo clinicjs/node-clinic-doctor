@@ -2,7 +2,7 @@
 
 const test = require('tap').test
 const Analyse = require('../analysis/')
-const generateProcessState = require('./generate-process-state.js')
+const generateProcessStat = require('./generate-process-stat.js')
 
 function analyse (data) {
   const analyse = new Analyse()
@@ -17,7 +17,7 @@ function analyse (data) {
 
 test('normal interval - cpu issue', function (t) {
   for (const noise of [0, 0.1, 0.3]) {
-    const goodCPU = generateProcessState({
+    const goodCPU = generateProcessStat({
       handles: [3, 3, 3, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 3, 3, 3],
       cpu: [1, 1, 1, 100, 100, 120, 90, 110, 100, 80, 110, 90, 110, 1, 1, 1]
     }, noise)
@@ -37,7 +37,7 @@ test('normal interval - cpu issue', function (t) {
       issueCategory: 'none'
     })
 
-    const badCPU = generateProcessState({
+    const badCPU = generateProcessStat({
       handles: [3, 3, 3, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 3, 3, 3],
       cpu: [1, 1, 1, 50, 40, 10, 10, 100, 50, 40, 10, 10, 10, 1, 1, 1]
     }, noise)
@@ -62,7 +62,7 @@ test('normal interval - cpu issue', function (t) {
 })
 
 test('full interval - flat data', function (t) {
-  const goodCPU = generateProcessState({
+  const goodCPU = generateProcessStat({
     handles: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
     cpu: [100, 100, 120, 90, 110, 100, 80, 110, 90, 110]
   }, 0)
@@ -82,7 +82,7 @@ test('full interval - flat data', function (t) {
     issueCategory: 'none'
   })
 
-  const badCPU = generateProcessState({
+  const badCPU = generateProcessStat({
     handles: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
     cpu: [50, 40, 10, 10, 100, 50, 40, 10, 10, 10]
   }, 0)

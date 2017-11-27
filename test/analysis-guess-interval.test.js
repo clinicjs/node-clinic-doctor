@@ -2,11 +2,11 @@
 
 const test = require('tap').test
 const guessInterval = require('../analysis/guess-interval.js')
-const generateProcessState = require('./generate-process-state.js')
+const generateProcessStat = require('./generate-process-stat.js')
 
 test('guess interval - expected data', function (t) {
   for (const noise of [0, 1, 5]) {
-    const data = generateProcessState({
+    const data = generateProcessStat({
       handles: [3, 3, 3, 3, 3, 13, 13, 13, 13, 13, 13, 13, 3, 3, 3]
     }, noise)
 
@@ -19,7 +19,7 @@ test('guess interval - expected data', function (t) {
 
 test('guess interval - missing left tail', function (t) {
   for (const noise of [0, 1, 5]) {
-    const data = generateProcessState({
+    const data = generateProcessStat({
       handles: [3, 3, 3, 3, 3, 13, 13, 13, 13, 13, 13, 13]
     }, noise)
 
@@ -32,7 +32,7 @@ test('guess interval - missing left tail', function (t) {
 
 test('guess interval - missing right tail', function (t) {
   for (const noise of [0, 1, 5]) {
-    const data = generateProcessState({
+    const data = generateProcessStat({
       handles: [13, 13, 13, 13, 13, 3, 3, 3, 3, 3, 3, 3]
     }, noise)
 
@@ -44,7 +44,7 @@ test('guess interval - missing right tail', function (t) {
 })
 
 test('guess interval - flat data', function (t) {
-  const data = generateProcessState({
+  const data = generateProcessStat({
     handles: [3, 3, 3, 3, 3, 3, 3, 3]
   }, 0)
 

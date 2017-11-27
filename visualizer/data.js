@@ -1,15 +1,15 @@
 
 const data = require('./data.json') // base64 encoded source file
 const startpoint = require('startpoint')
-const ProcessStateDecoder = require('../format/decoder.js')
+const ProcessStatDecoder = require('../format/process-stat-decoder.js')
 
 function loaddata (callback) {
   const parsed = []
 
   startpoint(Buffer.from(data.file, 'base64'))
-    .pipe(new ProcessStateDecoder())
-    .on('data', function (state) {
-      parsed.push(state)
+    .pipe(new ProcessStatDecoder())
+    .on('data', function (stat) {
+      parsed.push(stat)
     })
     .once('end', function () {
       callback(null, new Data(data.analysis, parsed, data.recommendation))

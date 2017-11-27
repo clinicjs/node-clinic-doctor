@@ -1,4 +1,4 @@
-message ProcessState {
+message ProcessStat {
   required double timestamp = 1;
   required double delay = 2;
   required double cpu = 3;

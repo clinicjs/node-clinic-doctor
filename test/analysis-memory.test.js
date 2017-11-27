@@ -2,11 +2,11 @@
 
 const test = require('tap').test
 const analyseMemory = require('../analysis/analyse-memory.js')
-const generateProcessState = require('./generate-process-state.js')
+const generateProcessStat = require('./generate-process-stat.js')
 
 test('analyse memory - sawtooth total heap', function (t) {
   for (const noise of [0, 1, 10]) {
-    const goodMemory = generateProcessState({
+    const goodMemory = generateProcessStat({
       delay: [1, 1, 3, 1, 1, 3, 1, 1, 3],
       memory: {
         heapTotal: [35, 40, 30, 35, 40, 30, 35, 40, 30]
@@ -19,7 +19,7 @@ test('analyse memory - sawtooth total heap', function (t) {
       rss: false
     })
 
-    const okayMemory = generateProcessState({
+    const okayMemory = generateProcessStat({
       delay: [1, 1, 1, 1, 1, 1, 1, 1, 1],
       memory: {
         heapTotal: [50, 70, 30, 50, 70, 30, 50, 70, 30]
@@ -32,7 +32,7 @@ test('analyse memory - sawtooth total heap', function (t) {
       rss: false
     })
 
-    const badMemory = generateProcessState({
+    const badMemory = generateProcessStat({
       delay: [1, 1, 10, 1, 1, 10, 1, 1, 10],
       memory: {
         heapTotal: [50, 70, 30, 50, 70, 30, 50, 70, 30]
@@ -51,7 +51,7 @@ test('analyse memory - sawtooth total heap', function (t) {
 
 test('analyse memory - old space too large', function (t) {
   for (const noise of [0, 1, 10]) {
-    const goodMemory = generateProcessState({
+    const goodMemory = generateProcessStat({
       memory: {
         heapUsed: [30, 100, 200, 300, 300, 300, 300, 300, 300, 300]
       }
@@ -63,7 +63,7 @@ test('analyse memory - old space too large', function (t) {
       rss: false
     })
 
-    const badMemory = generateProcessState({
+    const badMemory = generateProcessStat({
       memory: {
         heapUsed: [30, 100, 200, 300, 400, 500, 600, 700, 800, 900]
       }
@@ -81,7 +81,7 @@ test('analyse memory - old space too large', function (t) {
 
 test('analyse memory - huge difference', function (t) {
   for (const noise of [0, 1, 10]) {
-    const goodMemory = generateProcessState({
+    const goodMemory = generateProcessStat({
       memory: {
         heapUsed: [200, 250, 300, 350, 400, 500, 600, 200, 250, 300]
       }
@@ -93,7 +93,7 @@ test('analyse memory - huge difference', function (t) {
       rss: false
     })
 
-    const badMemory = generateProcessState({
+    const badMemory = generateProcessStat({
       memory: {
         heapUsed: [30, 100, 200, 300, 400, 500, 600, 30, 100, 200]
       }

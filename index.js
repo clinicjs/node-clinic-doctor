@@ -8,8 +8,8 @@ const { spawn } = require('child_process')
 const base64stream = require('base64-stream')
 const streamTemplate = require('stream-template')
 const getSampleFilename = require('./collect/get-sample-filename.js')
-const ProcessStateDecoder = require('./format/decoder.js')
-const ProcessStateAnalysis = require('./analysis/index.js')
+const ProcessStatDecoder = require('./format/process-stat-decoder.js')
+const ProcessStatAnalysis = require('./analysis/index.js')
 const CreateRecommendation = require('./recommendations/index.js')
 const stream = require('stream')
 
@@ -64,8 +64,8 @@ class ClinicDoctor {
       .pipe(base64stream.encode())
     // analyse datafile and output issue list and recommendation
     const analysis = dataSource
-      .pipe(new ProcessStateDecoder())
-      .pipe(new ProcessStateAnalysis())
+      .pipe(new ProcessStatDecoder())
+      .pipe(new ProcessStatAnalysis())
 
     const recommendation = analysis
       .pipe(new CreateRecommendation())

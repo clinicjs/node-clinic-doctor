@@ -3,7 +3,7 @@
 const fs = require('fs')
 const test = require('tap').test
 const ClinicDoctor = require('../index.js')
-const ProcessStateDecoder = require('../format/decoder.js')
+const ProcessStatDecoder = require('../format/process-stat-decoder.js')
 
 function diff (data) {
   const output = []
@@ -32,9 +32,9 @@ function collect (tool, callback) {
       // read datafile
       let dataOutputted = []
       fs.createReadStream(filename)
-        .pipe(new ProcessStateDecoder())
-        .on('data', function (state) {
-          dataOutputted.push(state.timestamp)
+        .pipe(new ProcessStatDecoder())
+        .on('data', function (stat) {
+          dataOutputted.push(stat.timestamp)
         })
         .once('end', function () {
           // remove datafile

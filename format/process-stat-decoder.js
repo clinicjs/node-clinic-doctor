@@ -6,10 +6,10 @@ const stream = require('stream')
 const protobuf = require('protocol-buffers')
 
 const messages = protobuf(
-  fs.readFileSync(path.resolve(__dirname, 'process-state.proto'))
+  fs.readFileSync(path.resolve(__dirname, 'process-stat.proto'))
 )
 
-const objectSize = messages.ProcessState.encodingLength({
+const objectSize = messages.ProcessStat.encodingLength({
   timestamp: 0,
   delay: 0,
   cpu: 0,
@@ -22,7 +22,7 @@ const objectSize = messages.ProcessState.encodingLength({
   handles: 0
 })
 
-class ProcessStateDecoder extends stream.Transform {
+class ProcessStatDecoder extends stream.Transform {
   constructor (options) {
     super(Object.assign({
       readableObjectMode: true,
@@ -44,7 +44,7 @@ class ProcessStateDecoder extends stream.Transform {
 
     // decode as long as there is an entire object
     while (chunk.length >= objectSize) {
-      this.push(messages.ProcessState.decode(chunk.slice(0, objectSize)))
+      this.push(messages.ProcessStat.decode(chunk.slice(0, objectSize)))
       chunk = chunk.slice(objectSize)
     }
 
@@ -58,4 +58,4 @@ class ProcessStateDecoder extends stream.Transform {
   }
 }
 
-module.exports = ProcessStateDecoder
+module.exports = ProcessStatDecoder
