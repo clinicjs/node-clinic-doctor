@@ -10,7 +10,6 @@
     "lint": "standard --fix | snazzy"
   },
   "dependencies": {
-    "async": "^2.5.0",
     "base64-stream": "^0.1.3",
     "brfs": "^1.4.3",
     "browserify": "^14.4.0",
@@ -31,6 +30,8 @@
     "ttest": "^1.1.0"
   },
   "devDependencies": {
+    "async": "^2.6.0",
+    "endpoint": "^0.4.5",
     "rimraf": "^2.6.2",
     "snazzy": "^7.0.0",
     "standard": "^10.0.3",

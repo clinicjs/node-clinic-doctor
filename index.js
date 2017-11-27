@@ -7,7 +7,7 @@ const browserify = require('browserify')
 const { spawn } = require('child_process')
 const base64stream = require('base64-stream')
 const streamTemplate = require('stream-template')
-const getSampleFilename = require('./collect/get-sample-filename.js')
+const getLoggingPaths = require('./collect/get-logging-paths.js')
 const ProcessStatDecoder = require('./format/process-stat-decoder.js')
 const ProcessStatAnalysis = require('./analysis/index.js')
 const CreateRecommendation = require('./recommendations/index.js')
@@ -48,7 +48,7 @@ class ClinicDoctor {
       }
 
       // filename is defined my the child pid
-      callback(null, getSampleFilename(proc.pid))
+      callback(null, getLoggingPaths(proc.pid)['/'])
     })
   }
 
