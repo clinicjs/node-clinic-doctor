@@ -3,7 +3,7 @@ message ProcessStat {
   required double delay = 2;
   required double cpu = 3;
   required Memory memory = 4;
-  required double handles = 5;
+  required int32 handles = 5;
 
   message Memory {
     required double rss = 1;

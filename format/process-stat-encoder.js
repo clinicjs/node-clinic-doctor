@@ -9,6 +9,8 @@ const messages = protobuf(
   fs.readFileSync(path.resolve(__dirname, 'process-stat.proto'))
 )
 
+const FRAME_PREFIX_SIZE = 2 // uint16 is 2 bytes
+
 class ProcessStatEncoder extends stream.Transform {
   constructor (options) {
     super(Object.assign({
@@ -17,8 +19,14 @@ class ProcessStatEncoder extends stream.Transform {
     }, options))
   }
 
-  _transform (stat, encoding, callback) {
-    callback(null, messages.ProcessStat.encode(stat))
+  _transform (message, encoding, callback) {
+    const messageLength = messages.ProcessStat.encodingLength(message)
+
+    const framedMessage = Buffer.alloc(messageLength + FRAME_PREFIX_SIZE)
+    framedMessage.writeUInt16BE(messageLength, 0)
+    messages.ProcessStat.encode(message, framedMessage, FRAME_PREFIX_SIZE)
+
+    callback(null, framedMessage)
   }
 }
 

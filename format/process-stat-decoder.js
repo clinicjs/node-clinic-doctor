@@ -9,18 +9,7 @@ const messages = protobuf(
   fs.readFileSync(path.resolve(__dirname, 'process-stat.proto'))
 )
 
-const objectSize = messages.ProcessStat.encodingLength({
-  timestamp: 0,
-  delay: 0,
-  cpu: 0,
-  memory: {
-    rss: 0,
-    heapTotal: 0,
-    heapUsed: 0,
-    external: 0
-  },
-  handles: 0
-})
+const FRAME_PREFIX_SIZE = 2 // uint16 is 2 bytes
 
 class ProcessStatDecoder extends stream.Transform {
   constructor (options) {
@@ -31,21 +20,37 @@ class ProcessStatDecoder extends stream.Transform {
 
     this._buffers = []
     this._bufferedLength = 0
+    this._nextMessageLength = FRAME_PREFIX_SIZE
+    this._awaitFramePrefix = true
   }
 
   _transform (chunk, encoding, callback) {
     // Join buffers if the concated buffer contains an object
     if (this._bufferedLength > 0 &&
-        this._bufferedLength + chunk.length >= objectSize) {
+        this._bufferedLength + chunk.length >= this._nextMessageLength) {
       chunk = Buffer.concat(this._buffers.concat([chunk]))
       this._buffers = []
       this._bufferedLength = 0
     }
 
     // decode as long as there is an entire object
-    while (chunk.length >= objectSize) {
-      this.push(messages.ProcessStat.decode(chunk.slice(0, objectSize)))
-      chunk = chunk.slice(objectSize)
+    // This is implemented as a very basic state machine:
+    while (chunk.length >= this._nextMessageLength) {
+      switch (this._awaitFramePrefix) {
+        case true:
+          this._nextMessageLength = chunk.readUInt16BE(0)
+          chunk = chunk.slice(FRAME_PREFIX_SIZE)
+          this._awaitFramePrefix = false
+          break
+        case false:
+          this.push(
+            messages.ProcessStat.decode(chunk.slice(0, this._nextMessageLength))
+          )
+          chunk = chunk.slice(this._nextMessageLength)
+          this._nextMessageLength = FRAME_PREFIX_SIZE
+          this._awaitFramePrefix = true
+          break
+      }
     }
 
     // add remaining chunk if there is data left
