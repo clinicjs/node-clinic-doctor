@@ -57,35 +57,25 @@ test('test gc events', function (t) {
       const markSweepCompact = output.gcEvent
         .filter((event) => event.type === 'MARK_SWEEP_COMPACT')
 
-      t.ok(scavenge.length >= 2)
+      t.ok(scavenge.length >= 1)
       t.strictDeepEqual(scavenge[0], {
-        timestamp: scavenge[0].timestamp,
-        type: 'SCAVENGE',
-        phase: 'BEGIN'
+        startTime: scavenge[0].startTime,
+        endTime: scavenge[0].endTime,
+        type: 'SCAVENGE'
       })
-      t.strictDeepEqual(scavenge[1], {
-        timestamp: scavenge[1].timestamp,
-        type: 'SCAVENGE',
-        phase: 'END'
-      })
-      t.ok(scavenge[0].timestamp <= scavenge[1].timestamp)
-      t.ok(Math.abs(scavenge[0].timestamp - Date.now()) < 200)
-      t.ok(Math.abs(scavenge[1].timestamp - Date.now()) < 200)
+      t.ok(scavenge[0].startTime <= scavenge[1].endTime)
+      t.ok(Math.abs(scavenge[0].startTime - Date.now()) < 200)
+      t.ok(Math.abs(scavenge[0].endTime - Date.now()) < 200)
 
-      t.strictEqual(markSweepCompact.length, 2)
+      t.strictEqual(markSweepCompact.length, 1)
       t.strictDeepEqual(markSweepCompact[0], {
-        timestamp: markSweepCompact[0].timestamp,
-        type: 'MARK_SWEEP_COMPACT',
-        phase: 'BEGIN'
+        startTime: markSweepCompact[0].startTime,
+        endTime: markSweepCompact[0].endTime,
+        type: 'MARK_SWEEP_COMPACT'
       })
-      t.strictDeepEqual(markSweepCompact[1], {
-        timestamp: markSweepCompact[1].timestamp,
-        type: 'MARK_SWEEP_COMPACT',
-        phase: 'END'
-      })
-      t.ok(markSweepCompact[0].timestamp <= markSweepCompact[1].timestamp)
-      t.ok(Math.abs(markSweepCompact[0].timestamp - Date.now()) < 200)
-      t.ok(Math.abs(markSweepCompact[1].timestamp - Date.now()) < 200)
+      t.ok(markSweepCompact[0].startTime <= markSweepCompact[0].endTime)
+      t.ok(Math.abs(markSweepCompact[0].startTime - Date.now()) < 200)
+      t.ok(Math.abs(markSweepCompact[0].endTime - Date.now()) < 200)
 
       t.end()
     })

@@ -30,8 +30,8 @@ test('test gc events', function (t) {
     clearInterval(interval1)
     clearInterval(interval2)
 
-    t.ok(result[0].phase, 'BEGIN')
-    t.ok(result[1].phase, 'END')
+    t.strictEqual(result[0].phase, 'BEGIN')
+    t.strictEqual(result[1].phase, 'END')
 
     const types = [
       'SCAVENGE',

@@ -9,21 +9,38 @@ const messages = protobuf(
   fs.readFileSync(path.resolve(__dirname, 'gc-event.proto'))
 )
 
-const phaseLookup = Object.keys(messages.GCEvent.Phase)
 const typeLookup = Object.keys(messages.GCEvent.EventType)
 
 class GCEventDecoder extends AbstractDecoder {
   constructor (options) {
     super(messages.GCEvent, options)
+
+    this._storage = new Map()
   }
 
   push (message) {
     if (message === null) return super.push(message)
-    super.push({
-      timestamp: message.timestamp,
-      phase: phaseLookup[message.phase],
-      type: typeLookup[message.type]
-    })
+
+    if (this._storage.has(message.type)) {
+      if (message.phase !== messages.GCEvent.Phase.END) {
+        return this.emit(new Error(`Unexpected phase: ${message.phase}`))
+      }
+      // recived END phase, emit combined event
+      const startTime = this._storage.get(message.type)
+      this._storage.delete(message.type)
+
+      super.push({
+        startTime: startTime,
+        endTime: message.timestamp,
+        type: typeLookup[message.type]
+      })
+    } else {
+      if (message.phase !== messages.GCEvent.Phase.BEGIN) {
+        return this.emit(new Error(`Unexpected phase: ${message.phase}`))
+      }
+      // recived BEGIN phase, store startTime
+      this._storage.set(message.type, message.timestamp)
+    }
   }
 }
 
