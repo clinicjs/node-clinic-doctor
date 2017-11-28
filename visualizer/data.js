@@ -1,21 +1,16 @@
 
 const data = require('./data.json') // base64 encoded source file
-const startpoint = require('startpoint')
-const ProcessStatDecoder = require('../format/process-stat-decoder.js')
 
 function loaddata (callback) {
-  const parsed = []
-
-  startpoint(Buffer.from(data.file, 'base64'))
-    .pipe(new ProcessStatDecoder())
-    .on('data', function (stat) {
-      parsed.push(stat)
-    })
-    .once('end', function () {
-      callback(null, new Data(data.analysis, parsed, data.recommendation))
-    })
+  setTimeout(function () {
+    callback(null, wrapData(data))
+  })
 }
 module.exports = loaddata
+
+function wrapData () {
+  return new Data(data.analysis, data.processStat, data.recommendation)
+}
 
 // Construct data container
 class Data {

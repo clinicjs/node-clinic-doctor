@@ -3,13 +3,14 @@
 const fs = require('fs')
 const path = require('path')
 const pump = require('pump')
-const browserify = require('browserify')
 const { spawn } = require('child_process')
-const base64stream = require('base64-stream')
+const analysis = require('./analysis/index.js')
+const Stringify = require('streaming-json-stringify')
+const browserify = require('browserify')
 const streamTemplate = require('stream-template')
 const getLoggingPaths = require('./collect/get-logging-paths.js')
+const GCEventDecoder = require('./format/gc-event-decoder.js')
 const ProcessStatDecoder = require('./format/process-stat-decoder.js')
-const ProcessStatAnalysis = require('./analysis/index.js')
 const CreateRecommendation = require('./recommendations/index.js')
 const stream = require('stream')
 
@@ -52,25 +53,25 @@ class ClinicDoctor {
     })
   }
 
-  visualize (dataFilename, outputFilename, callback) {
+  visualize (dataDirname, outputFilename, callback) {
     const fakeDataPath = path.join(__dirname, 'visualizer', 'data.json')
     const stylePath = path.join(__dirname, 'visualizer', 'style.css')
     const scriptPath = path.join(__dirname, 'visualizer', 'main.js')
 
-    // construct the data file
-    const dataSource = fs.createReadStream(dataFilename)
-    // encode the datafile as a base64 JSON string
-    const dataBase64 = dataSource
-      .pipe(base64stream.encode())
-    // analyse datafile and output issue list and recommendation
-    const analysis = dataSource
+    // Load data
+    const paths = getLoggingPaths(dataDirname.split('.')[0])
+    const gcEventReader = fs.createReadStream(paths['/gcevent'])
+      .pipe(new GCEventDecoder())
+    const processStatReader = fs.createReadStream(paths['/processstat'])
       .pipe(new ProcessStatDecoder())
-      .pipe(new ProcessStatAnalysis())
 
-    const recommendation = analysis
+    // create analysis
+    const analysisResult = analysis(gcEventReader, processStatReader)
+    const recommendation = analysisResult
       .pipe(new CreateRecommendation())
 
-    const analysisStringified = analysis
+    // Stringify data
+    const analysisStringified = analysisResult
       .pipe(new stream.Transform({
         readableObjectMode: false,
         writableObjectMode: true,
@@ -79,9 +80,20 @@ class ClinicDoctor {
         }
       }))
 
+    const gcEventReaderStringify = gcEventReader.pipe(new Stringify({
+      seperator: ',\n',
+      stringifier: JSON.stringify
+    }))
+
+    const processStatStringify = processStatReader.pipe(new Stringify({
+      seperator: ',\n',
+      stringifier: JSON.stringify
+    }))
+
     const dataFile = streamTemplate`
       {
-        "file": "${dataBase64}",
+        "gcEvent": "${gcEventReaderStringify}",
+        "processStat": "${processStatStringify}",
         "analysis": ${analysisStringified},
         "recommendation": ${recommendation}
       }
@@ -93,7 +105,6 @@ class ClinicDoctor {
       // 'debug': true,
       'noParse': [fakeDataPath]
     })
-    b.transform('brfs')
     b.require(dataFile, {
       'file': fakeDataPath
     })

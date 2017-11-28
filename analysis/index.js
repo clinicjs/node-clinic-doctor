@@ -47,4 +47,8 @@ class Analyse extends stream.Transform {
   }
 }
 
-module.exports = Analyse
+function analysis (gcEventReader, processStatReader) {
+  return processStatReader.pipe(new Analyse())
+}
+
+module.exports = analysis
