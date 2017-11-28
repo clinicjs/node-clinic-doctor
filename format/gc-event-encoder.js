@@ -14,12 +14,12 @@ class GCEventEncoder extends AbstractEncoder {
     super(messages.GCEvent, options)
   }
 
-  _transform_message(message) {
-    return {
+  _transform (message, encoding, callback) {
+    super._transform({
       timestamp: message.timestamp,
       phase: messages.GCEvent.Phase[message.phase],
       type: messages.GCEvent.EventType[message.type]
-    }
+    }, encoding, callback)
   }
 }
 

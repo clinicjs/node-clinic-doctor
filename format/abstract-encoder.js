@@ -14,12 +14,7 @@ class AbstractEncoder extends stream.Transform {
     this._messageType = messageType
   }
 
-  _transform_message(message) {
-    return message;
-  }
-
-  _transform (preMessage, encoding, callback) {
-    const message = this._transform_message(preMessage)
+  _transform (message, encoding, callback) {
     const messageLength = this._messageType.encodingLength(message)
 
     const framedMessage = Buffer.alloc(messageLength + FRAME_PREFIX_SIZE)

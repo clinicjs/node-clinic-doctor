@@ -19,10 +19,6 @@ class AbstractDecoder extends stream.Transform {
     this._awaitFramePrefix = true
   }
 
-  _transform_message(message) {
-    return message;
-  }
-
   _transform (chunk, encoding, callback) {
     // Join buffers if the concated buffer contains an object
     if (this._bufferedLength > 0 &&
@@ -42,9 +38,9 @@ class AbstractDecoder extends stream.Transform {
           this._awaitFramePrefix = false
           break
         case false:
-          this.push(this._transform_message(
+          this.push(
             this._messageType.decode(chunk.slice(0, this._nextMessageLength))
-          ))
+          )
           chunk = chunk.slice(this._nextMessageLength)
           this._nextMessageLength = FRAME_PREFIX_SIZE
           this._awaitFramePrefix = true

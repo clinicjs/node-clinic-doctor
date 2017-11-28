@@ -69,6 +69,8 @@ test('test gc events', function (t) {
         phase: 'END'
       })
       t.ok(scavenge[0].timestamp <= scavenge[1].timestamp)
+      t.ok(Math.abs(scavenge[0].timestamp - Date.now()) < 200)
+      t.ok(Math.abs(scavenge[1].timestamp - Date.now()) < 200)
 
       t.strictEqual(markSweepCompact.length, 2)
       t.strictDeepEqual(markSweepCompact[0], {
@@ -82,6 +84,8 @@ test('test gc events', function (t) {
         phase: 'END'
       })
       t.ok(markSweepCompact[0].timestamp <= markSweepCompact[1].timestamp)
+      t.ok(Math.abs(markSweepCompact[0].timestamp - Date.now()) < 200)
+      t.ok(Math.abs(markSweepCompact[1].timestamp - Date.now()) < 200)
 
       t.end()
     })

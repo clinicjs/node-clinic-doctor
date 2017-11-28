@@ -17,12 +17,13 @@ class GCEventDecoder extends AbstractDecoder {
     super(messages.GCEvent, options)
   }
 
-  _transform_message(message) {
-    return {
+  push (message) {
+    if (message === null) return super.push(message)
+    super.push({
       timestamp: message.timestamp,
       phase: phaseLookup[message.phase],
       type: typeLookup[message.type]
-    }
+    })
   }
 }
 

@@ -17,10 +17,18 @@ const typeIntegerToEnum = new Map([
   [kGCTypeProcessWeakCallbacks, 'PROCESS_WEAK_CALLBACKS']
 ])
 
+function hrtime2ms (time) {
+  return time[0] * 1e3 + time[1] * 1e-6
+}
+
 class GCEvent extends events.EventEmitter {
   constructor () {
     super()
     this._gcEmitter = gcStats()
+
+    // convert between Date.now() and process.hrtime() that gc-stats
+    // returns
+    this._offset = Date.now() - hrtime2ms(process.hrtime())
   }
 
   start () {
@@ -30,13 +38,13 @@ class GCEvent extends events.EventEmitter {
       this.emit('event', {
         type: typeIntegerToEnum.get(stats.gctype),
         phase: 'BEGIN',
-        timestamp: stats.startTime
+        timestamp: stats.startTime * 1e-6 + this._offset
       })
 
       this.emit('event', {
         type: typeIntegerToEnum.get(stats.gctype),
         phase: 'END',
-        timestamp: stats.endTime
+        timestamp: stats.endTime * 1e-6 + this._offset
       })
     })
   }
