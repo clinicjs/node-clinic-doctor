@@ -1,9 +1,15 @@
 'use strict'
 
-const ProcessStateDecoder = require('../format/decoder.js')
-const ProcessStateToCSV = require('./process-state-to-csv.js')
+const fs = require('fs')
+const ProcessStatToCSV = require('./process-stat-to-csv.js')
+const getLoggingPaths = require('../collect/get-logging-paths.js')
+const ProcessStatDecoder = require('../format/process-stat-decoder.js')
 
-process.stdin
-  .pipe(new ProcessStateDecoder())
-  .pipe(new ProcessStateToCSV())
+// Load data
+const paths = getLoggingPaths({ path: process.argv[2] })
+const processStatReader = fs.createReadStream(paths['/processstat'])
+  .pipe(new ProcessStatDecoder())
+
+processStatReader
+  .pipe(new ProcessStatToCSV())
   .pipe(process.stdout)

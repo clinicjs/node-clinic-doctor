@@ -2,15 +2,26 @@
 
 const path = require('path')
 
-function getLoggingPaths (idendifier) {
-  const dirname = `${idendifier}.clinic-doctor`
-  const gcEventFilename = `${idendifier}.clinic-doctor-gcevents`
-  const processsStatFilename = `${idendifier}.clinic-doctor-processstat`
+function getLoggingPaths (options) {
+  let dirpath, basename
+  if (options.hasOwnProperty('identifier')) {
+    dirpath = ''
+    basename = options.identifier.toString()
+  } else if (options.hasOwnProperty('path')) {
+    dirpath = path.dirname(options.path)
+    basename = path.basename(options.path, '.clinic-doctor')
+  } else {
+    throw new TypeError('missing either identifier or path value')
+  }
+
+  const dirname = `${basename}.clinic-doctor`
+  const gcEventFilename = `${basename}.clinic-doctor-gcevents`
+  const processsStatFilename = `${basename}.clinic-doctor-processstat`
 
   return {
-    '/': dirname,
-    '/gcevent': path.join(dirname, gcEventFilename),
-    '/processstat': path.join(dirname, processsStatFilename)
+    '/': path.join(dirpath, dirname),
+    '/gcevent': path.join(dirpath, dirname, gcEventFilename),
+    '/processstat': path.join(dirpath, dirname, processsStatFilename)
   }
 }
 

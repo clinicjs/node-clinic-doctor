@@ -49,7 +49,7 @@ class ClinicDoctor {
       }
 
       // filename is defined my the child pid
-      callback(null, getLoggingPaths(proc.pid)['/'])
+      callback(null, getLoggingPaths({ identifier: proc.pid })['/'])
     })
   }
 
@@ -59,7 +59,7 @@ class ClinicDoctor {
     const scriptPath = path.join(__dirname, 'visualizer', 'main.js')
 
     // Load data
-    const paths = getLoggingPaths(dataDirname.split('.')[0])
+    const paths = getLoggingPaths({ path: dataDirname })
     const gcEventReader = fs.createReadStream(paths['/gcevent'])
       .pipe(new GCEventDecoder())
     const processStatReader = fs.createReadStream(paths['/processstat'])

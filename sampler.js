@@ -8,7 +8,7 @@ const GCEventEncoder = require('./format/gc-event-encoder.js')
 const ProcessStatEncoder = require('./format/process-stat-encoder.js')
 
 // create encoding files and directory
-const paths = getLoggingPaths(process.pid)
+const paths = getLoggingPaths({ identifier: process.pid })
 fs.mkdirSync(paths['/'])
 
 const processStatEncoder = new ProcessStatEncoder()

@@ -3,7 +3,7 @@
 const stream = require('stream')
 const guessInterval = require('../analysis/guess-interval.js')
 
-class ProcessStateToCSV extends stream.Transform {
+class ProcessStatToCSV extends stream.Transform {
   constructor () {
     super({
       readableObjectMode: false,
@@ -38,4 +38,4 @@ class ProcessStateToCSV extends stream.Transform {
   }
 }
 
-module.exports = ProcessStateToCSV
+module.exports = ProcessStatToCSV

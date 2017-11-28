@@ -17,7 +17,7 @@ class CollectAndRead extends events.EventEmitter {
     tool.collect([process.execPath, ...args], function (err, dirname) {
       if (err) return self.emit('error', err)
 
-      const files = getLoggingPaths(dirname.split('.')[0])
+      const files = getLoggingPaths({ path: dirname })
 
       const gcevent = fs.createReadStream(files['/gcevent'])
         .pipe(new GCEventDecoder())
