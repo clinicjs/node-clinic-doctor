@@ -2,8 +2,10 @@
 
 const summary = require('summary')
 
-function analyseDelay (data) {
-  const stats = summary(data.map((d) => d.delay))
+// Note: this function is also used by analyseMemory, for detecting
+// correlations between Mark & Sweep & Compact and delays.
+function analyseDelay (processStatSubset, gcEventSubset) {
+  const stats = summary(processStatSubset.map((d) => d.delay))
 
   // If there is a 10ms event loop delay, we can't handle connections for 10ms
   // that is actually pretty bad. There are also some cases, where the GC

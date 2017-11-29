@@ -10,6 +10,7 @@
     "lint": "standard --fix | snazzy"
   },
   "dependencies": {
+    "async": "^2.6.0",
     "browserify": "^14.4.0",
     "d3-array": "^1.2.1",
     "d3-axis": "^1.0.8",
@@ -19,6 +20,7 @@
     "d3-time-format": "^2.1.0",
     "debug": "^3.1.0",
     "distributions": "^1.1.0",
+    "endpoint": "^0.4.5",
     "protocol-buffers": "^3.2.1",
     "pump": "^1.0.2",
     "showdown": "^1.7.6",
@@ -28,8 +30,6 @@
     "ttest": "^1.1.0"
   },
   "devDependencies": {
-    "async": "^2.6.0",
-    "endpoint": "^0.4.5",
     "rimraf": "^2.6.2",
     "snazzy": "^7.0.0",
     "standard": "^10.0.3",
