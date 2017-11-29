@@ -92,8 +92,8 @@ class ClinicDoctor {
 
     const dataFile = streamTemplate`
       {
-        "gcEvent": "${gcEventReaderStringify}",
-        "processStat": "${processStatStringify}",
+        "gcEvent": ${gcEventReaderStringify},
+        "processStat": ${processStatStringify},
         "analysis": ${analysisStringified},
         "recommendation": ${recommendation}
       }
