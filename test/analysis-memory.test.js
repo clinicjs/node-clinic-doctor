@@ -41,6 +41,24 @@ test('analyse memory - delay correlation', function (t) {
       heapUsed: false,
       rss: false
     })
+
+    const spikeMemoryStat = generateProcessStat({
+      delay: [1, 1, 20, 1, 1, 20, 1, 1, 20, 1, 1],
+      memory: {
+        heapTotal: [50, 70, 30, 50, 70, 30, 50, 70, 30, 50, 30]
+      }
+    }, noise)
+    const spikeMemoryGc = generateGCEvent([
+      'NONE', 'SCA', 'INC', 'MSC',
+      'SCA', 'INC', 'MSC',
+      'SCA', 'SCA', 'SCA', 'NONE'
+    ])
+    t.strictDeepEquals(analyseMemory(spikeMemoryStat, spikeMemoryGc), {
+      external: false,
+      heapTotal: true,
+      heapUsed: false,
+      rss: false
+    })
   }
 
   t.end()

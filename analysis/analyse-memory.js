@@ -10,23 +10,23 @@ function analyseMemory (processStatSubset, gcEventSubset) {
 
   // Seperate delay data into delay followed by msc and all other delays
   const mscEvent = gcEventSubset.filter((d) => d.type === 'MARK_SWEEP_COMPACT')
-  const delayFromMsc = []
-  const delayFromNoMsc = []
+  const statFromMsc = []
+  const statFromNoMsc = []
   {
     const mscIter = mscEvent[Symbol.iterator]()
     let mscCurrentValue = mscIter.next()
     for (const stat of processStatSubset) {
       if (mscCurrentValue.done) {
-        delayFromNoMsc.push(stat)
+        statFromNoMsc.push(stat)
         continue
       }
 
       if (stat.timestamp < mscCurrentValue.value.startTimestamp) {
-        delayFromNoMsc.push(stat)
+        statFromNoMsc.push(stat)
         continue
       }
 
-      delayFromMsc.push(stat)
+      statFromMsc.push(stat)
       mscCurrentValue = mscIter.next()
     }
   }
@@ -38,9 +38,10 @@ function analyseMemory (processStatSubset, gcEventSubset) {
 
   // If delay caused by MSC shows an issue, but the remanin
   let correlatedDelayIssue = false
-  if (delayFromMsc.length > 0) {
-    correlatedDelayIssue = analyseDelay(delayFromMsc, mscEvent) &&
-                           !analyseDelay(delayFromNoMsc, mscEvent)
+  if (statFromMsc.length > 0) {
+    const delayFromNoMsc = statFromNoMsc.map((d) => d.delay)
+    correlatedDelayIssue = analyseDelay(statFromMsc, mscEvent) &&
+                           summary(delayFromNoMsc).median() < 10
   }
 
   return {

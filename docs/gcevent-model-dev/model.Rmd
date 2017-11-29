@@ -33,6 +33,7 @@ load.data = function (name, has.issue) {
 };
 
 dat.sample.1 = load.data('10145.clinic-doctor')
+dat.sample.2 = load.data('12318.clinic-doctor')
 ```
 
 ```{r}
@@ -58,6 +59,7 @@ subset.interval = function (dat) {
 }
 
 dat.sample.1 = subset.interval(dat.sample.1)
+dat.sample.2 = subset.interval(dat.sample.2)
 ```
 
 ```{r}
