@@ -26,19 +26,19 @@ class GCEventDecoder extends AbstractDecoder {
         return this.emit(new Error(`Unexpected phase: ${message.phase}`))
       }
       // recived END phase, emit combined event
-      const startTime = this._storage.get(message.type)
+      const startTimestamp = this._storage.get(message.type)
       this._storage.delete(message.type)
 
       super.push({
-        startTime: startTime,
-        endTime: message.timestamp,
+        startTimestamp: startTimestamp,
+        endTimestamp: message.timestamp,
         type: typeLookup[message.type]
       })
     } else {
       if (message.phase !== messages.GCEvent.Phase.BEGIN) {
         return this.emit(new Error(`Unexpected phase: ${message.phase}`))
       }
-      // recived BEGIN phase, store startTime
+      // recived BEGIN phase, store startTimestamp
       this._storage.set(message.type, message.timestamp)
     }
   }

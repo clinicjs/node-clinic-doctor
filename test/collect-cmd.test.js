@@ -59,23 +59,23 @@ test('test gc events', function (t) {
 
       t.ok(scavenge.length >= 1)
       t.strictDeepEqual(scavenge[0], {
-        startTime: scavenge[0].startTime,
-        endTime: scavenge[0].endTime,
+        startTimestamp: scavenge[0].startTimestamp,
+        endTimestamp: scavenge[0].endTimestamp,
         type: 'SCAVENGE'
       })
-      t.ok(scavenge[0].startTime <= scavenge[1].endTime)
-      t.ok(Math.abs(scavenge[0].startTime - Date.now()) < 200)
-      t.ok(Math.abs(scavenge[0].endTime - Date.now()) < 200)
+      t.ok(scavenge[0].startTimestamp <= scavenge[1].endTimestamp)
+      t.ok(Math.abs(scavenge[0].startTimestamp - Date.now()) < 200)
+      t.ok(Math.abs(scavenge[0].endTimestamp - Date.now()) < 200)
 
       t.strictEqual(markSweepCompact.length, 1)
       t.strictDeepEqual(markSweepCompact[0], {
-        startTime: markSweepCompact[0].startTime,
-        endTime: markSweepCompact[0].endTime,
+        startTimestamp: markSweepCompact[0].startTimestamp,
+        endTimestamp: markSweepCompact[0].endTimestamp,
         type: 'MARK_SWEEP_COMPACT'
       })
-      t.ok(markSweepCompact[0].startTime <= markSweepCompact[0].endTime)
-      t.ok(Math.abs(markSweepCompact[0].startTime - Date.now()) < 200)
-      t.ok(Math.abs(markSweepCompact[0].endTime - Date.now()) < 200)
+      t.ok(markSweepCompact[0].startTimestamp <= markSweepCompact[0].endTimestamp)
+      t.ok(Math.abs(markSweepCompact[0].startTimestamp - Date.now()) < 200)
+      t.ok(Math.abs(markSweepCompact[0].endTimestamp - Date.now()) < 200)
 
       t.end()
     })
