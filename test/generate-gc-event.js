@@ -9,7 +9,7 @@ const typeMap = new Map([
 ])
 
 function generateGCEvent (data) {
-  const output = [];
+  const output = []
 
   let lastType = null
   let startIndex = -1

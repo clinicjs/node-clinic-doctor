@@ -6,7 +6,7 @@ const generateGCEvent = require('./generate-gc-event.js')
 const generateProcessStat = require('./generate-process-stat.js')
 
 test('analyse memory - delay correlation', function (t) {
-  for (const noise of [0 /*, 1, 10 */]) {
+  for (const noise of [0, 1, 10]) {
     const goodMemoryStat = generateProcessStat({
       delay: [1, 1, 3, 1, 1, 3, 1, 1, 3],
       memory: {
@@ -14,7 +14,7 @@ test('analyse memory - delay correlation', function (t) {
       }
     }, noise)
     const goodMemoryGc = generateGCEvent([
-       'NONE', 'SCA', 'NONE', 'SCA', 'NONE', 'MSC', 'NONE', 'SCA', 'NONE'
+      'NONE', 'SCA', 'NONE', 'SCA', 'NONE', 'MSC', 'NONE', 'SCA', 'NONE'
     ])
 
     t.strictDeepEquals(analyseMemory(goodMemoryStat, goodMemoryGc), {
@@ -31,9 +31,9 @@ test('analyse memory - delay correlation', function (t) {
       }
     }, noise)
     const badMemoryGc = generateGCEvent([
-       'NONE', 'SCA', 'INC', 'MSC',
-       'SCA', 'INC', 'MSC',
-       'SCA', 'INC', 'MSC', 'NONE'
+      'NONE', 'SCA', 'INC', 'MSC',
+      'SCA', 'INC', 'MSC',
+      'SCA', 'INC', 'MSC', 'NONE'
     ])
     t.strictDeepEquals(analyseMemory(badMemoryStat, badMemoryGc), {
       external: false,
