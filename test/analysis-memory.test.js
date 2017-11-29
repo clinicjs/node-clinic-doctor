@@ -12,7 +12,7 @@ test('analyse memory - sawtooth total heap', function (t) {
         heapTotal: [35, 40, 30, 35, 40, 30, 35, 40, 30]
       }
     }, noise)
-    t.strictDeepEquals(analyseMemory(goodMemory), {
+    t.strictDeepEquals(analyseMemory(goodMemory, []), {
       external: false,
       heapTotal: false,
       heapUsed: false,
@@ -25,7 +25,7 @@ test('analyse memory - sawtooth total heap', function (t) {
         heapTotal: [50, 70, 30, 50, 70, 30, 50, 70, 30]
       }
     }, noise)
-    t.strictDeepEquals(analyseMemory(okayMemory), {
+    t.strictDeepEquals(analyseMemory(okayMemory, []), {
       external: false,
       heapTotal: false,
       heapUsed: false,
@@ -38,7 +38,7 @@ test('analyse memory - sawtooth total heap', function (t) {
         heapTotal: [50, 70, 30, 50, 70, 30, 50, 70, 30]
       }
     }, noise)
-    t.strictDeepEquals(analyseMemory(badMemory), {
+    t.strictDeepEquals(analyseMemory(badMemory, []), {
       external: false,
       heapTotal: true,
       heapUsed: false,
@@ -56,7 +56,7 @@ test('analyse memory - old space too large', function (t) {
         heapUsed: [30, 100, 200, 300, 300, 300, 300, 300, 300, 300]
       }
     }, noise)
-    t.strictDeepEquals(analyseMemory(goodMemory), {
+    t.strictDeepEquals(analyseMemory(goodMemory, []), {
       external: false,
       heapTotal: false,
       heapUsed: false,
@@ -68,7 +68,7 @@ test('analyse memory - old space too large', function (t) {
         heapUsed: [30, 100, 200, 300, 400, 500, 600, 700, 800, 900]
       }
     }, noise)
-    t.strictDeepEquals(analyseMemory(badMemory), {
+    t.strictDeepEquals(analyseMemory(badMemory, []), {
       external: false,
       heapTotal: false,
       heapUsed: true,
@@ -86,7 +86,7 @@ test('analyse memory - huge difference', function (t) {
         heapUsed: [200, 250, 300, 350, 400, 500, 600, 200, 250, 300]
       }
     }, noise)
-    t.strictDeepEquals(analyseMemory(goodMemory), {
+    t.strictDeepEquals(analyseMemory(goodMemory, []), {
       external: false,
       heapTotal: false,
       heapUsed: false,
@@ -98,7 +98,7 @@ test('analyse memory - huge difference', function (t) {
         heapUsed: [30, 100, 200, 300, 400, 500, 600, 30, 100, 200]
       }
     }, noise)
-    t.strictDeepEquals(analyseMemory(badMemory), {
+    t.strictDeepEquals(analyseMemory(badMemory, []), {
       external: false,
       heapTotal: false,
       heapUsed: true,
