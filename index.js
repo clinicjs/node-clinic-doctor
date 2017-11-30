@@ -11,7 +11,7 @@ const streamTemplate = require('stream-template')
 const getLoggingPaths = require('./collect/get-logging-paths.js')
 const GCEventDecoder = require('./format/gc-event-decoder.js')
 const ProcessStatDecoder = require('./format/process-stat-decoder.js')
-const CreateRecommendation = require('./recommendations/index.js')
+const RenderRecommendations = require('./recommendations/index.js')
 const stream = require('stream')
 
 class ClinicDoctor {
@@ -66,12 +66,7 @@ class ClinicDoctor {
       .pipe(new ProcessStatDecoder())
 
     // create analysis
-    const analysisResult = analysis(gcEventReader, processStatReader)
-    const recommendation = analysisResult
-      .pipe(new CreateRecommendation())
-
-    // Stringify data
-    const analysisStringified = analysisResult
+    const analysisStringified = analysis(gcEventReader, processStatReader)
       .pipe(new stream.Transform({
         readableObjectMode: false,
         writableObjectMode: true,
@@ -94,10 +89,12 @@ class ClinicDoctor {
       {
         "gcEvent": ${gcEventReaderStringify},
         "processStat": ${processStatStringify},
-        "analysis": ${analysisStringified},
-        "recommendation": ${recommendation}
+        "analysis": ${analysisStringified}
       }
     `
+
+    // render recommendations as HTML templates
+    const recommendations = new RenderRecommendations()
 
     // create script-file stream
     const b = browserify({
@@ -117,7 +114,9 @@ class ClinicDoctor {
     // build output file
     const outputFile = streamTemplate`
       <!DOCTYPE html>
+      <html lang="en">
       <meta charset="utf8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>Clinic Doctor</title>
 
       <style>${styleFile}</style>
@@ -128,7 +127,10 @@ class ClinicDoctor {
       <div id="recommendation-space"></div>
       <div id="recommendation"></div>
 
+      ${recommendations}
+
       <script>${scriptFile}</script>
+      </html>
     `
 
     pump(

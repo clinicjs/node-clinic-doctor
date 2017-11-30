@@ -1,4 +1,4 @@
-### Understanding the analysis
+## Understanding the analysis
 
 JavaScript is a single-threaded event-driven non-blocking language.
 
@@ -31,7 +31,7 @@ To solve the Event Loop issue, we need to find out where the synchronous bottlen
 This may (commonly) be identified as a single long-running synchronous function, or
 the bottleneck may be distributed which would take rather more detective work.
 
-### Next Steps
+## Next Steps
 - If the system is already deployed, mitigate the issue immediately by implementing
   HTTP 503 Service Unavailable functionality (see *Load Shedding* in **Reference**)
   - This should allow the deployments Load Balance to route traffic to a different service instance
@@ -40,7 +40,7 @@ the bottleneck may be distributed which would take rather more detective work.
 - Look for "hot" blocks, these are functions that are observed (at a higher relative frequency) to be at the top the stack per CPU sample – in other words, such functions are blocking the event loop
   - (In the case of a distributed bottleneck, start by looking for lots of wide tips at the top of the Flamegraph)
 
-### Reference
+## Reference
 
 - Load Shedding
   - Express, Koa, Restify, `http`: [overload-protection](https://www.npmjs.com/package/overload-protection)

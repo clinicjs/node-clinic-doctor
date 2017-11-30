@@ -9,14 +9,13 @@ function loaddata (callback) {
 module.exports = loaddata
 
 function wrapData () {
-  return new Data(data.analysis, data.processStat, data.recommendation)
+  return new Data(data.analysis, data.processStat)
 }
 
 // Construct data container
 class Data {
-  constructor (analysis, data, recommendation) {
+  constructor (analysis, data) {
     this.analysis = analysis
-    this.recommendation = recommendation
     this.data = data
 
     this.rawTimestamp = data.map((point) => point.timestamp)

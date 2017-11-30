@@ -1,50 +1,74 @@
+'use strict'
 
 const d3 = require('./d3.js')
+const categories = require('./categories.js')
 const EventEmitter = require('events')
+
+class RecomendationWrapper {
+  constructor(categoryContent) {
+    this.content = categoryContent
+    this.category = this.content.category
+    this.title = this.content.title
+
+    this.selected = false
+    this.detected = false
+  }
+
+  getSummary () { return this.content.getSummary() }
+  hasSummary () { return this.content.hasSummary() }
+  getReadMore () { return this.content.getReadMore() }
+  hasReadMore () { return this.content.hasReadMore() }
+}
 
 class Recomendation extends EventEmitter {
   constructor () {
     super()
 
+    this.readMoreOpened = false
     this.opened = false
-    this.showingMore = false
+    this.selectedCategory = 'unknown'
 
+    // wrap content with selected and detected properties
+    this.recommendations = new Map()
+    this.recommendationsAsArray = []
+    for (const categoryContent of categories.asArray()) {
+      const wrapper = new RecomendationWrapper(categoryContent)
+      this.recommendations.set(wrapper.category, wrapper)
+      this.recommendationsAsArray.push(wrapper)
+    }
+
+    // create HTML structure
     this.space = d3.select('#recommendation-space')
 
     this.container = d3.select('#recommendation')
       .classed('open', this.opened)
 
-    this.wrapper = this.container.append('div')
-      .classed('wrapper', true)
+    this.content = this.container.append('div')
+      .classed('content', true)
+    this.menu = this.content.append('div')
+      .classed('menu', true)
+    this.summary = this.content.append('div')
+      .classed('summary', true)
+    this.readMoreButton = this.content.append('div')
+      .classed('read-more-button', true)
+      .on('click', () => this.emit(this.readMoreOpened ? 'less' : 'more'))
+    this.readMore = this.content.append('div')
+      .classed('read-more', true)
 
-    this.details = this.wrapper.append('div')
-      .classed('details', true)
-    this.details.append('div')
+    this.pages = this.menu.append('ul')
+    this.pages
+      .selectAll('li')
+      .data(this.recommendationsAsArray, (d) => d.category)
+      .enter()
+        .append('li')
+        .attr('data-content', (d) => d.title)
+        .on('click', (d) => this.emit('change-page', d.category))
+
+    this.menu.append('div')
       .classed('close', true)
       .on('click', () => this.emit('close'))
 
-    this.content = this.details.append('div')
-      .classed('content', true)
-
-    this.summary = this.content.append('div')
-      .classed('summary', true)
-
-    this.more = this.content.append('div')
-      .classed('hidden', true)
-      .classed('more', true)
-
-    this.moreBar = this.more.append('div')
-      .classed('more-bar', true)
-      .on('click', () => this.emit(this.showingMore ? 'less' : 'more'))
-    this.moreBar.append('div')
-      .classed('text', true)
-    this.moreBar.append('div')
-      .classed('arrow', true)
-
-    this.moreContent = this.more.append('div')
-      .classed('more-content', true)
-
-    this.bar = this.wrapper.append('div')
+    this.bar = this.container.append('div')
       .classed('bar', true)
       .on('click', () => this.emit(this.opened ? 'close' : 'open'))
     this.bar.append('div')
@@ -54,56 +78,60 @@ class Recomendation extends EventEmitter {
   }
 
   setData (data) {
-    this.summary.html(data.summary)
+    const category = data.analysis.issueCategory
+    this.recommendations.get(category).detected = true
+    this.setPage(category)
+  }
 
-    if (data.readMore) {
-      this.more
-        .classed('hidden', false)
-      this.moreContent
-        .html(data.readMore)
-    }
+  setPage (newCategory) {
+    const oldCategory = this.selectedCategory
+    this.selectedCategory = newCategory
+    this.recommendations.get(oldCategory).selected = false
+    this.recommendations.get(newCategory).selected = true
   }
 
   draw () {
+    this.pages
+      .selectAll('li')
+      .data(this.recommendationsAsArray, (d) => d.category)
+      .classed('detected', (d) => d.detected)
+      .classed('selected', (d) => d.selected)
 
+    const recommendation = this.recommendations.get(this.selectedCategory)
+
+    this.summary.html(null)
+    if (recommendation.hasSummary()) {
+      this.summary.node().appendChild(recommendation.getSummary())
+    }
+
+    this.readMore.html(null)
+    this.container.classed('has-read-more', recommendation.hasReadMore())
+    if (recommendation.hasReadMore()) {
+      this.readMore.node().appendChild(recommendation.getReadMore())
+    }
+
+    this.container.classed('open', this.opened)
+    this.container.classed('read-more-open', this.readMoreOpened)
+
+    // set space height such that the fixed element don't have to hide
+    // something in the background.
+    this.space.style('height', this.content.node().offsetHeight + 'px')
+  }
+
+  open () {
+    this.opened = true
   }
 
   close () {
     this.opened = false
-    this.container.classed('open', false)
-    this.space.style('height', '0px')
   }
 
-  open () {
-    const html = document.documentElement
-    const atBottom = html.scrollHeight - window.scrollY === window.innerHeight
-    const atTop = window.scrollY === 0
-
-    this.opened = true
-    this.container.classed('open', true)
-
-    // add extra space to the document, such that the details and graphs
-    // can be viewed simultaneously.
-    const detailsHeight = this.details.node().getBoundingClientRect().height
-    this.space.style('height', Math.floor(detailsHeight) + 'px')
-
-    // If the view was at the bottom, automatically scroll the view to
-    // the bottom after showing the details.
-    // If the user is on a large screen and is also seeing the top, then
-    // never scroll.
-    if (atBottom && !atTop) {
-      window.scrollTo(window.scrollX, html.scrollHeight - window.innerHeight)
-    }
+  openReadMore () {
+    this.readMoreOpened = true
   }
 
-  showMore () {
-    this.showingMore = true
-    this.more.classed('open', true)
-  }
-
-  showLess () {
-    this.showingMore = false
-    this.more.classed('open', false)
+  closeReadMore () {
+    this.readMoreOpened = false
   }
 }
 
