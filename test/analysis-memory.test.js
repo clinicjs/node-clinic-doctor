@@ -25,7 +25,7 @@ test('analyse memory - delay correlation', function (t) {
     })
 
     const badMemoryStat = generateProcessStat({
-      delay: [1, 1, 20, 1, 1, 20, 1, 1, 20, 1, 1],
+      delay: [1, 1, 70, 1, 1, 70, 1, 1, 70, 1, 1],
       memory: {
         heapTotal: [50, 70, 30, 50, 70, 30, 50, 70, 30, 50, 30]
       }
@@ -43,7 +43,7 @@ test('analyse memory - delay correlation', function (t) {
     })
 
     const spikeMemoryStat = generateProcessStat({
-      delay: [1, 1, 20, 1, 1, 20, 1, 1, 20, 1, 1],
+      delay: [1, 1, 70, 1, 1, 70, 1, 1, 70, 1, 1],
       memory: {
         heapTotal: [50, 70, 30, 50, 70, 30, 50, 70, 30, 50, 30]
       }

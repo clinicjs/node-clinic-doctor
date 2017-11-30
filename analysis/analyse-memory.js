@@ -1,7 +1,6 @@
 'use strict'
 
 const summary = require('summary')
-const analyseDelay = require('./analyse-delay.js')
 
 const MB = 1024 * 1024
 
@@ -39,8 +38,9 @@ function analyseMemory (processStatSubset, gcEventSubset) {
   // If delay caused by MSC shows an issue, but the remanin
   let correlatedDelayIssue = false
   if (statFromMsc.length > 0) {
+    const delayFromMsc = statFromMsc.map((d) => d.delay)
     const delayFromNoMsc = statFromNoMsc.map((d) => d.delay)
-    correlatedDelayIssue = analyseDelay(statFromMsc, mscEvent) &&
+    correlatedDelayIssue = summary(delayFromMsc).max() > 50 &&
                            summary(delayFromNoMsc).median() < 10
   }
 

@@ -2,8 +2,6 @@
 
 const summary = require('summary')
 
-// Note: this function is also used by analyseMemory, for detecting
-// correlations between Mark & Sweep & Compact and delays.
 function analyseDelay (processStatSubset, gcEventSubset) {
   const stats = summary(processStatSubset.map((d) => d.delay))
 
