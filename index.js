@@ -57,6 +57,7 @@ class ClinicDoctor {
     const fakeDataPath = path.join(__dirname, 'visualizer', 'data.json')
     const stylePath = path.join(__dirname, 'visualizer', 'style.css')
     const scriptPath = path.join(__dirname, 'visualizer', 'main.js')
+    const logoPath = path.join(__dirname, 'visualizer', 'app-logo.svg')
 
     // Load data
     const paths = getLoggingPaths({ path: dataDirname })
@@ -96,6 +97,9 @@ class ClinicDoctor {
     // render recommendations as HTML templates
     const recommendations = new RenderRecommendations()
 
+    // open logo
+    const logoFile = fs.createReadStream(logoPath)
+
     // create script-file stream
     const b = browserify({
       'basedir': __dirname,
@@ -121,7 +125,9 @@ class ClinicDoctor {
 
       <style>${styleFile}</style>
 
-      <div id="banner"></div>
+      <div id="banner">
+        ${logoFile}
+      </div>
       <div id="menu"></div>
       <div id="graph"></div>
       <div id="recommendation-space"></div>

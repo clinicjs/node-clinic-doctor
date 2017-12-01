@@ -3,7 +3,7 @@
 html {
   --main-bg-color: rgb(27, 30, 39);
 
-  --banner-text-color: rgb(255, 255, 255);
+  --banner-logo-color: rgba(255, 255, 255, 0.94);
   --banner-bg-color: rgb(41, 45, 57);
 
   --menu-button-color: rgb(200, 201, 203);
@@ -126,19 +126,16 @@ html.light-theme #menu, html.light-theme #graph {
 
 /* Banner layout */
 #banner {
+  display: flex;
+  align-items: center;
   height: 65px;
   background: var(--banner-bg-color);
   position: relative;
 }
 
-#banner::after {
-  content: 'Doctor';
-  font-size: 14pt;
-  font-weight: lighter;
-  color: var(--banner-text-color);
-  display: block;
-  margin-left: 35px;
-  line-height: 65px;
+#banner svg {
+  fill: var(--banner-logo-color);
+  margin-left: 28px;
 }
 
 /* Menu layout */
