@@ -1,6 +1,7 @@
 'use strict'
 
 const d3 = require('./d3.js')
+const icons = require('./icons.js')
 const EventEmitter = require('events')
 const HoverBox = require('./hover-box')
 
@@ -34,9 +35,10 @@ class SubGraph extends EventEmitter {
       .classed('unit', true)
       .text(this.setup.unit)
 
-    this.alert = this.title.append('div')
+    this.alert = this.title.append('svg')
       .classed('alert', true)
       .on('click', () => this.emit('alert-click'))
+      .call(icons.insertIcon('warning'))
 
     // add legned
     this.legendItems = []

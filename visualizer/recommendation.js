@@ -1,6 +1,7 @@
 'use strict'
 
 const d3 = require('./d3.js')
+const icons = require('./icons.js')
 const categories = require('./categories.js')
 const EventEmitter = require('events')
 
@@ -64,17 +65,24 @@ class Recomendation extends EventEmitter {
         .attr('data-content', (d) => d.title)
         .on('click', (d) => this.emit('change-page', d.category))
 
-    this.menu.append('div')
+    this.menu.append('svg')
       .classed('close', true)
       .on('click', () => this.emit('close'))
+      .call(icons.insertIcon('close'))
 
     this.bar = this.container.append('div')
       .classed('bar', true)
       .on('click', () => this.emit(this.opened ? 'close' : 'open'))
     this.bar.append('div')
       .classed('text', true)
-    this.bar.append('div')
+    const arrow = this.bar.append('div')
       .classed('arrow', true)
+    arrow.append('svg')
+      .classed('arrow-up', true)
+      .call(icons.insertIcon('arrow-up'))
+    arrow.append('svg')
+      .classed('arrow-down', true)
+      .call(icons.insertIcon('arrow-down'))
   }
 
   setData (data) {
