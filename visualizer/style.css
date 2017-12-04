@@ -6,6 +6,12 @@ html {
   --banner-logo-color: rgba(255, 255, 255, 0.94);
   --banner-bg-color: rgb(41, 45, 57);
 
+  --alert-border-color: rgb(68, 75, 96);
+  --alert-bg-color: rgb(55, 61, 79);
+  --alert-text-color: rgb(255, 255, 255);
+  --alert-button-color: rgb(200, 201, 203);
+  --alert-indicator-color: rgb(233, 67, 100);
+
   --menu-button-color: rgb(200, 201, 203);
 
   --graph-text-color: rgb(255, 255, 255);
@@ -33,13 +39,18 @@ html {
   --recommend-more-color: rgb(62, 167, 244);
   --recommend-menu-detected-color: rgb(67, 93, 122);
   --recommend-menu-selected-color: rgb(63, 125, 198);
-  --recommend-bg-color: rgba(59, 68, 90, 0.99);
+  --recommend-bg-color: rgba(55, 61, 79, 0.99);
 }
 
 html.light-theme {
   --main-bg-color: rgb(239, 239, 239);
 
   --banner-bg-color: rgb(65, 69, 85);
+
+  --alert-bg-color: rgb(227, 227, 227);
+  --alert-border-color: rgb(189, 189, 189);
+  --alert-text-color: rgb(101, 101, 101);
+  --alert-button-color: rgb(123, 128, 146);
 
   --menu-button-color: rgb(123, 128, 146);
 
@@ -62,6 +73,25 @@ html, body {
 
 body {
   background: var(--main-bg-color);
+}
+
+#front-matter {
+  display: flex;
+  align-items: flex-start;
+  margin: 22px 45px 24px 49px;
+  overflow: hidden;
+}
+
+#front-matter #alert {
+  flex: 1 1 0px;
+  min-width: 0; /* don't consider children for min-width calcultion */
+}
+
+#front-matter #menu {
+  flex: 0 0 auto;
+  height: 24px;
+  width: 95px;
+  margin-top: 5px;
 }
 
 #graph {
@@ -108,7 +138,7 @@ html {
   font-family: sans-serif;
 }
 
-html #banner, html #menu, html #graph, #graph .hover text, #recommendation .content {
+html #banner, html #front-matter, html #graph, #graph .hover text, #recommendation .content {
   /* light text on dark background doesn't look so good in the browser compared
      to graphical design tools. This is because graphical design tools uses
      antialiasing, where browsers uses subpixel rendering. To make it look
@@ -120,7 +150,7 @@ html #banner, html #menu, html #graph, #graph .hover text, #recommendation .cont
   -moz-osx-font-smoothing: grayscale;
 }
 
-html.light-theme #menu, html.light-theme #graph {
+html.light-theme #front-matter, html.light-theme #graph {
   -webkit-font-smoothing: unset;
   -moz-osx-font-smoothing: unset;
 }
@@ -141,15 +171,100 @@ html.light-theme #menu, html.light-theme #graph {
 
 /* Menu layout */
 
-#menu {
-  height: 24px;
+#alert {
+  border: 1px solid var(--alert-border-color);
+  border-radius: 4px;
+  background: var(--alert-bg-color);
+  color: var(--alert-text-color);
+  padding: 5px 13px;
+  min-height: 22px; /* just for reducing the initial draw blink */
+  max-height: 22px;
+  transition: max-height 0.15s;
+}
+
+#alert.open {
+  max-height: 10em;
+}
+
+#alert .summary {
+  display: flex;
+  height: 22px;
+  align-items: center;
+}
+
+#alert .summary svg.alert {
+  display: none;
+  flex: 0 0 auto;
+  height: 18px;
+  width: 18px;
+  fill: var(--alert-indicator-color);
+  align-self: baseline;
+}
+#alert.has-issue .summary svg.alert {
+  display: block;
+}
+
+#alert .summary .title {
+  flex: 1 1 0px;
+  padding: 0 8px;
+  white-space: nowrap;
+  overflow-x: scroll; /* JS will shorten the text if the element is scrollable */
+}
+
+#alert .summary .toggle {
+  display: none;
+  flex: 0 0 auto;
+  /* crop empty space in the svg icon */
+  position: relative;
+  width: 22px;
+  height: 22px;
   overflow: hidden;
-  margin: 22px 45px 10px 10px;
+
+  cursor: pointer;
+}
+#alert.has-issue .summary .toggle{
+  display: block;
+}
+
+#alert .summary .toggle svg {
+  /* crop empty space in the svg icon */
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 38px;
+  height: 38px;
+
+  fill: var(--alert-button-color);
+}
+#alert .summary .toggle svg.arrow-down {
+  top: -6px;
+}
+
+#alert:not(.open) .summary .toggle svg.arrow-up { display: none; }
+#alert.open .summary .toggle svg.arrow-down { display: none; }
+
+#alert ul.details {
+  margin: 8px 0 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+#alert ul.details li {
+  padding: 5px 0px;
+  cursor: pointer;
+}
+
+#alert ul.details li::before {
+  display: inline-block;
+  width: 18px;
+  content: '•';
+  padding: 0 2px 0 6px;
 }
 
 #menu .toggle {
   float: right;
   cursor: pointer;
+  margin-left: 22px;
 }
 
 #menu svg {
@@ -157,7 +272,6 @@ html.light-theme #menu, html.light-theme #graph {
 }
 
 #toggle-grid {
-  margin-right: 11px;
   height: 24px;
   width: 24px;
 }
@@ -166,7 +280,6 @@ html.grid-layout #toggle-grid svg.grid-2x2 { display: none; }
 
 svg#toggle-theme {
   margin-top: 2px;
-  margin-left: 11px;
   height: 20px;
   width: 27px;
 }

@@ -37,35 +37,45 @@ class Recommendation {
 const recommendations = [
   new Recommendation({
     category: 'gc',
-    title: 'Garabage Collection',
+    issue: true,
+    title: 'Potential Garabage Collection issue detected',
+    menu: 'Garabage Collection',
     order: 1,
     summary: path.resolve(__dirname, 'gc-summary.md'),
     readMore: path.resolve(__dirname, 'gc-readmore.md')
   }),
   new Recommendation({
     category: 'event-loop',
-    title: 'Event Loop',
+    issue: true,
+    title: 'Potential Event Loop issue detected',
+    menu: 'Event Loop',
     order: 2,
     summary: path.resolve(__dirname, 'event-loop-summary.md'),
     readMore: path.resolve(__dirname, 'event-loop-readmore.md')
   }),
   new Recommendation({
     category: 'io',
-    title: 'I/O',
+    issue: true,
+    title: 'Potential I/O issue detected',
+    menu: 'I/O',
     order: 3,
     summary: path.resolve(__dirname, 'io-summary.md'),
     readMore: path.resolve(__dirname, 'io-readmore.md')
   }),
   new Recommendation({
     category: 'none',
-    title: 'No issue',
+    issue: false,
+    title: 'No issue detected',
+    menu: 'No issue',
     order: 4,
     summary: path.resolve(__dirname, 'none-summary.md'),
     readMore: null
   }),
   new Recommendation({
     category: 'unknown',
-    title: 'Unknown issue',
+    issue: true,
+    title: 'Unknown issue detected',
+    menu: 'Unknown issue',
     order: 5,
     summary: path.resolve(__dirname, 'unknown-summary.md'),
     readMore: null
@@ -104,8 +114,10 @@ class RenderRecommendations extends stream.Readable {
           if (err) return done(err)
           const template =
             `<template class="recommendation-text"` +
+            ` data-issue="${recommendation.issue ? 'yes' : 'no'}"` +
             ` data-type="${file.type}"` +
             ` data-category="${recommendation.category}"` +
+            ` data-menu="${recommendation.menu}"` +
             ` data-title="${recommendation.title}"` +
             ` data-order="${recommendation.order}"` +
             `>\n` +

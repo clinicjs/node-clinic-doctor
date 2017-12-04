@@ -6,10 +6,10 @@ const categories = require('./categories.js')
 const EventEmitter = require('events')
 
 class RecomendationWrapper {
-  constructor(categoryContent) {
+  constructor (categoryContent) {
     this.content = categoryContent
     this.category = this.content.category
-    this.title = this.content.title
+    this.menu = this.content.menu
 
     this.selected = false
     this.detected = false
@@ -62,7 +62,7 @@ class Recomendation extends EventEmitter {
       .data(this.recommendationsAsArray, (d) => d.category)
       .enter()
         .append('li')
-        .attr('data-content', (d) => d.title)
+        .attr('data-content', (d) => d.menu)
         .on('click', (d) => this.emit('change-page', d.category))
 
     this.menu.append('svg')

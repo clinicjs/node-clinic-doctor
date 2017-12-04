@@ -5,6 +5,8 @@ class CategoryContent {
   constructor (node) {
     this.category = node.dataset.category
     this.order = parseInt(node.dataset.order, 10)
+    this.issue = node.dataset.issue === 'yes'
+    this.menu = node.dataset.menu
     this.title = node.dataset.title
     this.summary = null
     this.readMore = null
@@ -41,7 +43,7 @@ class CategoryContent {
 }
 
 class Categories {
-  constructor() {
+  constructor () {
     const categories = new Map()
     for (const node of d3.selectAll('.recommendation-text').nodes()) {
       if (!categories.has(node.dataset.category)) {
@@ -56,11 +58,11 @@ class Categories {
     ).sort((a, b) => a.order - b.order)
   }
 
-  getContent(category) {
+  getContent (category) {
     return this.categories.get(category)
   }
 
-  asArray() {
+  asArray () {
     return this.categoriesAsArray
   }
 }

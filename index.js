@@ -128,7 +128,10 @@ class ClinicDoctor {
       <div id="banner">
         ${logoFile}
       </div>
-      <div id="menu"></div>
+      <div id="front-matter">
+        <div id="alert"></div>
+        <div id="menu"></div>
+      </div>
       <div id="graph"></div>
       <div id="recommendation-space"></div>
       <div id="recommendation"></div>
