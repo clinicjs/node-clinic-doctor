@@ -144,7 +144,7 @@ html {
   font-family: sans-serif;
 }
 
-html #banner, html #front-matter, html #graph, #graph .hover text, #recommendation .content {
+html #banner, html #front-matter, html #graph, html #graph .hover text, html #recommendation .details {
   /* light text on dark background doesn't look so good in the browser compared
      to graphical design tools. This is because graphical design tools uses
      antialiasing, where browsers uses subpixel rendering. To make it look
@@ -306,54 +306,78 @@ svg#toggle-theme {
   align-items: stretch;
 }
 
-#recommendation .content {
-  display: none;
+#recommendation .details {
   flex: 0 1 auto;
+
+  display: none;
   overflow: hidden;
   flex-direction: column;
   justify-content: flex-end;
   align-items: stretch;
 }
 
-#recommendation.open .content {
+#recommendation.open .details {
   display: flex;
 }
 
-#recommendation .content .menu {
-  display: flex;
+#recommendation .details .menu {
   flex: 0 0 auto;
+
+  display: flex;
   min-height: 48px;
   overflow: hidden;
   box-sizing: border-box;
 }
 
-#recommendation .content .menu ul {
+#recommendation .details .menu ul {
   flex: 1 1 0px;
   align-self: flex-end;
 }
 
-#recommendation .content .menu .close {
+#recommendation .details .menu .close {
   flex: 0 0 24px;
   height: 24px;
   width: 24px;
   align-self: flex-start;
 }
 
-#recommendation .content .summary {
+#recommendation .details .content {
+  flex: 0 1 auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+}
+
+#recommendation .details .content .summary {
   flex: 0 0 auto;
 }
 
-#recommendation .content .read-more-button {
+#recommendation .details .content .read-more-button {
   flex: 0 0 auto;
 }
 
-#recommendation .content .read-more {
+#recommendation .details .content .read-more {
   display: none;
   flex: 0 1 auto;
-  overflow: scroll;
+  overflow-y: scroll;
 }
-#recommendation.read-more-open .content .read-more {
+#recommendation.read-more-open .details .content .read-more {
   display: block;
+}
+
+/* change the scroll area to be the entire content if the screen-size is
+   very small */
+@media (max-height: 700px) {
+  #recommendation .details .content {
+    display: block; /* disable flexbox layout for .content content */
+    overflow-y: scroll;
+  }
+
+  #recommendation .details .content .read-more {
+    overflow-y: unset;
+  }
 }
 
 #recommendation .bar {
@@ -368,7 +392,7 @@ svg#toggle-theme {
   margin-bottom: 75px; /* #recommendation.bar[height] + 10px */
 }
 
-#recommendation .content {
+#recommendation .details {
   background: var(--recommend-bg-color);
   color: var(--recommend-text-color);
   padding: 18px 28px;
@@ -377,28 +401,28 @@ svg#toggle-theme {
   overscroll-behavior-y: contain; /* prevent scolling the main window */
 }
 
-#recommendation .content a {
+#recommendation .details a {
   color: var(--recommend-link-color);
   text-decoration: none;
 }
 
-#recommendation .content .read-more-button {
+#recommendation .details .read-more-button {
   display: none;
   color: var(--recommend-link-color);
   cursor: pointer;
 }
-#recommendation .content .read-more-button::before {
+#recommendation .details .read-more-button::before {
   content: 'Read more';
 }
 
-#recommendation.read-more-open .content .read-more-button {
+#recommendation.read-more-open .details .read-more-button {
   margin-bottom: 10px;
 }
-#recommendation.read-more-open .content .read-more-button::before {
+#recommendation.read-more-open .details .read-more-button::before {
   content: 'Read less';
 }
 
-#recommendation.has-read-more .content .read-more-button {
+#recommendation.has-read-more .details .read-more-button {
   display: block;
 }
 

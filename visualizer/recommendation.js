@@ -44,10 +44,12 @@ class Recomendation extends EventEmitter {
     this.container = d3.select('#recommendation')
       .classed('open', this.opened)
 
-    this.content = this.container.append('div')
-      .classed('content', true)
-    this.menu = this.content.append('div')
+    this.details = this.container.append('div')
+      .classed('details', true)
+    this.menu = this.details.append('div')
       .classed('menu', true)
+    this.content = this.details.append('div')
+      .classed('content', true)
     this.summary = this.content.append('div')
       .classed('summary', true)
     this.readMoreButton = this.content.append('div')
@@ -123,7 +125,7 @@ class Recomendation extends EventEmitter {
 
     // set space height such that the fixed element don't have to hide
     // something in the background.
-    this.space.style('height', this.content.node().offsetHeight + 'px')
+    this.space.style('height', this.details.node().offsetHeight + 'px')
   }
 
   open () {
