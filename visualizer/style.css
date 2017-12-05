@@ -36,7 +36,6 @@ html {
   --recommend-title-bg-color: rgb(50, 58, 76);
   --recommend-link-color: rgb(62, 167, 244);
   --recommend-close-color: rgb(62, 167, 244);
-  --recommend-more-color: rgb(62, 167, 244);
   --recommend-menu-detected-color: rgb(67, 93, 122);
   --recommend-menu-selected-color: rgb(63, 125, 198);
   --recommend-bg-color: rgba(55, 61, 79, 0.99);
@@ -58,6 +57,13 @@ html.light-theme {
   --graph-bg-color: rgb(227, 227, 227);
   --graph-interval-color: rgba(0, 0, 0, 0.1);
   --graph-axis-color: rgb(189, 189, 189);
+
+  --recommend-text-color: rgb(20, 20, 20);
+  --recommend-title-bg-color: rgb(189, 189, 189);
+  --recommend-link-color: rgb(31, 91, 162);
+  --recommend-close-color: rgb(63, 125, 198);
+  --recommend-menu-detected-color: rgb(137, 152, 169);
+  --recommend-bg-color: rgb(209, 211, 218);
 }
 
 /* Main layout */
@@ -150,7 +156,7 @@ html #banner, html #front-matter, html #graph, #graph .hover text, #recommendati
   -moz-osx-font-smoothing: grayscale;
 }
 
-html.light-theme #front-matter, html.light-theme #graph {
+html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recommendation .details {
   -webkit-font-smoothing: unset;
   -moz-osx-font-smoothing: unset;
 }
