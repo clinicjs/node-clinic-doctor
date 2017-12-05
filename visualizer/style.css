@@ -308,13 +308,26 @@ svg#toggle-theme {
 
 #recommendation .details {
   flex: 0 1 auto;
+  box-sizing: border-box;
+  min-height: 255px; /* prevent jumps for no-issue and unknow-issue */
 
   display: none;
   overflow: hidden;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: stretch;
 }
+#recommendation.open.read-more-open .details {
+  min-height: calc(100vh - 65px - 65px); /* 100% - #banner[height] .bar[height] */
+}
+/* change the scroll area to be the entire content if the screen-size is
+   very small */
+@media (max-height: 385px) {
+  #recommendation .details {
+    min-height: unset;
+  }
+}
+
 
 #recommendation.open .details {
   display: flex;
