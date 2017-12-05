@@ -15,6 +15,11 @@ class RecomendationWrapper {
     this.detected = false
   }
 
+  get order() {
+    // always make the detected issue appear first
+    return this.detected ? 0 : this.content.order;
+  }
+
   getSummary () { return this.content.getSummary() }
   hasSummary () { return this.content.hasSummary() }
   getReadMore () { return this.content.getReadMore() }
@@ -90,6 +95,13 @@ class Recomendation extends EventEmitter {
   setData (data) {
     const category = data.analysis.issueCategory
     this.recommendations.get(category).detected = true
+
+    // reorder pages, such that the detected page selector comes first
+    this.pages
+      .selectAll('li')
+      .sort((a, b) => a.order - b.order)
+
+    // set the default page
     this.setPage(category)
   }
 

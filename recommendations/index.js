@@ -63,21 +63,21 @@ const recommendations = [
     readMore: path.resolve(__dirname, 'io-readmore.md')
   }),
   new Recommendation({
-    category: 'none',
-    issue: false,
-    title: 'No issue detected',
-    menu: 'No issue',
-    order: 4,
-    summary: path.resolve(__dirname, 'none-summary.md'),
-    readMore: null
-  }),
-  new Recommendation({
     category: 'unknown',
     issue: true,
     title: 'Unknown issue detected',
     menu: 'Unknown issue',
-    order: 5,
+    order: 4,
     summary: path.resolve(__dirname, 'unknown-summary.md'),
+    readMore: null
+  }),
+  new Recommendation({
+    category: 'none',
+    issue: false,
+    title: 'No issue detected',
+    menu: 'No issue',
+    order: 5,
+    summary: path.resolve(__dirname, 'none-summary.md'),
     readMore: null
   })
 ]
