@@ -202,7 +202,6 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   height: 18px;
   width: 18px;
   fill: var(--alert-indicator-color);
-  align-self: baseline;
 }
 #alert.has-issue .summary svg.alert {
   display: block;
