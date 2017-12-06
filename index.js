@@ -110,6 +110,7 @@ class ClinicDoctor {
       'file': fakeDataPath
     })
     b.add(scriptPath)
+    b.transform('brfs')
     const scriptFile = b.bundle()
 
     // create style-file stream
