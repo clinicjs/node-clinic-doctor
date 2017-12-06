@@ -11,7 +11,7 @@ const streamTemplate = require('stream-template')
 const getLoggingPaths = require('./collect/get-logging-paths.js')
 const GCEventDecoder = require('./format/gc-event-decoder.js')
 const ProcessStatDecoder = require('./format/process-stat-decoder.js')
-const CreateRecommendation = require('./recommendations/index.js')
+const RenderRecommendations = require('./recommendations/index.js')
 const stream = require('stream')
 
 class ClinicDoctor {
@@ -57,6 +57,7 @@ class ClinicDoctor {
     const fakeDataPath = path.join(__dirname, 'visualizer', 'data.json')
     const stylePath = path.join(__dirname, 'visualizer', 'style.css')
     const scriptPath = path.join(__dirname, 'visualizer', 'main.js')
+    const logoPath = path.join(__dirname, 'visualizer', 'app-logo.svg')
 
     // Load data
     const paths = getLoggingPaths({ path: dataDirname })
@@ -66,12 +67,7 @@ class ClinicDoctor {
       .pipe(new ProcessStatDecoder())
 
     // create analysis
-    const analysisResult = analysis(gcEventReader, processStatReader)
-    const recommendation = analysisResult
-      .pipe(new CreateRecommendation())
-
-    // Stringify data
-    const analysisStringified = analysisResult
+    const analysisStringified = analysis(gcEventReader, processStatReader)
       .pipe(new stream.Transform({
         readableObjectMode: false,
         writableObjectMode: true,
@@ -94,10 +90,15 @@ class ClinicDoctor {
       {
         "gcEvent": ${gcEventReaderStringify},
         "processStat": ${processStatStringify},
-        "analysis": ${analysisStringified},
-        "recommendation": ${recommendation}
+        "analysis": ${analysisStringified}
       }
     `
+
+    // render recommendations as HTML templates
+    const recommendations = new RenderRecommendations()
+
+    // open logo
+    const logoFile = fs.createReadStream(logoPath)
 
     // create script-file stream
     const b = browserify({
@@ -109,6 +110,7 @@ class ClinicDoctor {
       'file': fakeDataPath
     })
     b.add(scriptPath)
+    b.transform('brfs')
     const scriptFile = b.bundle()
 
     // create style-file stream
@@ -117,18 +119,28 @@ class ClinicDoctor {
     // build output file
     const outputFile = streamTemplate`
       <!DOCTYPE html>
+      <html lang="en">
       <meta charset="utf8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>Clinic Doctor</title>
 
       <style>${styleFile}</style>
 
-      <div id="banner"></div>
-      <div id="menu"></div>
+      <div id="banner">
+        ${logoFile}
+      </div>
+      <div id="front-matter">
+        <div id="alert"></div>
+        <div id="menu"></div>
+      </div>
       <div id="graph"></div>
       <div id="recommendation-space"></div>
       <div id="recommendation"></div>
 
+      ${recommendations}
+
       <script>${scriptFile}</script>
+      </html>
     `
 
     pump(

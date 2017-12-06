@@ -6,31 +6,82 @@ const async = require('async')
 const stream = require('stream')
 const Showdown = require('showdown')
 
-// setup filepaths to Markdown files
-const recommendations = {
-  'gc': {
-    summary: path.resolve(__dirname, 'gc-summary.md'),
-    readMore: path.resolve(__dirname, 'gc-readmore.md')
-  },
-  'event-loop': {
-    summary: path.resolve(__dirname, 'event-loop-summary.md'),
-    readMore: path.resolve(__dirname, 'event-loop-readmore.md')
-  },
-  'io': {
-    summary: path.resolve(__dirname, 'io-summary.md'),
-    readMore: path.resolve(__dirname, 'io-readmore.md')
-  },
-  'none': {
-    summary: path.resolve(__dirname, 'none-summary.md')
-  },
-  'unknown': {
-    summary: path.resolve(__dirname, 'unknown-summary.md')
+class Recommendation {
+  constructor (settings) {
+    Object.assign(this, settings)
+  }
+
+  // Iterate over the files and annotate them with the type.
+  [Symbol.iterator] () {
+    const files = []
+
+    if (this.summary) {
+      files.push({
+        type: 'summary',
+        filepath: this.summary
+      })
+    }
+
+    if (this.readMore) {
+      files.push({
+        type: 'read-more',
+        filepath: this.readMore
+      })
+    }
+
+    return files[Symbol.iterator]()
   }
 }
 
-// Common markdown converter. Only one recommendation
-// per report will get proccessed from markdown to html.
-// Options: https://github.com/showdownjs/showdown#valid-options
+// Create recommendation object for each category
+const recommendations = [
+  new Recommendation({
+    category: 'gc',
+    issue: true,
+    title: 'Potential Garabage Collection issue detected',
+    menu: 'Garabage Collection',
+    order: 1,
+    summary: path.resolve(__dirname, 'gc-summary.md'),
+    readMore: path.resolve(__dirname, 'gc-readmore.md')
+  }),
+  new Recommendation({
+    category: 'event-loop',
+    issue: true,
+    title: 'Potential Event Loop issue detected',
+    menu: 'Event Loop',
+    order: 2,
+    summary: path.resolve(__dirname, 'event-loop-summary.md'),
+    readMore: path.resolve(__dirname, 'event-loop-readmore.md')
+  }),
+  new Recommendation({
+    category: 'io',
+    issue: true,
+    title: 'Potential I/O issue detected',
+    menu: 'I/O',
+    order: 3,
+    summary: path.resolve(__dirname, 'io-summary.md'),
+    readMore: path.resolve(__dirname, 'io-readmore.md')
+  }),
+  new Recommendation({
+    category: 'unknown',
+    issue: true,
+    title: 'Unknown issue detected',
+    menu: 'Unknown issue',
+    order: 4,
+    summary: path.resolve(__dirname, 'unknown-summary.md'),
+    readMore: null
+  }),
+  new Recommendation({
+    category: 'none',
+    issue: false,
+    title: 'No issue detected',
+    menu: 'No issue',
+    order: 5,
+    summary: path.resolve(__dirname, 'none-summary.md'),
+    readMore: null
+  })
+]
+
 const md = new Showdown.Converter({
   noHeaderId: true,
   simplifiedAutoLink: true,
@@ -41,47 +92,52 @@ const md = new Showdown.Converter({
   simpleLineBreaks: false
 })
 
-class GenerateRecommendation extends stream.Transform {
+class RenderRecommendations extends stream.Readable {
   constructor (options) {
-    super(Object.assign({
-      readableObjectMode: false,
-      writableObjectMode: true
-    }, options))
+    super(options)
 
-    this.analysis = null
+    // create a reading queue over all the categories
+    this._readingQueue = recommendations[Symbol.iterator]()
   }
 
-  _transform (datum, encoding, callback) {
-    this.analysis = datum
-    callback(null)
-  }
+  _read (size) {
+    const self = this
+    const read = this._readingQueue.next()
+    if (read.done) return this.push(null)
 
-  _generate (category, callback) {
-    const files = recommendations[category]
-
-    async.mapValues(
-      files,
-      function (filepath, key, done) {
-        fs.readFile(filepath, 'utf-8', function (err, content) {
+    // read the recommendation files for this category
+    const recommendation = read.value
+    async.map(
+      recommendation,
+      function (file, done) {
+        fs.readFile(file.filepath, 'utf-8', function (err, content) {
           if (err) return done(err)
-          done(null, md.makeHtml(content))
+          const template =
+            `<template class="recommendation-text"` +
+            ` data-issue="${recommendation.issue ? 'yes' : 'no'}"` +
+            ` data-type="${file.type}"` +
+            ` data-category="${recommendation.category}"` +
+            ` data-menu="${recommendation.menu}"` +
+            ` data-title="${recommendation.title}"` +
+            ` data-order="${recommendation.order}"` +
+            `>\n` +
+            `${md.makeHtml(content)}\n` +
+            `</template>`
+
+          done(null, template)
         })
       },
-      callback
-    )
-  }
+      function (err, result) {
+        if (err) return self.emit('error', err)
 
-  _flush (callback) {
-    this._generate(
-      this.analysis.issueCategory,
-      (err, recommendation) => {
-        if (err) return callback(err)
+        // Join summary and read-more text
+        const output = result.join('\n') + '\n'
 
-        this.push(JSON.stringify(recommendation))
-        callback(null)
+        // Push output and continue reading if required
+        self.push(output)
       }
     )
   }
 }
 
-module.exports = GenerateRecommendation
+module.exports = RenderRecommendations
