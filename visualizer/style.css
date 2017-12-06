@@ -33,11 +33,11 @@ html {
   --recommendbar-bg-color: rgb(63, 125, 198);
 
   --recommend-text-color: rgb(255, 255, 255);
-  --recommend-title-bg-color: rgb(50, 58, 76);
+  --recommend-title-bg-color: rgba(0, 0, 0, 0.15);
   --recommend-link-color: rgb(62, 167, 244);
   --recommend-close-color: rgb(62, 167, 244);
-  --recommend-menu-detected-color: rgb(67, 93, 122);
   --recommend-menu-selected-color: rgb(63, 125, 198);
+  --recommend-menu-alert-color: rgb(233, 67, 100);
   --recommend-bg-color: rgba(55, 61, 79, 0.99);
 }
 
@@ -59,10 +59,8 @@ html.light-theme {
   --graph-axis-color: rgb(189, 189, 189);
 
   --recommend-text-color: rgb(20, 20, 20);
-  --recommend-title-bg-color: rgb(189, 189, 189);
   --recommend-link-color: rgb(31, 91, 162);
   --recommend-close-color: rgb(63, 125, 198);
-  --recommend-menu-detected-color: rgb(137, 152, 169);
   --recommend-bg-color: rgb(209, 211, 218);
 }
 
@@ -96,7 +94,7 @@ body {
 #front-matter #menu {
   flex: 0 0 auto;
   height: 24px;
-  width: 95px;
+  width: 80px;
   margin-top: 5px;
 }
 
@@ -270,24 +268,25 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
 #menu .toggle {
   float: right;
   cursor: pointer;
-  margin-left: 22px;
+  height: 16px;
+  padding: 4px;
+  margin-left: 10px;
 }
 
 #menu svg {
   fill: var(--menu-button-color);
 }
 
-#toggle-grid {
-  height: 24px;
-  width: 24px;
+#toggle-grid svg {
+  height: 16px;
+  width: 16px;
 }
 html:not(.grid-layout) #toggle-grid svg.grid-1x4 { display: none; }
 html.grid-layout #toggle-grid svg.grid-2x2 { display: none; }
 
 svg#toggle-theme {
-  margin-top: 2px;
-  height: 20px;
-  width: 27px;
+  height: 16px;
+  width: 20px;
 }
 
 /* recommendation layout */
@@ -469,25 +468,56 @@ svg#toggle-theme {
 }
 
 #recommendation .menu ul li {
-  display: block;
+  display: flex;
   float: left;
   height: 35px;
   box-sizing: border-box;
   padding: 0px 4px 0 4px;
-  line-height: 35px;
+  border-bottom: 4px solid transparent;
   margin-right: 30px;
   cursor: pointer;
 }
-
-#recommendation .menu ul li::before {
-  content: attr(data-content);
-}
-
-#recommendation .menu ul li.detected:not(.selected) {
-  border-bottom: 4px solid var(--recommend-menu-detected-color);
-}
 #recommendation .menu ul li.selected {
   border-bottom: 4px solid var(--recommend-menu-selected-color);
+  font-weight: bold;
+}
+
+#recommendation .menu ul li .menu-text {
+  flex: 0 0 auto;
+  align-self: center;
+  display: block;
+  line-height: 31px;
+}
+
+#recommendation .menu ul li .menu-text::before {
+  display: block;
+  width: 100%;
+  content: attr(data-content);
+  text-align: center;
+}
+/* Create a hidden element with the attr(data-content) content, but bold.
+   This will make the element attain the size as if it had font-weight: bold;.
+   This prevents jumping of the surrounding menu items when selected. */
+#recommendation .menu ul li .menu-text::after {
+  content: attr(data-content);
+  display: block;
+  font-weight: bold;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+#recommendation .menu ul li .warning-icon {
+  flex: 0 0 auto;
+  align-self: center;
+  margin-left: 10px;
+  height: 18px;
+  width: 18px;
+  display: none;
+  fill: var(--recommend-menu-alert-color);
+}
+#recommendation .menu ul li.detected .warning-icon {
+  display: block;
 }
 
 #recommendation .menu svg.close {
@@ -604,7 +634,7 @@ svg#toggle-theme {
   display: none;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 670px) {
   .graph .header .legend .legend-item .long-legend {
     display: none;
   }
@@ -613,17 +643,6 @@ svg#toggle-theme {
     display: unset;
   }
 }
-
-@media (max-width: 1280px) {
-  html.grid-layout .graph .header .legend .legend-item .long-legend {
-    display: none;
-  }
-
-  html.grid-layout .graph .header .legend .legend-item .short-legend {
-    display: unset;
-  }
-}
-
 
 .graph .hover-area {
   position: absolute;

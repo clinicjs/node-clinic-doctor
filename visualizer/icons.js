@@ -74,7 +74,9 @@ class Icons {
   insertIcon (name) {
     const icon = this._icons.get(name)
     return function (selection) {
-      icon.insert(selection.node())
+      for (const node of selection.nodes()) {
+        icon.insert(node)
+      }
     }
   }
 }

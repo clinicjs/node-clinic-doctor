@@ -64,13 +64,18 @@ class Recomendation extends EventEmitter {
       .classed('read-more', true)
 
     this.pages = this.menu.append('ul')
-    this.pages
+    const pagesLiEnter = this.pages
       .selectAll('li')
       .data(this.recommendationsAsArray, (d) => d.category)
       .enter()
         .append('li')
-        .attr('data-content', (d) => d.menu)
-        .on('click', (d) => this.emit('change-page', d.category))
+          .on('click', (d) => this.emit('change-page', d.category))
+    pagesLiEnter.append('span')
+      .classed('menu-text', true)
+      .attr('data-content', (d) => d.menu)
+    pagesLiEnter.append('svg')
+      .classed('warning-icon', true)
+      .call(icons.insertIcon('warning'))
 
     this.menu.append('svg')
       .classed('close', true)
