@@ -2,8 +2,8 @@
 
 const summary = require('summary')
 
-function analyseCPU (data) {
-  const stats = summary(data.map((d) => d.cpu))
+function analyseCPU (processStatSubset, gcEventSubset) {
+  const stats = summary(processStatSubset.map((d) => d.cpu))
 
   // If the 90% quartile has less than 90% CPU load then the CPU is not
   // utilized optimally, likely because of some I/O delays. Highlight the

@@ -1,42 +1,57 @@
 'use strict'
 
 const fs = require('fs')
-const path = require('path')
+const GCEvent = require('./collect/gc-event.js')
 const ProcessStat = require('./collect/process-stat.js')
+const getLoggingPaths = require('./collect/get-logging-paths.js')
+const GCEventEncoder = require('./format/gc-event-encoder.js')
 const ProcessStatEncoder = require('./format/process-stat-encoder.js')
-const getSampleFilename = require('./collect/get-sample-filename.js')
 
-// setup encoded stats file
-const encoder = new ProcessStatEncoder()
-encoder.pipe(
-  fs.createWriteStream(path.resolve(getSampleFilename(process.pid)))
-)
+// create encoding files and directory
+const paths = getLoggingPaths({ identifier: process.pid })
+fs.mkdirSync(paths['/'])
+
+const processStatEncoder = new ProcessStatEncoder()
+processStatEncoder.pipe(fs.createWriteStream(paths['/processstat']))
+
+const gcEventsEncoder = new GCEventEncoder()
+gcEventsEncoder.pipe(fs.createWriteStream(paths['/gcevent']))
+
+// save gc-events
+const gcEvent = new GCEvent()
+gcEvent.on('event', function (info) {
+  gcEventsEncoder.write(info)
+})
 
 // sample every 10ms
-const stat = new ProcessStat(parseInt(
+const processStat = new ProcessStat(parseInt(
   process.env.NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL, 10
 ))
 
 // keep sample time unrefed such it doesn't interfer too much
 let timer = null
 function scheduleSample () {
-  timer = setTimeout(saveSample, stat.sampleInterval)
+  timer = setTimeout(saveSample, processStat.sampleInterval)
   timer.unref()
 }
 
 function saveSample () {
-  const sample = stat.sample()
-  encoder.write(sample)
-  stat.refresh()
+  const sample = processStat.sample()
+  processStatEncoder.write(sample)
+  processStat.refresh()
 
   scheduleSample()
 }
 
-// start sampler
+// start
 scheduleSample()
+gcEvent.start()
 
 // before process exits, flush the encoded data to the sample file
 process.once('beforeexit', function () {
   clearTimeout(timer)
-  encoder.end()
+  gcEvent.stop()
+
+  processStatEncoder.end()
+  gcEventsEncoder.end()
 })

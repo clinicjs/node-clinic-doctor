@@ -1,3 +1,4 @@
+'use strict'
 
 const xorshift = require('xorshift')
 const MB = Math.pow(1024, 2)

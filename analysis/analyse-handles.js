@@ -3,7 +3,7 @@
 const summary = require('summary')
 const distributions = require('distributions')
 
-function analyseHandles (data) {
+function analyseHandles (processStatSubset, gcEventSubset) {
   // Healthy handle graphs tends to grow or shrink in small steps.
   //
   // handles
@@ -24,7 +24,7 @@ function analyseHandles (data) {
   // healthy handle graphs are esentially random walks on a symetric
   // distribution.
   // To test this, perform a sign change test on the differential.
-  const handles = data.map((d) => d.handles)
+  const handles = processStatSubset.map((d) => d.handles)
 
   // check for stochasticity, otherwise the following is mathmatical nosense.
   if (summary(handles).sd() === 0) {
@@ -44,8 +44,8 @@ function analyseHandles (data) {
   // like there are unsually few sign changes. But this is actually fine if
   // the server doesn't do anything asynchronously at all. To not see this
   // as a handle issue, compare not the number of sign changes with
-  // `data.length` but instead with the number of observations where changes
-  // were observed.
+  // `processStatSubset.length` but instead with the number of observations
+  // where changes were observed.
   // There can be an off-by-one error were there are more sign changes than
   // non constant observations. Simply round the number of non constant
   // observations up to fit.

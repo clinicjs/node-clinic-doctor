@@ -1,0 +1,142 @@
+---
+title: "Developing the handles model"
+output: html_document
+---
+
+```{r, echo=FALSE}
+rm(list=ls())
+cat('\f')
+
+library(knitr)
+library(ggplot2)
+library(scales)
+library(plyr)
+library(reshape2)
+
+print.data.table = function (dat) {
+  dat = data.frame(dat)
+  dat$time = NULL
+  dat$startTime = NULL
+  dat$endTime = NULL
+  kable(head(dat)) 
+}
+```
+
+## Getting the data
+
+```{r}
+load.data = function (name, has.issue) {
+  return(list(
+    gc=read.csv(paste0(name, '/', name, '-gcevents.csv'), strip.white=T),
+    stat=read.csv(paste0(name, '/', name, '-processstat.csv'), strip.white=T)
+  ))
+};
+
+dat.sample.1 = load.data('10145.clinic-doctor')
+dat.sample.2 = load.data('12318.clinic-doctor')
+```
+
+```{r}
+print.data.table(dat.sample.1$gc)
+print.data.table(dat.sample.1$stat)
+```
+
+```{r}
+subset.interval = function (dat) {
+  dat.gc = dat$gc[dat$gc$interval == 1, ]
+  dat.stat = dat$stat[dat$stat$interval == 1, ]
+  
+  offset = dat.stat[1, 'timestamp']
+  
+  dat.stat$time = as.POSIXct((dat.stat$timestamp - offset) / 1000, origin="1970-01-01", tz="GMT")
+  dat.gc$startTime = as.POSIXct((dat.gc$startTimestamp - offset) / 1000, origin="1970-01-01", tz="GMT")
+  dat.gc$endTime = as.POSIXct((dat.gc$endTimestamp - offset) / 1000, origin="1970-01-01", tz="GMT")
+  
+  return(list(
+    gc=dat.gc,
+    stat=dat.stat
+  ))
+}
+
+dat.sample.1 = subset.interval(dat.sample.1)
+dat.sample.2 = subset.interval(dat.sample.2)
+```
+
+```{r}
+print.data.table(dat.sample.1$gc)
+print.data.table(dat.sample.1$stat)
+```
+
+
+## Plot data
+
+```{r, fig.height=9, fig.width=7}
+dat = melt(dat.sample.1$stat, id.vars=c("time", "timestamp", "interval"))
+
+p = ggplot(dat)
+p = p + geom_rect(data = dat.sample.1$gc, aes(xmin=startTime, xmax=endTime, ymin=-Inf, ymax=Inf, fill=type), alpha=0.8)
+p = p + geom_line(aes(x = time, y = value))
+p = p + facet_grid(variable ~ ., scales='free_y')
+p = p + scale_x_datetime(labels = date_format("%S sec"))
+p = p + scale_y_continuous(limits = c(0, NA))
+p = p + theme(legend.position="bottom")
+print(p)
+```
+
+## Model hypothesis
+
+> If delay and `MARK_SWEEP_COMPACT` are correlated.
+
+## Model
+
+```{r}
+dat.annotate.msc = function (dat) {
+  msc = dat$gc[dat$gc$type == 'MARK_SWEEP_COMPACT', ]
+  
+  annotate = rep(F, nrow(dat$stat))
+  for(i in 1:nrow(msc)) {
+    intervalStart = msc[i, 'startTimestamp']
+    intervalEnd = msc[i, 'endTimestamp'] + 20
+    
+    annotate = annotate | (intervalStart <= dat$stat$timestamp & dat$stat$timestamp <= intervalEnd)
+  }
+  
+  dat.stat = data.frame(dat$stat)
+  dat.stat$msc = annotate
+  return(list(
+    gc=dat$gc,
+    stat=dat.stat
+  ))
+}
+
+dat.sample.1 = dat.annotate.msc(dat.sample.1)
+```
+
+```{r}
+p = ggplot(dat.sample.1$stat, aes(x = time, y = delay, colour=msc))
+p = p + geom_point()
+p = p + scale_x_datetime(labels = date_format("%S sec"))
+p = p + scale_y_continuous(limits = c(0, NA))
+p = p + theme(legend.position="bottom")
+print(p)
+```
+
+```{r}
+analysis.msc.delay = function (dat) {
+  dat.stat = dat$stat
+  
+  return(data.frame(list(
+    msc = c(T, F),
+    median = c(
+      median(dat.stat[dat.stat$msc == T, 'delay']),
+      median(dat.stat[dat.stat$msc == F, 'delay'])
+    ),
+    max = c(
+      max(dat.stat[dat.stat$msc == T, 'delay']),
+      max(dat.stat[dat.stat$msc == F, 'delay'])
+    )
+  )))
+}
+
+kable(analysis.msc.delay(dat.sample.1))
+```
