@@ -1,0 +1,399 @@
+---
+title: "Developing the handles model"
+output: html_document
+---
+
+```{r, echo=FALSE}
+rm(list=ls())
+cat('\f')
+
+library(knitr)
+library(ggplot2)
+library(scales)
+library(plyr)
+
+print.data.table = function (dat) {
+  dat = data.frame(dat)
+  dat$name = NULL
+  dat$time = NULL
+  dat$has.issue = NULL
+  kable(head(dat)) 
+}
+```
+
+## The Problem
+
+I/O are currently detected using only the CPU data. We generally expect servers to be CPU bound, as node.js is very good at handling I/O concurrency. Thus if the CPU usage is low, that indicates that too much time is spent on waiting for I/O.
+
+However, if by pressureing the server sufficiently hard with a lot of requests, it is almost always possible to get the CPU to 100%. The idea is to use the additional `handles` data as a second metric for detecting I/O issues.
+
+## Getting the data
+
+Matteo provided some sample files. To work on these in R, they should be converted to `.csv` files.
+
+```
+cat small-load.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > small-load.csv
+
+cat heavy-load-1.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > heavy-load-1.csv
+cat heavy-load-2.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > heavy-load-2.csv
+
+cat mystery-1.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > mystery-1.csv
+cat mystery-2.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > mystery-2.csv
+cat mystery-3.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > mystery-3.csv
+cat mystery-4.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > mystery-4.csv
+
+cat issue-1.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > issue-1.csv
+cat issue-2.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > issue-2.csv
+cat issue-3.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > issue-3.csv
+```
+
+Unfortunately we currently don't have any real data, and the not `slow-io` servers have unrealistic constant handle trends. This makes it difficult to test our model against data without a handle issue. To work around this, the `small-load` data set is used as an example without an I/O issue. Even though it was specifically created to have an I/O issue, the I/O issue primarly shows up in the CPU data.
+
+To load the data:
+
+```{r}
+load.data = function (name, has.issue) {
+  dat = read.csv(name)
+  dat$name = name
+  dat$has.issue = has.issue
+  dat$time = as.POSIXct((dat$timestamp - min(dat$timestamp)) / 1000, origin="1970-01-01", tz="GMT")
+  return(dat)
+};
+
+dat.small.load = load.data('small-load.csv', F)
+dat.heavy.load.1 = load.data('heavy-load-1.csv', T)
+dat.heavy.load.2 = load.data('heavy-load-2.csv', T)
+dat.mystery.1 = load.data('mystery-1.csv', F)
+dat.mystery.2 = load.data('mystery-2.csv', F)
+dat.mystery.3 = load.data('mystery-3.csv', T)
+dat.mystery.4 = load.data('mystery-4.csv', T)
+dat.issue.1 = load.data('issue-1.csv', F)
+dat.issue.2 = load.data('issue-2.csv', F)
+dat.issue.3 = load.data('issue-3.csv', F)
+```
+
+The data is structured as:
+
+```{r, results='asis'}
+print.data.table(head(dat.small.load))
+```
+
+The `interval` column has the value `1` for the gussed analysis interval. To focus only on this data:
+
+```{r}
+subset.interval = function (dat) {
+  dat = dat[dat$interval == 1, ]
+  dat$time = as.POSIXct((dat$timestamp - min(dat$timestamp)) / 1000, origin="1970-01-01", tz="GMT")
+  return(dat)
+}
+
+dat.small.load = subset.interval(dat.small.load)
+dat.heavy.load.1 = subset.interval(dat.heavy.load.1)
+dat.heavy.load.2 = subset.interval(dat.heavy.load.2)
+dat.mystery.1 = subset.interval(dat.mystery.1)
+dat.mystery.2 = subset.interval(dat.mystery.2)
+dat.mystery.3 = subset.interval(dat.mystery.3)
+dat.mystery.4 = subset.interval(dat.mystery.4)
+dat.issue.1 = subset.interval(dat.issue.1)
+dat.issue.2 = subset.interval(dat.issue.2)
+dat.issue.3 = subset.interval(dat.issue.3)
+```
+
+Reprinting the data, shows the `interval = 0` have now been stripped.
+
+```{r, results='asis'}
+print.data.table(head(dat.small.load))
+```
+
+Finally, the data is combined for convience:
+```{r}
+dat.main = rbind(dat.small.load, dat.heavy.load.1, dat.heavy.load.2)
+dat.mystery = rbind(dat.mystery.1, dat.mystery.2, dat.mystery.3, dat.mystery.4)
+dat.issue = rbind(dat.issue.1, dat.issue.2, dat.issue.3)
+```
+
+## The model hypothesis
+
+The model hypothesis is made by looking at the data and condering once domain knowledge. Particularly the latter should be the primary component when there isn't any real data.
+
+```{r}
+p = ggplot(dat.main, aes(x = time, y = handles, colour=has.issue))
+p = p + geom_line()
+p = p + facet_grid(name ~ ., scales='free_y')
+p = p + scale_x_datetime(labels = date_format("%S sec"))
+p = p + scale_y_continuous(limits = c(0, NA))
+print(p)
+```
+
+The model hypothesis that Matteo provided was:
+
+> servers with an I/O issue will have an increasing number of handles, that will occationally decrease a lot.
+
+This appears to fit well with the `heavy-load` data and not very well with `small-load`. This is also what we want, as `small-load` is treated as having no issues with the `handles` data.
+
+## Quantifying the model hypothesis
+
+### Coefficient of variation
+
+The immediate thought is that the `heavy-load` will have relatively more variance than `small-load` because it has more extream values. A challenge here is that the variance will depend on the number of concurrent requests. To normalize against this, the standard deviation is divided by the mean. This is what is called the coeffeicent of variation (`cv`).
+
+```{r}
+cv.unbiased = function (vec) {
+  cv = sd(vec) / mean(vec)
+  return(cv * (1 + 1/(4 * length(vec))))
+}
+
+analysis.cv = function (dat) {
+  name = dat[1, 'name']
+  return(data.frame(list(
+    cv.unbiased = cv.unbiased(dat$handles)
+  )))
+}
+
+kable(ddply(dat.main, "name", analysis.cv))
+```
+
+The results quickly show that this is not the case. `heavy-load-1` does actally have a smaller coefficient of variation than `small-load`. 
+
+### Heavy tail detection
+
+Before going for the next idea it can be useful to at the data from other angels than just the plain graph. Once such way is the data distribution.
+
+```{r, fig.height=4}
+p = ggplot(dat.main, aes(handles, colour=has.issue))
+p = p + geom_density(fill = 1, alpha = 0.1)
+p = p + facet_wrap(~ name, scales='free')
+print(p)
+```
+
+From this data, the idea is that that `heavy-load` data has more skewness (yes, this is a statistical term) than `small-load`. Once could then use a fancy statistical test like Jarque-Barre to test the skewness value. However, fancy statistical tests are a nightmare to implement in JavaScript. Instead the data is assumed to be normally distributed, from this assumtion one can check if there is a surprising amount of data at either distribution tails.
+
+```{r, fig.height=3}
+plot.heavy.tail = function (dat) {
+  lower.bound = mean(dat$handles) - 1.96 * sd(dat$handles)
+  upper.bound = mean(dat$handles) + 1.96 * sd(dat$handles)
+  
+  p = ggplot(dat, aes(x = time, y = handles, colour=has.issue))
+  p = p + geom_line()
+  p = p + scale_x_datetime(labels = date_format("%S sec"))
+  p = p + geom_hline(yintercept = lower.bound)
+  p = p + annotate("text", min(dat$time), lower.bound, vjust = -1, hjust=0, label = "lower bound")
+  p = p + geom_hline(yintercept = upper.bound)
+  p = p + annotate("text", max(dat$time), upper.bound, vjust = -1, hjust=1, label = "upper bound")
+  print(p)
+}
+
+plot.heavy.tail(dat.small.load)
+plot.heavy.tail(dat.heavy.load.1)
+```
+
+From the graphs, this appears to be a somewhat reasonable strategy. `small-load` is evenly distributed on both sides, `heavy-load-1` is is clearly not. This is then transformed into completly test function:
+
+```{r}
+
+analysis.heavy.tail = function (dat, risk = 0.05) {
+  name = dat[1, 'name']
+  has.issue = dat[1, 'has.issue']
+  t.multipler = qt((1 - 0.05/2), nrow(dat))
+  lower.bound = mean(dat$handles) - t.multipler * sd(dat$handles)
+  upper.bound = mean(dat$handles) + t.multipler * sd(dat$handles)
+
+    # extream tail ratio
+  upper.extream.ratio = sum(dat$handles > upper.bound) / length(dat$handles)
+  lower.extream.ratio = sum(dat$handles < lower.bound) / length(dat$handles)
+  issue.deteted = max(upper.extream.ratio, lower.extream.ratio) > risk
+
+  return(data.frame(list(
+    lower = lower.extream.ratio,
+    upper = upper.extream.ratio,
+    detect.issue = issue.deteted,
+    has.issue = has.issue
+  )))
+}
+
+kable(ddply(dat.main, "name", analysis.heavy.tail))
+```
+
+At this point life is good. Matteo then later showed data where this strategy doesn't work.
+
+```{r}
+kable(ddply(dat.mystery, "name", analysis.heavy.tail))
+```
+
+As seen from this result, the issue detection (`detect.issue`) doesn't match the target (`has.issue`). Looking at the data, nothing appears to be unusual.
+
+```{r}
+p = ggplot(dat.mystery, aes(x = time, y = handles, colour=has.issue))
+p = p + geom_line()
+p = p + facet_grid(name ~ ., scales='free_y')
+p = p + scale_x_datetime(labels = date_format("%S sec"))
+p = p + scale_y_continuous(limits = c(0, NA))
+print(p)
+```
+
+Looking at the results for `dat.mystery.4`, where an issue should be detected but isn't, nothing appears to be wrong. The detection logic just isn't good enogth. One could of course just and work around with small hacks, but this is rarely the solution.
+
+```{r, fig.height=3}
+plot.heavy.tail(dat.mystery.4)
+```
+
+What one should take from this, is that the model hypthoesis might be slightly wrong. The drops don't appear in `dat.mystery.4` are sudden but also a bit gradual.
+
+## New model hypothesis
+
+The previuse analysis, inspires a new hypothesis.
+
+> servers with an I/O issue will have an increasing number of handles for a period followed by a period of decreasing number of handles.
+
+### Sign change test
+
+The immediate thought might be that one could fit a sinus function to this data. But without knowing what a good and bad period is, and because the period and amplitude may change over time, this is unlikely to be a good strategy.
+
+Instead, increasing and decreasing trends are often best analysed by looking at the differential curves. This is where one looks at the difference from the previuse time step.
+
+```{r}
+diff.data = function (dat) {
+  return(data.frame(list(
+    timestamp = head(dat$timestamp, -1),
+    time = head(dat$time, -1),
+    handles.delta = diff(dat$handles),
+    has.issue = head(dat$has.issue, -1)
+  )))
+}
+
+dat.main.delta = ddply(dat.main, "name", diff.data)
+dat.mystery.delta = ddply(dat.mystery, "name", diff.data)
+```
+
+
+```{r, fig.height=7}
+p = ggplot(rbind(dat.main.delta, dat.mystery.delta), aes(x = time, y = handles.delta, colour=has.issue))
+p = p + geom_line()
+p = p + facet_grid(name ~ ., scales='free_y')
+p = p + scale_x_datetime(labels = date_format("%S sec"))
+print(p)
+```
+
+In the differential data transformation, the increasing part will be positive and the decreasing part will be negative. We can understand this better by looking at the just the signs.
+
+```{r}
+dat.main.delta$handles.delta.sign = sign(dat.main.delta$handles.delta)
+dat.mystery.delta$handles.delta.sign = sign(dat.mystery.delta$handles.delta)
+```
+
+```{r, fig.height=7}
+p = ggplot(rbind(dat.main.delta, dat.mystery.delta), aes(x = time, y = handles.delta.sign, colour=has.issue))
+p = p + geom_point(alpha=0.1)
+p = p + facet_grid(name ~ .)
+p = p + scale_x_datetime(labels = date_format("%S sec"))
+print(p)
+```
+
+From this it is apparent that the samples with an issue, has an uneven distribution of increasing and decreasing number of handles.
+
+In classical statistics, a test that is often performed is the sign-test. This says, that if data is normally distributed then the next observation has a 50% change of having the opposite sign, compared to the previous observation. This test, does actually not just hold for normally distributed data but symetrically distributed data in general. Looking at the histrograms from before, and for the `dat.mystery` there do also appear to be a relation between symmetry and the number of handles. Although, the relation is not super apparent.
+
+To get a better idea if this is true, a symmetry plot can be made:
+
+```{r}
+symmetry.data = function (dat) {
+  handles.median = median(dat$handles.delta)
+  handles.sorted = dat$handles.delta[order(dat$handles.delta)]
+  
+  return(data.frame(
+    symmetry.x = rev(handles.sorted) - handles.median,
+    symmetry.y = handles.median - handles.sorted,
+    has.issue = dat$has.issue
+  ))
+}
+
+dat.main.delta.symmetry = ddply(dat.main.delta, "name", symmetry.data)
+dat.mystery.delta.symmetry = ddply(dat.mystery.delta, "name", symmetry.data)
+
+p = ggplot(rbind(dat.main.delta.symmetry, dat.mystery.delta.symmetry), aes(symmetry.x, symmetry.y, colour=has.issue))
+p = p + geom_point(alpha=0.3)
+p = p + geom_abline(intercept = 0, slope = 1)
+p = p + facet_wrap(~ name, scales='free')
+print(p)
+```
+
+In this plot, data samples that isn't generally on the line can be said to be non-symetrical. From this plot the correlation between an issue and symmetry appears to be very strong.
+
+The next step is then to implement the sign change test. To do this, we count the number of sign changes and compare that with the total number of observations. For symmetric data, the properbility of a sign change is 0.5. However this does not guarantee an exact split. To overcome this, the binomial distribution is used to tell the properbility of observing the given number of sign changes, given `n` observation and a properbility of 50%.
+
+```{r}
+analysis.sign.change.v1 = function (dat, risk = 0.001) {
+  name = dat[1, 'name']
+  has.issue = dat[1, 'has.issue']
+  
+  differential.data = diff(dat$handles)
+  differential.data.sign = sign(differential.data)
+  
+  # count changes
+  sign.changes = sum(diff(differential.data.sign) != 0)
+  
+  # lower tail p.value
+  p.value = pbinom(sign.changes, nrow(dat), 0.5)
+  
+  return(data.frame(list(
+    name = name,
+    p.value = p.value,
+    detect.issue = p.value < risk,
+    has.issue = has.issue
+  )))
+}
+
+kable(ddply(rbind(dat.main, dat.mystery), "name", analysis.sign.change.v1))
+```
+
+Once again life is good. Matteo then later showed data where this doesn't work.
+
+```{r}
+kable(ddply(dat.issue, "name", analysis.sign.change.v1))
+```
+
+### Improved sign change test
+
+Luckily, the fix here is simple. The issue exists when the number of handles is almost constant: 
+
+```{r}
+p = ggplot(dat.issue, aes(x = time, y = handles, colour=has.issue))
+p = p + geom_line()
+p = p + facet_grid(name ~ ., scales='free_y')
+p = p + scale_x_datetime(labels = date_format("%S sec"))
+p = p + scale_y_continuous(limits = c(0, NA))
+print(p)
+```
+
+This mostly happen in very theoretical cases, were there is very little or no I/O activity. A simple solution to this, is to only consider the observations were the number of observations actually changed. 
+
+```{r}
+analysis.sign.change.v1 = function (dat, risk = 0.001) {
+  name = dat[1, 'name']
+  has.issue = dat[1, 'has.issue']
+  
+  differential.data = diff(dat$handles)
+  differential.data.sign = sign(differential.data)
+  
+  # count changes
+  sign.changes = sum(diff(differential.data.sign) != 0)
+  num.none.constant.obs = sum(differential.data.sign != 0)
+  num.none.constant.obs = max(num.none.constant.obs, sign.changes)
+  
+  # lower tail p.value
+  p.value = pbinom(sign.changes, num.none.constant.obs, 0.5)
+  
+  return(data.frame(list(
+    name = name,
+    p.value = p.value,
+    detect.issue = p.value < risk,
+    has.issue = has.issue
+  )))
+}
+
+kable(ddply(rbind(dat.main, dat.mystery, dat.issue), "name", analysis.sign.change.v1))
+```
+
+## Conclusion
+
+The final model appears to be quite good. The p-values are extreamly good, so there is a lot of room for errors. Without any real data it stil remains unclear whether or not the model hypothesis and the sign change test holds in practice. But for now, this is the best we can do.
