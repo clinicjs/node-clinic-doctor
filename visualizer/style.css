@@ -39,6 +39,9 @@ html {
   --recommend-menu-selected-color: rgb(63, 125, 198);
   --recommend-menu-alert-color: rgb(233, 67, 100);
   --recommend-bg-color: rgba(55, 61, 79, 0.99);
+
+  --special-scrollbar-bg: rgba(255, 255, 255, .5);
+  --special-scrollbar-shadow: rgba(0, 0, 0, .5);
 }
 
 html.light-theme {
@@ -62,6 +65,9 @@ html.light-theme {
   --recommend-link-color: rgb(31, 91, 162);
   --recommend-close-color: rgb(63, 125, 198);
   --recommend-bg-color: rgb(209, 211, 218);
+
+  --special-scrollbar-bg: rgba(0, 0, 0, .5);
+  --special-scrollbar-shadow: rgba(255, 255, 255, .5);
 }
 
 /* Main layout */
@@ -225,7 +231,7 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
 
   cursor: pointer;
 }
-#alert.has-issue .summary .toggle{
+#alert.has-issue .summary .toggle {
   display: block;
 }
 
@@ -354,6 +360,10 @@ svg#toggle-theme {
 
 #recommendation .details .content {
   flex: 0 1 auto;
+  /* in firefox `flex: 0 1 auto` takes up the content space instead of the
+     available space. Set min-height to indicate that the auto height can
+     be less than the content. */
+  min-height: 0px;
 
   display: flex;
   flex-direction: column;
@@ -377,6 +387,8 @@ svg#toggle-theme {
   display: none;
   flex: 0 1 auto;
   overflow-y: scroll;
+  min-height: 0px; /* make auto be the available space instead of content space */
+  padding-right: 7px;
 }
 #recommendation.read-more-open .details .content .read-more {
   display: block;
@@ -388,10 +400,12 @@ svg#toggle-theme {
   #recommendation .details .content {
     display: block; /* disable flexbox layout for .content content */
     overflow-y: scroll;
+    padding-right: 7px;
   }
 
   #recommendation .details .content .read-more {
     overflow-y: unset;
+    padding-right: 0px;
   }
 }
 
@@ -402,7 +416,7 @@ svg#toggle-theme {
   width: 100%;
 }
 
-/* styleing */
+/* recommendation styleing */
 #recommendation-space {
   margin-bottom: 75px; /* #recommendation.bar[height] + 10px */
 }
@@ -419,6 +433,16 @@ svg#toggle-theme {
 #recommendation .content a {
   color: var(--recommend-link-color);
   text-decoration: none;
+}
+
+#recommendation ::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+#recommendation ::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: var(--special-scrollbar-bg);
+  -webkit-box-shadow: 0 0 1px var(--special-shadow-bg);
 }
 
 #recommendation .content .summary-title {
@@ -454,6 +478,7 @@ svg#toggle-theme {
 
 #recommendation .content .read-more {
   columns: 400px 4;
+  column-fill: auto;
   text-align: justify;
   hyphens: auto;
 }
