@@ -476,9 +476,8 @@ svg#toggle-theme {
   display: block;
 }
 
-#recommendation .content .read-more {
+#recommendation .content .read-more .columns {
   columns: 400px 4;
-  column-fill: auto;
   text-align: justify;
   hyphens: auto;
 }
