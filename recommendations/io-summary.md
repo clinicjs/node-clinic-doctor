@@ -1,4 +1,3 @@
-Potential __I/O__ issue detected:
 - There may be long-running asynchronous activities
 - This can mean that the bottleneck is not the Node process at all, but rather an I/O operation
 - The simplest current approach to solving this problem is by reasoning about external infrastructure

@@ -361,6 +361,10 @@ svg#toggle-theme {
   align-items: stretch;
 }
 
+#recommendation .details .content .summary-title {
+  flex: 0 0 auto;
+}
+
 #recommendation .details .content .summary {
   flex: 0 0 auto;
 }
@@ -412,38 +416,49 @@ svg#toggle-theme {
   overscroll-behavior-y: contain; /* prevent scolling the main window */
 }
 
-#recommendation .details a {
+#recommendation .content a {
   color: var(--recommend-link-color);
   text-decoration: none;
 }
 
-#recommendation .details .read-more-button {
+#recommendation .content .summary-title {
+  display: none;
+  padding-top: 16px;
+}
+#recommendation .content .summary-title::after {
+  content: ':'
+}
+#recommendation.detected .content .summary-title {
+  display: block;
+}
+
+#recommendation .content .read-more-button {
   display: none;
   color: var(--recommend-link-color);
   cursor: pointer;
 }
-#recommendation .details .read-more-button::before {
+#recommendation .content .read-more-button::before {
   content: 'Read more';
 }
 
-#recommendation.read-more-open .details .read-more-button {
+#recommendation.read-more-open .content .read-more-button {
   margin-bottom: 10px;
 }
-#recommendation.read-more-open .details .read-more-button::before {
+#recommendation.read-more-open .content .read-more-button::before {
   content: 'Read less';
 }
 
-#recommendation.has-read-more .details .read-more-button {
+#recommendation.has-read-more .content .read-more-button {
   display: block;
 }
 
-#recommendation .read-more {
+#recommendation .content .read-more {
   columns: 400px 4;
   text-align: justify;
   hyphens: auto;
 }
 
-#recommendation .read-more h2 {
+#recommendation .content .read-more h2 {
   background: var(--recommend-title-bg-color);
   font-size: 12pt;
   padding: 12px;
@@ -452,7 +467,7 @@ svg#toggle-theme {
   margin: 0; /* let p and ul tags dominate margin collapse */
 }
 
-#recommendation .read-more li {
+#recommendation .content .read-more li {
   orphans: 4;
 }
 

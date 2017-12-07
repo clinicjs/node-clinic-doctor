@@ -10,6 +10,7 @@ class RecomendationWrapper {
     this.content = categoryContent
     this.category = this.content.category
     this.menu = this.content.menu
+    this.title = this.content.title
 
     this.selected = false
     this.detected = false
@@ -55,6 +56,8 @@ class Recomendation extends EventEmitter {
       .classed('menu', true)
     this.content = this.details.append('div')
       .classed('content', true)
+    this.summaryTitle = this.content.append('div')
+      .classed('summary-title', true)
     this.summary = this.content.append('div')
       .classed('summary', true)
     this.readMoreButton = this.content.append('div')
@@ -126,6 +129,16 @@ class Recomendation extends EventEmitter {
 
     const recommendation = this.recommendations.get(this.selectedCategory)
 
+    // update state classes
+    this.container
+      .classed('open', this.opened)
+      .classed('read-more-open', this.readMoreOpened)
+      .classed('detected', recommendation.detected)
+
+    // set content
+    this.summaryTitle
+      .text(recommendation.title)
+
     this.summary.html(null)
     if (recommendation.hasSummary()) {
       this.summary.node().appendChild(recommendation.getSummary())
@@ -136,9 +149,6 @@ class Recomendation extends EventEmitter {
     if (recommendation.hasReadMore()) {
       this.readMore.node().appendChild(recommendation.getReadMore())
     }
-
-    this.container.classed('open', this.opened)
-    this.container.classed('read-more-open', this.readMoreOpened)
 
     // set space height such that the fixed element don't have to hide
     // something in the background.

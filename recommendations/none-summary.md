@@ -1,1 +1,1 @@
-No problems detected, everything looks good!
+* Everything looks good!
