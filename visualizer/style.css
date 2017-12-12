@@ -126,19 +126,19 @@ html.grid-layout #graph {
     "delay handles";
 }
 
-#graph .graph.cpu {
+#graph .sub-graph.cpu {
   grid-area: cpu;
 }
 
-#graph .graph.memory {
+#graph .sub-graph.memory {
   grid-area: memory;
 }
 
-#graph .graph.delay {
+#graph .sub-graph.delay {
   grid-area: delay;
 }
 
-#graph .graph.handles {
+#graph .sub-graph.handles {
   grid-area: handles;
 }
 
@@ -598,11 +598,11 @@ svg#toggle-theme {
 #recommendation.open .bar .arrow svg.arrow-up { display: none; }
 
 /* Graph layout */
-.graph {
+#graph .sub-graph {
   position: relative;
 }
 
-.graph .header {
+#graph .sub-graph .header {
   /* margin-left: is the `graph g[margin-left] - .domain[stroke-width]` */
   margin: 0 20px 0 48px;
   height: 18px;
@@ -611,13 +611,13 @@ svg#toggle-theme {
   overflow: hidden;
 }
 
-.graph .header .title {
+#graph .sub-graph .header .title {
   float: left;
   height: 18px;
   margin-right: 20px;
 }
 
-.graph .header .title svg.alert {
+#graph .sub-graph .header .title svg.alert {
   float: right;
   margin-left: 10px;
   height: 18px;
@@ -627,138 +627,138 @@ svg#toggle-theme {
   fill: var(--graph-alert-color)
 }
 
-.graph .header .title .alert.visible {
+#graph .sub-graph .header .title .alert.visible {
   visibility: visible;
 }
 
-.graph .header .title .name::after {
+#graph .sub-graph .header .title .name::after {
   content: ' ';
 }
 
-.graph .header .legend {
+#graph .sub-graph .header .legend {
   float: left;
   height: 18px;
   overflow: hidden;
 }
 
-.graph .header .legend .legend-item {
+#graph .sub-graph .header .legend .legend-item {
   float: left;
   height: 18px;
   margin-left: 20px;
   overflow: hidden;
 }
 
-.graph .header .legend .legend-item svg {
+#graph .sub-graph .header .legend .legend-item svg {
   float: left;
   margin-right: 6px;
 }
 
-.graph .header .legend .legend-item svg line {
+#graph .sub-graph .header .legend .legend-item svg line {
   stroke-width: 2px;
   stroke: var(--graph-good-line-color);
 }
 
-.graph .header .legend .legend-item.bad svg line {
+#graph .sub-graph .header .legend .legend-item.bad svg line {
   stroke: var(--graph-bad-line-color);
 }
 
-.graph .header .legend .legend-item span {
+#graph .sub-graph .header .legend .legend-item span {
   float: left;
   font-size: 10pt;
   line-height: 18px;
 }
 
-.graph .header .legend .legend-item .short-legend {
+#graph .sub-graph .header .legend .legend-item .short-legend {
   display: none;
 }
 
 @media (max-width: 670px) {
-  .graph .header .legend .legend-item .long-legend {
+  .sub-graph.header .legend .legend-item .long-legend {
     display: none;
   }
 
-  .graph .header .legend .legend-item .short-legend {
+  .sub-graph.header .legend .legend-item .short-legend {
     display: unset;
   }
 }
 
-.graph .hover-area {
+#graph .sub-graph .hover-area {
   position: absolute;
   z-index: 1;
 }
 
-.graph .hover {
+#graph .sub-graph .hover {
   position: absolute;
   display: none;
 }
 
-.graph .hover.visible {
+#graph .sub-graph .hover.visible {
   display: block;
 }
 
-.graph .hover .background, .graph .hover .pointer {
+#graph .sub-graph .hover .background, #graph .sub-graph .hover .pointer {
   fill: var(--hover-bg-color);
 }
 
-.graph .hover .line {
+#graph .sub-graph .hover .line {
   fill: var(--hover-line-color);
 }
 
-.graph .hover text {
+#graph .sub-graph .hover text {
   alignment-baseline: central;
   fill: var(--hover-text-color);
   font-size: 10pt;
 }
 
-.graph .hover .title {
+#graph .sub-graph .hover .title {
   font-weight: bold;
   text-anchor: middle;
 }
 
-.graph .hover .legend {
+#graph .sub-graph .hover .legend {
   font-weight: bold;
 }
 
-.graph svg.chart {
+#graph .sub-graph svg.chart {
   width: 100%;
   height: 180px;
 }
 
-.graph .chart .line {
+#graph .sub-graph .chart .line {
   fill: none;
   stroke: var(--graph-good-line-color);
   stroke-width: 2px;
 }
 
-.graph .chart .line.bad {
+#graph .sub-graph .chart .line.bad {
   stroke: var(--graph-bad-line-color);
 }
 
-.graph .chart .tick line {
+#graph .sub-graph .chart .tick line {
   stroke: var(--graph-tick-color);
   shape-rendering: crispEdges;
 }
 
-.graph .chart .tick text {
+#graph .sub-graph .chart .tick text {
   fill: var(--graph-text-color);
   font-size: 10pt;
 }
 
-.graph .chart .domain {
+#graph .sub-graph .chart .domain {
   stroke: var(--graph-axis-color);
   stroke-width: 2px;
   shape-rendering: crispEdges;
 }
 
-.graph .chart .background {
+#graph .sub-graph .chart .background {
   fill: var(--graph-bg-color);
 }
 
-.graph .chart .interval {
+#graph .sub-graph .chart .interval {
   fill: var(--graph-interval-color);
   display: none;
 }
 
-html.recommendation-open .graph .chart .interval {
+html.recommendation-open #graph .sub-graph.chart .interval {
   display: block;
 }

@@ -18,7 +18,7 @@ class SubGraph extends EventEmitter {
     // setup graph container
     this.container = container.append('div')
       .attr('id', `graph-${setup.className}`)
-      .classed('graph', true)
+      .classed('sub-graph', true)
       .classed(setup.className, true)
 
     // add headline
