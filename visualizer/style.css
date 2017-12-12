@@ -673,11 +673,11 @@ svg#toggle-theme {
 }
 
 @media (max-width: 670px) {
-  .sub-graph.header .legend .legend-item .long-legend {
+  #graph .sub-graph .header .legend .legend-item .long-legend {
     display: none;
   }
 
-  .sub-graph.header .legend .legend-item .short-legend {
+  #graph .sub-graph .header .legend .legend-item .short-legend {
     display: unset;
   }
 }
