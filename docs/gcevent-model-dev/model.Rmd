@@ -1,5 +1,5 @@
 ---
-title: "Developing the handles model"
+title: "Developing the GC model"
 output: html_document
 ---
 
@@ -34,6 +34,7 @@ load.data = function (name, has.issue) {
 
 dat.sample.1 = load.data('10145.clinic-doctor')
 dat.sample.2 = load.data('12318.clinic-doctor')
+dat.sample.3 = load.data('3139.clinic-doctor')
 ```
 
 ```{r}
@@ -50,7 +51,7 @@ subset.interval = function (dat) {
   
   dat.stat$time = as.POSIXct((dat.stat$timestamp - offset) / 1000, origin="1970-01-01", tz="GMT")
   dat.gc$startTime = as.POSIXct((dat.gc$startTimestamp - offset) / 1000, origin="1970-01-01", tz="GMT")
-  dat.gc$endTime = as.POSIXct((dat.gc$endTimestamp - offset) / 1000, origin="1970-01-01", tz="GMT")
+  dat.gc$endTime = as.POSIXct((dat.gc$endTimestamp - offset + 50) / 1000, origin="1970-01-01", tz="GMT")
   
   return(list(
     gc=dat.gc,
@@ -60,21 +61,50 @@ subset.interval = function (dat) {
 
 dat.sample.1 = subset.interval(dat.sample.1)
 dat.sample.2 = subset.interval(dat.sample.2)
+dat.sample.3 = subset.interval(dat.sample.3)
 ```
 
 ```{r}
-print.data.table(dat.sample.1$gc)
-print.data.table(dat.sample.1$stat)
+print.data.table(dat.sample.3$gc)
+print.data.table(dat.sample.3$stat)
 ```
 
 
 ## Plot data
 
 ```{r, fig.height=9, fig.width=7}
-dat = melt(dat.sample.1$stat, id.vars=c("time", "timestamp", "interval"))
+dat = melt(dat.sample.3$stat, id.vars=c("time", "timestamp", "interval"))
 
 p = ggplot(dat)
-p = p + geom_rect(data = dat.sample.1$gc, aes(xmin=startTime, xmax=endTime, ymin=-Inf, ymax=Inf, fill=type), alpha=0.8)
+p = p + geom_rect(data = dat.sample.3$gc, aes(xmin=startTime, xmax=endTime, ymin=-Inf, ymax=Inf, fill=type), alpha=0.8)
+p = p + geom_line(aes(x = time, y = value))
+p = p + facet_grid(variable ~ ., scales='free_y')
+p = p + scale_x_datetime(labels = date_format("%S sec"))
+p = p + scale_y_continuous(limits = c(0, NA))
+p = p + theme(legend.position="bottom")
+print(p)
+```
+
+```{r, fig.height=9, fig.width=7}
+dat = melt(dat.sample.3$stat, id.vars=c("time", "timestamp", "interval"))
+dat.sample.3.gc.msc = dat.sample.3$gc[dat.sample.3$gc$type == 'MARK_SWEEP_COMPACT', ]
+
+p = ggplot(dat)
+p = p + geom_rect(data = dat.sample.3.gc.msc, aes(xmin=startTime, xmax=endTime, ymin=-Inf, ymax=Inf, fill=type), alpha=0.8)
+p = p + geom_line(aes(x = time, y = value))
+p = p + facet_grid(variable ~ ., scales='free_y')
+p = p + scale_x_datetime(labels = date_format("%S sec"))
+p = p + scale_y_continuous(limits = c(0, NA))
+p = p + theme(legend.position="bottom")
+print(p)
+```
+
+```{r, fig.height=9, fig.width=7}
+dat = melt(dat.sample.3$stat, id.vars=c("time", "timestamp", "interval"))
+dat.sample.3.gc.sca = dat.sample.3$gc[dat.sample.3$gc$type == 'SCAVENGE', ]
+
+p = ggplot(dat)
+p = p + geom_rect(data = dat.sample.3.gc.sca, aes(xmin=startTime, xmax=endTime, ymin=-Inf, ymax=Inf, fill=type), alpha=0.8)
 p = p + geom_line(aes(x = time, y = value))
 p = p + facet_grid(variable ~ ., scales='free_y')
 p = p + scale_x_datetime(labels = date_format("%S sec"))
@@ -109,11 +139,11 @@ dat.annotate.msc = function (dat) {
   ))
 }
 
-dat.sample.1 = dat.annotate.msc(dat.sample.1)
+dat.sample.3 = dat.annotate.msc(dat.sample.3)
 ```
 
 ```{r}
-p = ggplot(dat.sample.1$stat, aes(x = time, y = delay, colour=msc))
+p = ggplot(dat.sample.3$stat, aes(x = time, y = delay, colour=msc))
 p = p + geom_point()
 p = p + scale_x_datetime(labels = date_format("%S sec"))
 p = p + scale_y_continuous(limits = c(0, NA))
@@ -138,5 +168,5 @@ analysis.msc.delay = function (dat) {
   )))
 }
 
-kable(analysis.msc.delay(dat.sample.1))
+kable(analysis.msc.delay(dat.sample.3))
 ```
