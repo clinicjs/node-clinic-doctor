@@ -28,11 +28,17 @@ class ClinicDoctor {
     const samplerPath = path.resolve(__dirname, 'sampler.js')
 
     // run program, but inject the sampler
-    const proc = spawn(args[0], ['-r', samplerPath].concat(args.slice(1)), {
+    const logArgs = [
+      '-r', samplerPath
+    ]
+    const proc = spawn(args[0], args.slice(1), {
       stdio: 'inherit',
-      env: Object.assign({
-        'NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL': this.sampleInterval
-      }, process.env)
+      env: Object.assign({}, process.env, {
+        NODE_OPTIONS: logArgs.join(' ') + (
+          process.env.NODE_OPTIONS ? ' ' + process.env.NODE_OPTIONS : ''
+        ),
+        NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL: this.sampleInterval
+      })
     })
 
     // relay SIGINT to process
