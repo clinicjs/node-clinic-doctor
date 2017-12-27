@@ -16,9 +16,9 @@ class RecomendationWrapper {
     this.detected = false
   }
 
-  get order() {
+  get order () {
     // always make the detected issue appear first
-    return this.detected ? 0 : this.content.order;
+    return this.detected ? 0 : this.content.order
   }
 
   getSummary () { return this.content.getSummary() }
