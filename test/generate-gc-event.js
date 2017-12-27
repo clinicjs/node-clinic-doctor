@@ -15,7 +15,7 @@ function generateGCEvent (data) {
   let startIndex = -1
   for (let i = 0; i < data.length; i++) {
     const type = typeMap.get(data[i])
-    if (type !== lastType) {
+    if (type !== lastType || type === null) {
       if (type !== null) {
         output.push({
           startTimestamp: startIndex * 10,
