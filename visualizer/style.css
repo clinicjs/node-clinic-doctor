@@ -759,6 +759,6 @@ svg#toggle-theme {
   display: none;
 }
 
-html.recommendation-open #graph .sub-graph.chart .interval {
+html.recommendation-open #graph .sub-graph .chart .interval {
   display: block;
 }
