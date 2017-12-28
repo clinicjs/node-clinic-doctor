@@ -1,19 +1,17 @@
 'use strict'
 
 const test = require('tap').test
+const endpoint = require('endpoint')
 const ProcessStat = require('../collect/process-stat.js')
 const ProcessStatDecoder = require('../format/process-stat-decoder.js')
 const ProcessStatEncoder = require('../format/process-stat-encoder.js')
 
-test('basic encoder-decoder works', function (t) {
+test('Format - process stat - encoder-decoder', function (t) {
   const stat = new ProcessStat(1)
 
   const encoder = new ProcessStatEncoder()
   const decoder = new ProcessStatDecoder()
   encoder.pipe(decoder)
-
-  const outputSamples = []
-  decoder.on('data', (sample) => outputSamples.push(sample))
 
   const inputSamples = []
   for (let i = 0; i < 1; i++) {
@@ -21,16 +19,16 @@ test('basic encoder-decoder works', function (t) {
     encoder.write(sample)
     inputSamples.push(sample)
   }
+  encoder.end()
 
-  decoder.once('end', function () {
+  decoder.pipe(endpoint({ objectMode: true }, function (err, outputSamples) {
+    if (err) t.ifError(err)
     t.strictDeepEqual(inputSamples, outputSamples)
     t.end()
-  })
-
-  encoder.end()
+  }))
 })
 
-test('partial decoding', function (t) {
+test('Format - process stat - partial decoding', function (t) {
   const stat = new ProcessStat(1)
 
   const encoder = new ProcessStatEncoder()
