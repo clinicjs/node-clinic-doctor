@@ -11,7 +11,7 @@ function getLoggingPaths (options) {
     dirpath = path.dirname(options.path)
     basename = path.basename(options.path, '.clinic-doctor')
   } else {
-    throw new TypeError('missing either identifier or path value')
+    throw new Error('missing either identifier or path value')
   }
 
   const dirname = `${basename}.clinic-doctor`

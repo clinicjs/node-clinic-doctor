@@ -7,7 +7,7 @@ function hrtime2ms (time) {
 class ProcessStat {
   constructor (sampleInterval) {
     if (typeof sampleInterval !== 'number') {
-      throw TypeError('sample interval must be a number')
+      throw new TypeError('sample interval must be a number')
     }
 
     this.sampleInterval = sampleInterval

@@ -3,21 +3,29 @@
 const test = require('tap').test
 const ProcessStat = require('../collect/process-stat.js')
 
-test('timestamp', function (t) {
+test('Collect - process stat - input validation', function (t) {
+  t.throws(
+    () => new ProcessStat(),
+    new TypeError('sample interval must be a number')
+  )
+  t.end()
+})
+
+test('Collect - process stat - timestamp', function (t) {
   const stat = new ProcessStat(1)
   const sample = stat.sample()
   t.ok(sample.timestamp > Date.now() - 100 && sample.timestamp <= Date.now())
   t.end()
 })
 
-test('number of handles', function (t) {
+test('Collect - process stat - number of handles', function (t) {
   const stat = new ProcessStat(1)
   const sample = stat.sample()
   t.strictEqual(sample.handles, process._getActiveHandles().length)
   t.end()
 })
 
-test('memory usage', function (t) {
+test('Collect - process stat - memory usage', function (t) {
   const stat = new ProcessStat(1)
   const sample = stat.sample()
   t.ok(sample.memory.rss > 0)
@@ -33,7 +41,7 @@ function sleep (time) {
   while (Date.now() < future);
 }
 
-test('delay usage', function (t) {
+test('Collect - process stat - delay usage', function (t) {
   const stat = new ProcessStat(10)
   stat.refresh()
   sleep(20)
@@ -43,7 +51,7 @@ test('delay usage', function (t) {
   t.end()
 })
 
-test('cpu usage', function (t) {
+test('Collect - process stat - cpu usage', function (t) {
   const stat = new ProcessStat(10)
   stat.refresh()
   sleep(200)

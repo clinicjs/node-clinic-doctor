@@ -2,7 +2,6 @@
 
 const test = require('tap').test
 const endpoint = require('endpoint')
-const ProcessStat = require('../collect/process-stat.js')
 const ProcessStatDecoder = require('../format/gc-event-decoder.js')
 const ProcessStatEncoder = require('../format/gc-event-encoder.js')
 
