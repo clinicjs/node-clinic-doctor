@@ -15,12 +15,10 @@ class Recommendation {
   [Symbol.iterator] () {
     const files = []
 
-    if (this.summary) {
-      files.push({
-        type: 'summary',
-        filepath: this.summary
-      })
-    }
+    files.push({
+      type: 'summary',
+      filepath: this.summary
+    })
 
     if (this.readMore) {
       files.push({

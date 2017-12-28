@@ -31,6 +31,7 @@
     "ttest": "^1.1.0"
   },
   "devDependencies": {
+    "cheerio": "^1.0.0-rc.2",
     "rimraf": "^2.6.2",
     "snazzy": "^7.0.0",
     "standard": "^10.0.3",
