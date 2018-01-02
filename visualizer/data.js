@@ -1,5 +1,5 @@
 
-const data = require('./data.json') // base64 encoded source file
+const data = require('./data.json')
 
 function loaddata (callback) {
   setTimeout(function () {
