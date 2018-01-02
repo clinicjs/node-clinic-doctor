@@ -1,6 +1,6 @@
-#clinic-doctor specific
-*.clinic-doctor-sample
-*.clinic-doctor-sample.html
+# clinic-doctor specific
+*.clinic-doctor
+*.clinic-doctor.html
 
 # Logs
 logs
