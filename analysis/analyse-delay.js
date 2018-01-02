@@ -2,7 +2,7 @@
 
 const summary = require('summary')
 
-function analyseDelay (processStatSubset, gcEventSubset) {
+function analyseDelay (processStatSubset, traceEventSubset) {
   const stats = summary(processStatSubset.map((d) => d.delay))
 
   // If there is a 10ms event loop delay, we can't handle connections for 10ms
