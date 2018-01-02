@@ -8,7 +8,8 @@ test('Collect - logging path - identifier', function (t) {
 
   t.strictDeepEqual(paths, {
     '/': '1062.clinic-doctor',
-    '/gcevent': '1062.clinic-doctor/1062.clinic-doctor-gcevents',
+    '/traceevent': '1062.clinic-doctor/1062.clinic-doctor-traceevent',
+    '/systeminfo': '1062.clinic-doctor/1062.clinic-doctor-systeminfo',
     '/processstat': '1062.clinic-doctor/1062.clinic-doctor-processstat'
   })
   t.end()
@@ -19,7 +20,8 @@ test('Collect - logging path - path', function (t) {
 
   t.strictDeepEqual(paths, {
     '/': '/root/1062.clinic-doctor',
-    '/gcevent': '/root/1062.clinic-doctor/1062.clinic-doctor-gcevents',
+    '/traceevent': '/root/1062.clinic-doctor/1062.clinic-doctor-traceevent',
+    '/systeminfo': '/root/1062.clinic-doctor/1062.clinic-doctor-systeminfo',
     '/processstat': '/root/1062.clinic-doctor/1062.clinic-doctor-processstat'
   })
   t.end()
