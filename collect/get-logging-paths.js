@@ -15,12 +15,14 @@ function getLoggingPaths (options) {
   }
 
   const dirname = `${basename}.clinic-doctor`
-  const gcEventFilename = `${basename}.clinic-doctor-gcevents`
+  const traceEventFilename = `${basename}.clinic-doctor-traceevent`
+  const systemInfoFilename = `${basename}.clinic-doctor-systeminfo`
   const processsStatFilename = `${basename}.clinic-doctor-processstat`
 
   return {
     '/': path.join(dirpath, dirname),
-    '/gcevent': path.join(dirpath, dirname, gcEventFilename),
+    '/systeminfo': path.join(dirpath, dirname, systemInfoFilename),
+    '/traceevent': path.join(dirpath, dirname, traceEventFilename),
     '/processstat': path.join(dirpath, dirname, processsStatFilename)
   }
 }

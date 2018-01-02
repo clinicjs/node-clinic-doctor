@@ -3,7 +3,7 @@
 const summary = require('summary')
 const distributions = require('distributions')
 
-function analyseHandles (processStatSubset, gcEventSubset) {
+function analyseHandles (processStatSubset, traceEventSubset) {
   // Healthy handle graphs tends to grow or shrink in small steps.
   //
   // handles

@@ -40,10 +40,10 @@ test('test gc events', function (t) {
   `)
 
   cmd.on('error', t.ifError.bind(t))
-  cmd.on('ready', function (gcEventReader, processStatReader) {
+  cmd.on('ready', function (traceEventReader, processStatReader) {
     async.parallel({
-      gcEvent (done) {
-        gcEventReader.pipe(endpoint({ objectMode: true }, done))
+      traceEvent (done) {
+        traceEventReader.pipe(endpoint({ objectMode: true }, done))
       },
 
       processStat (done) {
@@ -52,30 +52,20 @@ test('test gc events', function (t) {
     }, function (err, output) {
       if (err) return t.ifError(err)
 
-      const scavenge = output.gcEvent
-        .filter((event) => event.type === 'SCAVENGE')
-      const markSweepCompact = output.gcEvent
-        .filter((event) => event.type === 'MARK_SWEEP_COMPACT')
+      const scavenge = output.traceEvent
+        .filter((event) => event.name === 'V8.GCScavenger')
+      const compactor = output.traceEvent
+        .filter((event) => event.name === 'V8.GCCompactor')
 
       t.ok(scavenge.length >= 1)
-      t.strictDeepEqual(scavenge[0], {
-        startTimestamp: scavenge[0].startTimestamp,
-        endTimestamp: scavenge[0].endTimestamp,
-        type: 'SCAVENGE'
-      })
-      t.ok(scavenge[0].startTimestamp <= scavenge[1].endTimestamp)
-      t.ok(Math.abs(scavenge[0].startTimestamp - Date.now()) < 200)
-      t.ok(Math.abs(scavenge[0].endTimestamp - Date.now()) < 200)
+      t.ok(scavenge[0].args.startTimestamp <= scavenge[0].args.endTimestamp)
+      t.ok(Math.abs(scavenge[0].args.endTimestamp - Date.now()) < 400)
+      t.ok(Math.abs(scavenge[0].args.startTimestamp - Date.now()) < 400)
 
-      t.strictEqual(markSweepCompact.length, 1)
-      t.strictDeepEqual(markSweepCompact[0], {
-        startTimestamp: markSweepCompact[0].startTimestamp,
-        endTimestamp: markSweepCompact[0].endTimestamp,
-        type: 'MARK_SWEEP_COMPACT'
-      })
-      t.ok(markSweepCompact[0].startTimestamp <= markSweepCompact[0].endTimestamp)
-      t.ok(Math.abs(markSweepCompact[0].startTimestamp - Date.now()) < 200)
-      t.ok(Math.abs(markSweepCompact[0].endTimestamp - Date.now()) < 200)
+      t.strictEqual(compactor.length, 1)
+      t.ok(compactor[0].args.startTimestamp <= compactor[0].args.endTimestamp)
+      t.ok(Math.abs(compactor[0].args.startTimestamp - Date.now()) < 400)
+      t.ok(Math.abs(compactor[0].args.endTimestamp - Date.now()) < 400)
 
       t.end()
     })
@@ -85,10 +75,10 @@ test('test gc events', function (t) {
 test('collect command produces data files with content', function (t) {
   const cmd = new CollectAndRead({}, '-e', 'setTimeout(() => {}, 200)')
   cmd.on('error', t.ifError.bind(t))
-  cmd.on('ready', function (gcEventReader, processStatReader) {
+  cmd.on('ready', function (traceEventReader, processStatReader) {
     async.parallel({
-      gcEvent (done) {
-        gcEventReader.pipe(endpoint({ objectMode: true }, done))
+      traceEvent (done) {
+        traceEventReader.pipe(endpoint({ objectMode: true }, done))
       },
 
       processStat (done) {
@@ -96,9 +86,6 @@ test('collect command produces data files with content', function (t) {
       }
     }, function (err, output) {
       if (err) return t.ifError(err)
-
-      // to fast to cause gc
-      t.ok(output.gcEvent.length >= 0)
 
       // expect time seperation to be 10ms, allow 10ms error
       const sampleTimes = output.processStat.map((stat) => stat.timestamp)
@@ -117,10 +104,10 @@ test('custom sample interval', function (t) {
   }, '-e', 'setTimeout(() => {}, 200)')
 
   cmd.on('error', t.ifError.bind(t))
-  cmd.on('ready', function (gcEventReader, processStatReader) {
+  cmd.on('ready', function (traceEventReader, processStatReader) {
     async.parallel({
-      gcEvent (done) {
-        gcEventReader.pipe(endpoint({ objectMode: true }, done))
+      traceEvent (done) {
+        traceEventReader.pipe(endpoint({ objectMode: true }, done))
       },
 
       processStat (done) {
@@ -128,9 +115,6 @@ test('custom sample interval', function (t) {
       }
     }, function (err, output) {
       if (err) return t.ifError(err)
-
-      // to fast to cause gc
-      t.ok(output.gcEvent.length >= 0)
 
       // expect time seperation to be 1ms, allow 5ms error
       const sampleTimes = output.processStat.map((stat) => stat.timestamp)

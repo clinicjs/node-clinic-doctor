@@ -3,16 +3,17 @@
 const fs = require('fs')
 const path = require('path')
 const pump = require('pump')
+const stream = require('stream')
 const { spawn } = require('child_process')
 const analysis = require('./analysis/index.js')
 const Stringify = require('streaming-json-stringify')
 const browserify = require('browserify')
 const streamTemplate = require('stream-template')
 const getLoggingPaths = require('./collect/get-logging-paths.js')
-const GCEventDecoder = require('./format/gc-event-decoder.js')
+const SystemInfoDecoder = require('./format/system-info-decoder.js')
+const TraceEventDecoder = require('./format/trace-event-decoder.js')
 const ProcessStatDecoder = require('./format/process-stat-decoder.js')
 const RenderRecommendations = require('./recommendations/index.js')
-const stream = require('stream')
 
 class ClinicDoctor {
   constructor (settings = {}) {
@@ -29,7 +30,8 @@ class ClinicDoctor {
 
     // run program, but inject the sampler
     const logArgs = [
-      '-r', samplerPath
+      '-r', samplerPath,
+      '--trace-events-enabled', '--trace-event-categories', 'v8'
     ]
     const proc = spawn(args[0], args.slice(1), {
       stdio: 'inherit',
@@ -54,8 +56,17 @@ class ClinicDoctor {
         }
       }
 
-      // filename is defined my the child pid
-      callback(null, getLoggingPaths({ identifier: proc.pid })['/'])
+      // get logging directory structure
+      const paths = getLoggingPaths({ identifier: proc.pid })
+
+      // move trace_event file to logging directory
+      fs.rename(
+        'node_trace.1.log', paths['/traceevent'],
+        function (err) {
+          if (err) return callback(err)
+          callback(null, paths['/'])
+        }
+      )
     })
   }
 
@@ -67,13 +78,15 @@ class ClinicDoctor {
 
     // Load data
     const paths = getLoggingPaths({ path: dataDirname })
-    const gcEventReader = fs.createReadStream(paths['/gcevent'])
-      .pipe(new GCEventDecoder())
+    const SystemInfoReader = fs.createReadStream(paths['/systeminfo'])
+      .pipe(new SystemInfoDecoder())
+    const traceEventReader = fs.createReadStream(paths['/traceevent'])
+      .pipe(new TraceEventDecoder(SystemInfoReader))
     const processStatReader = fs.createReadStream(paths['/processstat'])
       .pipe(new ProcessStatDecoder())
 
     // create analysis
-    const analysisStringified = analysis(gcEventReader, processStatReader)
+    const analysisStringified = analysis(traceEventReader, processStatReader)
       .pipe(new stream.Transform({
         readableObjectMode: false,
         writableObjectMode: true,
@@ -82,7 +95,7 @@ class ClinicDoctor {
         }
       }))
 
-    const gcEventReaderStringify = gcEventReader.pipe(new Stringify({
+    const traceEventStringify = traceEventReader.pipe(new Stringify({
       seperator: ',\n',
       stringifier: JSON.stringify
     }))
@@ -94,7 +107,7 @@ class ClinicDoctor {
 
     const dataFile = streamTemplate`
       {
-        "gcEvent": ${gcEventReaderStringify},
+        "traceEvent": ${traceEventStringify},
         "processStat": ${processStatStringify},
         "analysis": ${analysisStringified}
       }

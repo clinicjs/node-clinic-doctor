@@ -3,9 +3,10 @@
 const fs = require('fs')
 const async = require('async')
 const events = require('events')
-const getLoggingPaths = require('../collect/get-logging-paths.js')
 const ClinicDoctor = require('../index.js')
-const GCEventDecoder = require('../format/gc-event-decoder.js')
+const getLoggingPaths = require('../collect/get-logging-paths.js')
+const SystemInfoDecoder = require('../format/system-info-decoder.js')
+const TraceEventDecoder = require('../format/trace-event-decoder.js')
 const ProcessStatDecoder = require('../format/process-stat-decoder.js')
 
 class CollectAndRead extends events.EventEmitter {
@@ -19,30 +20,40 @@ class CollectAndRead extends events.EventEmitter {
 
       const files = getLoggingPaths({ path: dirname })
 
-      const gcevent = fs.createReadStream(files['/gcevent'])
-        .pipe(new GCEventDecoder())
-      const processstat = fs.createReadStream(files['/processstat'])
+      const systemInfo = fs.createReadStream(files['/systeminfo'])
+        .pipe(new SystemInfoDecoder())
+      const traceEvent = fs.createReadStream(files['/traceevent'])
+        .pipe(new TraceEventDecoder(systemInfo))
+      const processStat = fs.createReadStream(files['/processstat'])
         .pipe(new ProcessStatDecoder())
 
-      self._setupAutoCleanup(files, gcevent, processstat)
-      self.emit('ready', gcevent, processstat)
+      self._setupAutoCleanup(files, systemInfo, traceEvent, processStat)
+      self.emit('ready', traceEvent, processStat)
     })
   }
 
-  _setupAutoCleanup (files, gcevent, processstat) {
+  _setupAutoCleanup (files, systemInfo, traceEvent, processStat) {
     const self = this
 
     async.parallel({
-      stackTraces (done) {
-        gcevent.once('end', function () {
-          fs.unlink(files['/gcevent'], function (err) {
+      systemInfo (done) {
+        systemInfo.once('end', function () {
+          fs.unlink(files['/systeminfo'], function (err) {
             if (err) return done(err)
             done(null)
           })
         })
       },
-      traveEvents (done) {
-        processstat.once('end', function () {
+      traceEvent (done) {
+        traceEvent.once('end', function () {
+          fs.unlink(files['/traceevent'], function (err) {
+            if (err) return done(err)
+            done(null)
+          })
+        })
+      },
+      processStat (done) {
+        processStat.once('end', function () {
           fs.unlink(files['/processstat'], function (err) {
             if (err) return done(err)
             done(null)

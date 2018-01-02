@@ -4,13 +4,13 @@ const test = require('tap').test
 const startpoint = require('startpoint')
 const analyse = require('../analysis/index.js')
 const generateProcessStat = require('./generate-process-stat.js')
-const generateGCEvent = require('./generate-gc-event.js')
+const generateTraceEvent = require('./generate-trace-event.js')
 
-async function getAnalysis (processStatData, gcEventData) {
+async function getAnalysis (processStatData, traceEventData) {
   const processStatReader = startpoint(processStatData, { objectMode: true })
-  const gcEventReader = startpoint(gcEventData, { objectMode: true })
+  const traceEventReader = startpoint(traceEventData, { objectMode: true })
 
-  const analysisResult = analyse(gcEventReader, processStatReader)
+  const analysisResult = analyse(traceEventReader, processStatReader)
 
   // read data
   return new Promise(function (resolve, reject) {
@@ -44,8 +44,8 @@ test('Analysis - pipeline - normal interval', async function (t) {
       handles: [3, 3, 3, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 3, 3, 3],
       cpu: [1, 1, 1, 100, 100, 120, 90, 110, 100, 80, 110, 90, 110, 1, 1, 1]
     }, noise)
-    const goodMemoryGC = generateGCEvent([
-      'NONE', 'NONE', 'NONE', 'SCA', 'NONE', 'SCA', 'NONE', 'SCA', 'NONE',
+    const goodMemoryGC = generateTraceEvent([
+      'NONE', 'SCA', 'NONE', 'SCA', 'NONE', 'SCA', 'NONE', 'SCA', 'NONE',
       'SCA', 'NONE', 'SCA', 'NONE', 'NONE', 'NONE', 'NONE'
     ])
     t.strictDeepEqual(await getAnalysis(goodCPU, goodMemoryGC), {

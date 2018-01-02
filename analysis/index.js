@@ -22,19 +22,19 @@ class Analyse extends stream.Readable {
   }
 }
 
-function analysis (gcEventReader, processStatReader) {
+function analysis (traceEventReader, processStatReader) {
   const result = new Analyse()
 
   async.parallel({
-    gcEvent (done) {
-      gcEventReader.pipe(endpoint({ objectMode: true }, done))
+    traceEvent (done) {
+      traceEventReader.pipe(endpoint({ objectMode: true }, done))
     },
     processStat (done) {
       processStatReader.pipe(endpoint({ objectMode: true }, done))
     }
   }, function (err, data) {
     if (err) return result.emit('error', err)
-    const { gcEvent, processStat } = data
+    const { traceEvent, processStat } = data
 
     // guess the interval for where the benchmarker ran
     const intervalIndex = guessInterval(processStat)
@@ -45,19 +45,19 @@ function analysis (gcEventReader, processStatReader) {
 
     // subset data
     const processStatSubset = processStat.slice(...intervalIndex)
-    const gcEventSubset = []
-    for (const datum of gcEvent) {
-      if (datum.startTimestamp >= intervalTime[0] &&
-          datum.endTimestamp <= intervalTime[1]) {
-        gcEventSubset.push(datum)
+    const traceEventSubset = []
+    for (const datum of traceEvent) {
+      if (datum.args.startTimestamp >= intervalTime[0] &&
+          datum.args.endTimestamp <= intervalTime[1]) {
+        traceEventSubset.push(datum)
       }
     }
 
     const issues = {
-      'delay': analyseDelay(processStatSubset, gcEventSubset),
-      'cpu': analyseCPU(processStatSubset, gcEventSubset),
-      'memory': analyseMemory(processStatSubset, gcEventSubset),
-      'handles': analyseHandles(processStatSubset, gcEventSubset)
+      'delay': analyseDelay(processStatSubset, traceEventSubset),
+      'cpu': analyseCPU(processStatSubset, traceEventSubset),
+      'memory': analyseMemory(processStatSubset, traceEventSubset),
+      'handles': analyseHandles(processStatSubset, traceEventSubset)
     }
     const category = issueCategory(issues)
 
