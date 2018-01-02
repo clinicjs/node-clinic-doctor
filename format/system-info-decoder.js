@@ -3,7 +3,7 @@
 const stream = require('stream')
 
 class SystemInfo {
-  constructor(systemInfo) {
+  constructor (systemInfo) {
     this.clock = systemInfo.clock
 
     const hrtime = this.clock.hrtime

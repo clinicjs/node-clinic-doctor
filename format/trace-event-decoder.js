@@ -37,7 +37,7 @@ class TraceEventDecoder extends stream.Transform {
     this.parser.on('data', (data) => this._process(data))
   }
 
-  _process(traceEvent) {
+  _process (traceEvent) {
     if (traceEvent.cat !== 'v8' || !gcEventNames.has(traceEvent.name)) {
       return
     }
@@ -70,17 +70,17 @@ class TraceEventDecoder extends stream.Transform {
       const starttime = this.incremetalMarkingStart
       const endtime = traceEvent.ts + traceEvent.dur
       this.push({
-       pid: traceEvent.pid,
-       tid: traceEvent.tid,
-       ts: starttime,
-       ph: 'X',
-       cat: 'v8',
-       name: 'V8.GCMarkSweepCompact',
-       dur: endtime - starttime,
-       args: {
-         startTimestamp: (starttime * 1e-3) + this.clockOffset,
-         endTimestamp: (endtime * 1e-3) + this.clockOffset
-       }
+        pid: traceEvent.pid,
+        tid: traceEvent.tid,
+        ts: starttime,
+        ph: 'X',
+        cat: 'v8',
+        name: 'V8.GCMarkSweepCompact',
+        dur: endtime - starttime,
+        args: {
+          startTimestamp: (starttime * 1e-3) + this.clockOffset,
+          endTimestamp: (endtime * 1e-3) + this.clockOffset
+        }
       })
     } else {
       // Add unixtime to the traceEvent
