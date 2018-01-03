@@ -8,6 +8,7 @@ const cmd = new CollectAndRead({}, '-e', `
     console.log('SIGINT received')
     process.kill(process.pid, 'SIGINT')
   })
+  console.log('listening for SIGINT')
 `)
 cmd.on('ready', function () {
   cmd.cleanup()

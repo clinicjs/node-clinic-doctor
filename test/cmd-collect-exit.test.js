@@ -15,7 +15,8 @@ test('cmd - collect - external SIGINT is relayed', function (t) {
       cwd: __dirname
     }
   )
-  setTimeout(() => child.kill('SIGINT'), 500)
+
+  child.stdout.once('data', () => child.kill('SIGINT'))
 
   async.parallel({
     stdout (done) { child.stdout.pipe(endpoint(done)) },
@@ -25,7 +26,8 @@ test('cmd - collect - external SIGINT is relayed', function (t) {
 
     // Expect the WARNING output to be shown
     t.ok(output.stderr.toString().split('\n').length, 1)
-    t.strictEqual(output.stdout.toString().trim(), 'SIGINT received')
+    t.strictEqual(output.stdout.toString(),
+                  'listening for SIGINT\nSIGINT received\n')
     t.end()
   })
 })
