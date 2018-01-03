@@ -51,8 +51,8 @@ Will consume the datafile specified by `dataFilename`, this datafile will be pro
 [1]: https://nodejs.org/api/documentation.html#documentation_stability_index
 [2]: https://img.shields.io/npm/v/node-clinic-doctor.svg?style=flat-square
 [3]: https://npmjs.org/package/node-clinic-doctor
-[4]: https://img.shields.io/travis/nearform/node-clinic-doctor/master.svg?style=flat-square
-[5]: https://travis-ci.org/nearform/node-clinic-doctor
+[4]: https://circleci.com/gh/nearform/node-clinic-doctor/tree/master.svg?style=shield&circle-token=c26d5926558ff909ef0384756c3b70bc6151866e
+[5]: https://circleci.com/gh/nearform/node-clinic-doctor
 [6]: https://img.shields.io/codecov/c/github/nearform/node-clinic-doctor/master.svg?style=flat-square
 [7]: https://codecov.io/github/nearform/node-clinic-doctor
 [8]: http://img.shields.io/npm/dm/node-clinic-doctor.svg?style=flat-square
