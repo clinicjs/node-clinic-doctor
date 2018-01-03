@@ -43,6 +43,9 @@ class ClinicDoctor {
       })
     })
 
+    // get logging directory structure
+    const paths = getLoggingPaths({ identifier: proc.pid })
+
     // relay SIGINT to process
     process.once('SIGINT', () => proc.kill('SIGINT'))
 
@@ -50,20 +53,23 @@ class ClinicDoctor {
       // the process did not exit normally
       if (code !== 0 && signal !== 'SIGINT') {
         if (code !== null) {
-          return callback(new Error(`process exited with exit code ${code}`))
+          return callback(
+            new Error(`process exited with exit code ${code}`),
+            paths['/']
+          )
         } else {
-          return callback(new Error(`process exited by signal ${signal}`))
+          return callback(
+            new Error(`process exited by signal ${signal}`),
+            paths['/']
+          )
         }
       }
-
-      // get logging directory structure
-      const paths = getLoggingPaths({ identifier: proc.pid })
 
       // move trace_event file to logging directory
       fs.rename(
         'node_trace.1.log', paths['/traceevent'],
         function (err) {
-          if (err) return callback(err)
+          if (err) return callback(err, paths['/'])
           callback(null, paths['/'])
         }
       )

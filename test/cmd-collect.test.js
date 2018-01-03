@@ -16,7 +16,7 @@ function diff (data) {
   return output
 }
 
-test('test gc events', function (t) {
+test('cmd - collect - gc events', function (t) {
   const cmd = new CollectAndRead({}, '--expose-gc', '-e', `
     const t = [];
 
@@ -40,14 +40,14 @@ test('test gc events', function (t) {
   `)
 
   cmd.on('error', t.ifError.bind(t))
-  cmd.on('ready', function (traceEventReader, processStatReader) {
+  cmd.on('ready', function () {
     async.parallel({
       traceEvent (done) {
-        traceEventReader.pipe(endpoint({ objectMode: true }, done))
+        cmd.traceEvent.pipe(endpoint({ objectMode: true }, done))
       },
 
       processStat (done) {
-        processStatReader.pipe(endpoint({ objectMode: true }, done))
+        cmd.processStat.pipe(endpoint({ objectMode: true }, done))
       }
     }, function (err, output) {
       if (err) return t.ifError(err)
@@ -72,17 +72,17 @@ test('test gc events', function (t) {
   })
 })
 
-test('collect command produces data files with content', function (t) {
+test('cmd - collect - data files have content', function (t) {
   const cmd = new CollectAndRead({}, '-e', 'setTimeout(() => {}, 200)')
   cmd.on('error', t.ifError.bind(t))
-  cmd.on('ready', function (traceEventReader, processStatReader) {
+  cmd.on('ready', function () {
     async.parallel({
       traceEvent (done) {
-        traceEventReader.pipe(endpoint({ objectMode: true }, done))
+        cmd.traceEvent.pipe(endpoint({ objectMode: true }, done))
       },
 
       processStat (done) {
-        processStatReader.pipe(endpoint({ objectMode: true }, done))
+        cmd.processStat.pipe(endpoint({ objectMode: true }, done))
       }
     }, function (err, output) {
       if (err) return t.ifError(err)
@@ -98,20 +98,20 @@ test('collect command produces data files with content', function (t) {
   })
 })
 
-test('custom sample interval', function (t) {
+test('cmd - collect - custom sample interval', function (t) {
   const cmd = new CollectAndRead({
     sampleInterval: 1
   }, '-e', 'setTimeout(() => {}, 200)')
 
   cmd.on('error', t.ifError.bind(t))
-  cmd.on('ready', function (traceEventReader, processStatReader) {
+  cmd.on('ready', function () {
     async.parallel({
       traceEvent (done) {
-        traceEventReader.pipe(endpoint({ objectMode: true }, done))
+        cmd.traceEvent.pipe(endpoint({ objectMode: true }, done))
       },
 
       processStat (done) {
-        processStatReader.pipe(endpoint({ objectMode: true }, done))
+        cmd.processStat.pipe(endpoint({ objectMode: true }, done))
       }
     }, function (err, output) {
       if (err) return t.ifError(err)

@@ -33,7 +33,7 @@ test('cmd - test visualization', function (t) {
           if (err) return cleanup(err, dirname)
 
           t.ok(content.length > 1024)
-          t.end()
+          cleanup(null, dirname)
         })
       })
     }

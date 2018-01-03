@@ -2,6 +2,7 @@
 
 const fs = require('fs')
 const async = require('async')
+const rimraf = require('rimraf')
 const events = require('events')
 const ClinicDoctor = require('../index.js')
 const getLoggingPaths = require('../collect/get-logging-paths.js')
@@ -16,45 +17,54 @@ class CollectAndRead extends events.EventEmitter {
     const tool = new ClinicDoctor(options)
 
     tool.collect([process.execPath, ...args], function (err, dirname) {
+      self.files = getLoggingPaths({ path: dirname })
       if (err) return self.emit('error', err)
 
-      const files = getLoggingPaths({ path: dirname })
+      self.noError = true
 
-      const systemInfo = fs.createReadStream(files['/systeminfo'])
+      const systemInfo = fs.createReadStream(self.files['/systeminfo'])
         .pipe(new SystemInfoDecoder())
-      const traceEvent = fs.createReadStream(files['/traceevent'])
+      const traceEvent = fs.createReadStream(self.files['/traceevent'])
         .pipe(new TraceEventDecoder(systemInfo))
-      const processStat = fs.createReadStream(files['/processstat'])
+      const processStat = fs.createReadStream(self.files['/processstat'])
         .pipe(new ProcessStatDecoder())
 
-      self._setupAutoCleanup(files, systemInfo, traceEvent, processStat)
-      self.emit('ready', traceEvent, processStat)
+      self.systemInfo = systemInfo
+      self.traceEvent = traceEvent
+      self.processStat = processStat
+
+      self._setupAutoCleanup()
+      self.emit('ready')
     })
   }
 
-  _setupAutoCleanup (files, systemInfo, traceEvent, processStat) {
+  cleanup () {
+    rimraf.sync(this.files['/'])
+  }
+
+  _setupAutoCleanup () {
     const self = this
 
     async.parallel({
       systemInfo (done) {
-        systemInfo.once('end', function () {
-          fs.unlink(files['/systeminfo'], function (err) {
+        self.systemInfo.once('end', function () {
+          fs.unlink(self.files['/systeminfo'], function (err) {
             if (err) return done(err)
             done(null)
           })
         })
       },
       traceEvent (done) {
-        traceEvent.once('end', function () {
-          fs.unlink(files['/traceevent'], function (err) {
+        self.traceEvent.once('end', function () {
+          fs.unlink(self.files['/traceevent'], function (err) {
             if (err) return done(err)
             done(null)
           })
         })
       },
       processStat (done) {
-        processStat.once('end', function () {
-          fs.unlink(files['/processstat'], function (err) {
+        self.processStat.once('end', function () {
+          fs.unlink(self.files['/processstat'], function (err) {
             if (err) return done(err)
             done(null)
           })
@@ -63,7 +73,7 @@ class CollectAndRead extends events.EventEmitter {
     }, function (err, output) {
       if (err) return self.emit('error', err)
 
-      fs.rmdir(files['/'], function (err) {
+      fs.rmdir(self.files['/'], function (err) {
         if (err) return self.emit('error', err)
       })
     })
