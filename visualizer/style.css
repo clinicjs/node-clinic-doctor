@@ -220,6 +220,10 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   overflow-x: scroll; /* JS will shorten the text if the element is scrollable */
 }
 
+#alert .summary .title.no-bar {
+  overflow-x: hidden;
+}
+
 #alert .summary .toggle {
   display: none;
   flex: 0 0 auto;

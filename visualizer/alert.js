@@ -83,6 +83,11 @@ class Alert extends EventEmitter {
     if (titleNode.offsetWidth < titleNode.scrollWidth) {
       this.title.text(content.issue ? 'Issue detected' : 'No issue')
     }
+    const titleTextNode = Array.from(titleNode.childNodes).find(function (node) {
+      return node.nodeType === window.Node.TEXT_NODE
+    })
+    const isTitleFitting = this.getNodeRange(titleTextNode).width < titleNode.offsetWidth
+    this.title.classed('no-bar', isTitleFitting)
   }
 
   open () {
@@ -93,6 +98,12 @@ class Alert extends EventEmitter {
   close () {
     this.opened = false
     this.container.classed('open', false)
+  }
+
+  getNodeRange (node) {
+    const range = document.createRange()
+    range.selectNode(node)
+    return range.getBoundingClientRect()
   }
 }
 
