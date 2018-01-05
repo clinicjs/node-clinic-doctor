@@ -59,13 +59,13 @@ test('cmd - collect - gc events', function (t) {
 
       t.ok(scavenge.length >= 1)
       t.ok(scavenge[0].args.startTimestamp <= scavenge[0].args.endTimestamp)
-      t.ok(Math.abs(scavenge[0].args.endTimestamp - Date.now()) < 400)
-      t.ok(Math.abs(scavenge[0].args.startTimestamp - Date.now()) < 400)
+      t.ok(Math.abs(scavenge[0].args.endTimestamp - Date.now()) < 10000)
+      t.ok(Math.abs(scavenge[0].args.startTimestamp - Date.now()) < 10000)
 
       t.strictEqual(compactor.length, 1)
       t.ok(compactor[0].args.startTimestamp <= compactor[0].args.endTimestamp)
-      t.ok(Math.abs(compactor[0].args.startTimestamp - Date.now()) < 400)
-      t.ok(Math.abs(compactor[0].args.endTimestamp - Date.now()) < 400)
+      t.ok(Math.abs(compactor[0].args.startTimestamp - Date.now()) < 10000)
+      t.ok(Math.abs(compactor[0].args.endTimestamp - Date.now()) < 10000)
 
       t.end()
     })
