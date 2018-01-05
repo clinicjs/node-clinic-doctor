@@ -33,6 +33,7 @@ graph.on('hover-update', (unitX) => graph.hoverUpdate(unitX))
 graph.on('alert-click', function () {
   document.documentElement.classList.add('recommendation-open')
   recommendation.open()
+  recommendation.draw()
 })
 
 recommendation.on('open', function () {
