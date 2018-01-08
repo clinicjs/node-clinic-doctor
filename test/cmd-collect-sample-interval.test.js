@@ -36,9 +36,9 @@ test('cmd - collect - custom sample interval', function (t) {
 
       // expect time seperation to be 1ms, allow 5ms error
       const sampleTimes = output.processStat.map((stat) => stat.timestamp)
-      const timeSeperation = summary(diff(sampleTimes)).mean()
+      const timeSeparation = summary(diff(sampleTimes)).mean()
       t.ok(sampleTimes.length > 0, 'data is outputted')
-      t.ok(Math.abs(timeSeperation - 1) < 5)
+      t.ok(Math.abs(timeSeparation - 1) < 5)
 
       t.end()
     })
