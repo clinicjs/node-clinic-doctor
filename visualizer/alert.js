@@ -5,6 +5,13 @@ const icons = require('./icons.js')
 const categories = require('./categories.js')
 const EventEmitter = require('events')
 
+
+function getTextNodeBoundingRect (node) {
+  const range = document.createRange()
+  range.selectNode(node)
+  return range.getBoundingClientRect()
+}
+
 class Issue {
   constructor (id, detected, title) {
     this.graphId = `graph-${id}`
@@ -86,7 +93,7 @@ class Alert extends EventEmitter {
     const titleTextNode = Array.from(titleNode.childNodes).find(function (node) {
       return node.nodeType === window.Node.TEXT_NODE
     })
-    const isTitleFitting = this.getNodeRange(titleTextNode).width < titleNode.offsetWidth
+    const isTitleFitting = getTextNodeBoundingRect(titleTextNode).width < titleNode.offsetWidth
     this.title.classed('no-bar', isTitleFitting)
   }
 
@@ -100,11 +107,6 @@ class Alert extends EventEmitter {
     this.container.classed('open', false)
   }
 
-  getNodeRange (node) {
-    const range = document.createRange()
-    range.selectNode(node)
-    return range.getBoundingClientRect()
-  }
 }
 
 module.exports = new Alert()
