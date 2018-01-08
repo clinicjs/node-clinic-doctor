@@ -5,7 +5,6 @@ const icons = require('./icons.js')
 const categories = require('./categories.js')
 const EventEmitter = require('events')
 
-
 function getTextNodeBoundingRect (node) {
   const range = document.createRange()
   range.selectNode(node)
@@ -87,14 +86,12 @@ class Alert extends EventEmitter {
 
     // If there is not enogth space, shorten the title text
     const titleNode = this.title.node()
-    if (titleNode.offsetWidth < titleNode.scrollWidth) {
-      this.title.text(content.issue ? 'Issue detected' : 'No issue')
-    }
     const titleTextNode = Array.from(titleNode.childNodes).find(function (node) {
       return node.nodeType === window.Node.TEXT_NODE
     })
-    const isTitleFitting = getTextNodeBoundingRect(titleTextNode).width < titleNode.offsetWidth
-    this.title.classed('no-bar', isTitleFitting)
+    if (titleNode.offsetWidth < getTextNodeBoundingRect(titleTextNode).width) {
+      this.title.text(content.issue ? 'Issue detected' : 'No issue')
+    }
   }
 
   open () {
@@ -106,7 +103,6 @@ class Alert extends EventEmitter {
     this.opened = false
     this.container.classed('open', false)
   }
-
 }
 
 module.exports = new Alert()
