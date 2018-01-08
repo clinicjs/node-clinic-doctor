@@ -82,6 +82,9 @@ class Alert extends EventEmitter {
         .append('li')
         .on('click', (d) => this.emit('click', d.graphId))
         .text((d) => d.title)
+
+    this.titleTextNode.textContent = content.title
+    this.fullTitleWidth = getTextNodeBoundingRect(this.titleTextNode).width
   }
 
   draw () {
@@ -90,7 +93,7 @@ class Alert extends EventEmitter {
 
     // If there is not enogth space, shorten the title text
     const titleNode = this.title.node()
-    if (titleNode.offsetWidth < getTextNodeBoundingRect(this.titleTextNode).width) {
+    if (titleNode.offsetWidth < this.fullTitleWidth) {
       this.titleTextNode.textContent = content.issue ? 'Issue detected' : 'No issue'
     }
   }
