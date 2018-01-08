@@ -98,11 +98,11 @@ test('cmd - collect - data files have content', function (t) {
   })
 })
 
-test('cmd - collect - custom sample interval', function (t) {
-  const cmd = new CollectAndRead({
-    sampleInterval: 1
-  }, '-e', 'setTimeout(() => {}, 200)')
-
+test('cmd - collect - startup delay is not included', function (t) {
+  const cmd = new CollectAndRead({}, '-e', `
+    for (const t = Date.now() + 100; t > Date.now();) {}
+    setTimeout(() => {}, 100)
+  `)
   cmd.on('error', t.ifError.bind(t))
   cmd.on('ready', function () {
     async.parallel({
@@ -116,12 +116,8 @@ test('cmd - collect - custom sample interval', function (t) {
     }, function (err, output) {
       if (err) return t.ifError(err)
 
-      // expect time seperation to be 1ms, allow 5ms error
-      const sampleTimes = output.processStat.map((stat) => stat.timestamp)
-      const timeSeperation = summary(diff(sampleTimes)).mean()
-      t.ok(sampleTimes.length > 0, 'data is outputted')
-      t.ok(Math.abs(timeSeperation - 1) < 5)
-
+      const delay = output.processStat.map((stat) => stat.delay)
+      t.ok(delay[0] < 50)
       t.end()
     })
   })
