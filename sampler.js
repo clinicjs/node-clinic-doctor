@@ -37,7 +37,10 @@ function saveSample () {
 }
 
 // start sampler on next tick, to avoid measureing the startup time
-process.nextTick(scheduleSample)
+process.nextTick(function () {
+  processStat.refresh()
+  scheduleSample()
+})
 
 // before process exits, flush the encoded data to the sample file
 process.once('beforeexit', function () {
