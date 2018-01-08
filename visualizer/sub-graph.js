@@ -128,6 +128,14 @@ class SubGraph extends EventEmitter {
           .y((d) => this.yScale(d.y[i]))
       this.lineDrawers.push(lineDrawer)
 
+      if( this.setup.interpolation ){
+        if( d3[this.setup.interpolation] ){
+          lineDrawer.curve( d3[this.setup.interpolation] )
+        } else {
+          console.warn(`Warning: SubGraph "${this.setup.name}" was assigned an unrecognised D3 interpolator, "${this.setup.interpolation}". Interpolation has not been applied`)
+        }
+      }
+
       const lineElement = this.graph.append('path')
           .attr('class', 'line')
           .attr('stroke-dasharray', this.setup.lineStyle[i])
