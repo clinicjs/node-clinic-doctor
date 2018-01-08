@@ -5,6 +5,12 @@ const icons = require('./icons.js')
 const categories = require('./categories.js')
 const EventEmitter = require('events')
 
+function getTextNodeBoundingRect (node) {
+  const range = document.createRange()
+  range.selectNode(node)
+  return range.getBoundingClientRect()
+}
+
 class Issue {
   constructor (id, detected, title) {
     this.graphId = `graph-${id}`
@@ -19,6 +25,7 @@ class Alert extends EventEmitter {
 
     this.analysis = null
     this.opened = false
+    this.fullTitleWidth = null
 
     this.container = d3.select('#alert')
 
@@ -31,6 +38,9 @@ class Alert extends EventEmitter {
 
     this.title = this.summary.append('div')
       .classed('title', true)
+
+    this.titleTextNode = document.createTextNode('')
+    this.title.node().appendChild(this.titleTextNode)
 
     this.toggle = this.summary.append('div')
       .classed('toggle', true)
@@ -72,16 +82,19 @@ class Alert extends EventEmitter {
         .append('li')
         .on('click', (d) => this.emit('click', d.graphId))
         .text((d) => d.title)
+
+    this.titleTextNode.textContent = content.title
+    this.fullTitleWidth = getTextNodeBoundingRect(this.titleTextNode).width
   }
 
   draw () {
     const content = categories.getContent(this.analysis.issueCategory)
-    this.title.text(categories.getContent(this.analysis.issueCategory).title)
+    this.titleTextNode.textContent = content.title
 
-    // If there is not enogth space, shorten the title text
+    // If there is not enough space, shorten the title text
     const titleNode = this.title.node()
-    if (titleNode.offsetWidth < titleNode.scrollWidth) {
-      this.title.text(content.issue ? 'Issue detected' : 'No issue')
+    if (parseInt(window.getComputedStyle(titleNode).width) < this.fullTitleWidth) {
+      this.titleTextNode.textContent = content.issue ? 'Issue detected' : 'No issue'
     }
   }
 
