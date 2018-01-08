@@ -126,15 +126,9 @@ class SubGraph extends EventEmitter {
       const lineDrawer = d3.line()
           .x((d) => this.xScale(d.x))
           .y((d) => this.yScale(d.y[i]))
-      this.lineDrawers.push(lineDrawer)
+          .curve(d3[this.setup.interpolation || 'curveLinear'])
 
-      if (this.setup.interpolation) {
-        if (d3[this.setup.interpolation]) {
-          lineDrawer.curve(d3[this.setup.interpolation])
-        } else {
-          console.warn(`Warning: SubGraph "${this.setup.name}" was assigned an unrecognised D3 interpolator, "${this.setup.interpolation}". Interpolation has not been applied`)
-        }
-      }
+      this.lineDrawers.push(lineDrawer)
 
       const lineElement = this.graph.append('path')
           .attr('class', 'line')
