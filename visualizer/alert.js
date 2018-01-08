@@ -93,7 +93,7 @@ class Alert extends EventEmitter {
 
     // If there is not enough space, shorten the title text
     const titleNode = this.title.node()
-    if (titleNode.offsetWidth < this.fullTitleWidth) {
+    if (parseInt(window.getComputedStyle(titleNode).width) < this.fullTitleWidth) {
       this.titleTextNode.textContent = content.issue ? 'Issue detected' : 'No issue'
     }
   }
