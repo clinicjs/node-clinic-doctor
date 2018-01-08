@@ -25,6 +25,7 @@ class Alert extends EventEmitter {
 
     this.analysis = null
     this.opened = false
+    this.fullTitleWidth = null
 
     this.container = d3.select('#alert')
 
