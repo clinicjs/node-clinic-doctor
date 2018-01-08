@@ -217,7 +217,8 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   flex: 1 1 0px;
   padding: 0 8px;
   white-space: nowrap;
-  overflow-x: scroll; /* JS will shorten the text if the element is scrollable */
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 #alert .summary .toggle {
