@@ -91,7 +91,7 @@ class Alert extends EventEmitter {
     const content = categories.getContent(this.analysis.issueCategory)
     this.titleTextNode.textContent = content.title
 
-    // If there is not enogth space, shorten the title text
+    // If there is not enough space, shorten the title text
     const titleNode = this.title.node()
     if (titleNode.offsetWidth < this.fullTitleWidth) {
       this.titleTextNode.textContent = content.issue ? 'Issue detected' : 'No issue'
