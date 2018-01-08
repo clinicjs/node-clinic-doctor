@@ -40,8 +40,7 @@ class Alert extends EventEmitter {
       .classed('title', true)
 
     this.titleTextNode = document.createTextNode('')
-    const titleNode = this.title.node()
-    titleNode.appendChild(this.titleTextNode)
+    this.title.node().appendChild(this.titleTextNode)
 
     this.toggle = this.summary.append('div')
       .classed('toggle', true)
