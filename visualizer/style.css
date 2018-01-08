@@ -218,7 +218,7 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   padding: 0 8px;
   white-space: nowrap;
   text-overflow: ellipsis;
-  overflow: hidden; /* JS will shorten the text if the element is scrollable */
+  overflow: hidden;
 }
 
 #alert .summary .toggle {
