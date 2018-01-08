@@ -43,8 +43,7 @@ class Graph extends EventEmitter {
       showLegend: false,
       lineStyle: [''],
       numLines: 1,
-      ymin: 0,
-      interpolation: 'curveStepBefore'
+      ymin: 0
     })
 
     this.handles = new SubGraph(this.container, {
