@@ -38,6 +38,10 @@ class Alert extends EventEmitter {
     this.title = this.summary.append('div')
       .classed('title', true)
 
+    this.titleTextNode = document.createTextNode('')
+    const titleNode = this.title.node()
+    titleNode.appendChild(this.titleTextNode)
+
     this.toggle = this.summary.append('div')
       .classed('toggle', true)
       .on('click', () => this.emit(this.opened ? 'close' : 'open'))
@@ -82,15 +86,12 @@ class Alert extends EventEmitter {
 
   draw () {
     const content = categories.getContent(this.analysis.issueCategory)
-    this.title.text(categories.getContent(this.analysis.issueCategory).title)
+    this.titleTextNode.textContent = content.title
 
     // If there is not enogth space, shorten the title text
     const titleNode = this.title.node()
-    const titleTextNode = Array.from(titleNode.childNodes).find(function (node) {
-      return node.nodeType === window.Node.TEXT_NODE
-    })
-    if (titleNode.offsetWidth < getTextNodeBoundingRect(titleTextNode).width) {
-      this.title.text(content.issue ? 'Issue detected' : 'No issue')
+    if (titleNode.offsetWidth < getTextNodeBoundingRect(this.titleTextNode).width) {
+      this.titleTextNode.textContent = content.issue ? 'Issue detected' : 'No issue'
     }
   }
 
