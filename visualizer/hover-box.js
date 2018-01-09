@@ -14,15 +14,15 @@ class HoverBox {
       lineWidth: 1,
       marginTop: 3,
       marginBottom: 3,
-      lengedHeight: 28,
+      legendHeight: 28,
       pointHeight: 10
     }
 
-    this.lengedTopOffset = this.size.titleHeight + this.size.lineWidth +
+    this.legendTopOffset = this.size.titleHeight + this.size.lineWidth +
                             this.size.marginTop
 
-    this.hoverBoxHeight = this.lengedTopOffset + this.size.marginBottom +
-                           this.setup.numLines * this.size.lengedHeight
+    this.hoverBoxHeight = this.legendTopOffset + this.size.marginBottom +
+                           this.setup.numLines * this.size.legendHeight
 
     this.height = this.hoverBoxHeight + this.size.pointHeight
     this.width = 136
@@ -79,7 +79,7 @@ class HoverBox {
   setPosition (x, y) {
     let offset = 0
     // flip downward if above half way
-    if (y - this.lengedTopOffset < this.hoverAreaHeight / 2) {
+    if (y - this.legendTopOffset < this.hoverAreaHeight / 2) {
       offset = 10
     }
     this.svg
@@ -93,8 +93,8 @@ class HoverBox {
     this.title.attr('y', 5 + offset)
     this.line.attr('y', this.size.titleHeight + offset)
     for (let i = 0; i < this.setup.numLines; i++) {
-      this.values[i].valueText.attr('y', this.lengedTopOffset + i * this.size.lengedHeight + offset)
-      this.values[i].legendText.attr('y', this.lengedTopOffset + i * this.size.lengedHeight + offset)
+      this.values[i].valueText.attr('y', this.legendTopOffset + i * this.size.legendHeight + offset)
+      this.values[i].legendText.attr('y', this.legendTopOffset + i * this.size.legendHeight + offset)
     }
   }
 
