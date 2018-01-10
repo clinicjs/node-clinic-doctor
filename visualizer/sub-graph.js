@@ -72,15 +72,15 @@ class SubGraph extends EventEmitter {
       }
     }
 
+    // add hover box
+    this.hover = new HoverBox(this.container, this.setup)
+
     // setup graph area
     this.svg = this.container.append('svg')
       .classed('chart', true)
     this.graph = this.svg.append('g')
       .attr('transform',
             'translate(' + margin.left + ',' + margin.top + ')')
-
-    // add hover box
-    this.hover = new HoverBox(this.container, this.setup, this.getGraphSize().height)
 
     // setup hover events
     this.hoverArea = this.container.append('div')

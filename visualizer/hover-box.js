@@ -3,7 +3,7 @@
 const d3 = require('./d3.js')
 
 class HoverBox {
-  constructor (container, setup, hoverAreaHeight) {
+  constructor (container, setup) {
     this.container = container
     this.setup = setup
     this.showen = false
@@ -26,8 +26,6 @@ class HoverBox {
 
     this.height = this.hoverBoxHeight + this.size.pointHeight
     this.width = 136
-
-    this.hoverAreaHeight = hoverAreaHeight
 
     // create main svg element
     this.svg = this.container.append('svg')
@@ -79,7 +77,7 @@ class HoverBox {
   setPosition (x, y) {
     let offset = 0
     // flip downward if above half way
-    if (y - this.legendTopOffset < this.hoverAreaHeight / 2) {
+    if (y - this.height < 0) {
       offset = 10
     }
     this.svg
