@@ -50,9 +50,9 @@ class HoverBox {
     this.svg.append('path')
       .classed('pointer', true)
       .classed('below-curve', true)
-      .attr('d', `M${this.width / 2 - size.pointHeight} 10 ` +
+      .attr('d', `M${this.width / 2 - size.pointHeight} ${size.pointHeight} ` +
                  `L${this.width / 2} 0 ` +
-                 `L${this.width / 2 + size.pointHeight} 10 Z`)
+                 `L${this.width / 2 + size.pointHeight} ${size.pointHeight} Z`)
     dataBox.append('rect')
       .classed('line', true)
       .attr('width', this.width)
