@@ -24,7 +24,7 @@ html {
   --graph-alert-color: rgb(233, 67, 100);
 
   --hover-text-color: rgb(255, 255, 255);
-  --hover-bg-color: rgb(82, 87, 111);
+  --hover-bg-color: rgba(82, 87, 111, 0.92);
   --hover-line-color: rgb(100, 107, 127);
 
   --recommendbar-text-color: rgb(255, 255, 255);

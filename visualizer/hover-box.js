@@ -39,7 +39,6 @@ class HoverBox {
       .attr('rx', 5)
       .attr('width', this.width)
       .attr('height', this.hoverBoxHeight)
-      .attr('fill-opacity', 0.92)
     this.path = this.svg.append('path')
       .classed('pointer', true)
     this.line = this.svg.append('rect')
