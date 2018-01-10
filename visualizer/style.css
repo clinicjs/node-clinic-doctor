@@ -724,10 +724,6 @@ svg#toggle-theme {
   display: none;
 }
 
-#graph .sub-graph .hover.below-curve .data-box {
-  transform: translate(0, 10px);
-}
-
 #graph .sub-graph svg.chart {
   width: 100%;
   height: 180px;
