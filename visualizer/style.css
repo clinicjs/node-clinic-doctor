@@ -720,6 +720,14 @@ svg#toggle-theme {
   font-weight: bold;
 }
 
+#graph .sub-graph .hover.above-curve .pointer.below-curve, #graph .sub-graph .hover.below-curve .pointer.above-curve {
+  display: none;
+}
+
+#graph .sub-graph .hover.below-curve .data-box {
+  transform: translate(0, 10px);
+}
+
 #graph .sub-graph svg.chart {
   width: 100%;
   height: 180px;
