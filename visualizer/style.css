@@ -479,6 +479,13 @@ svg#toggle-theme {
   display: block;
 }
 
+#recommendation.has-read-more .content .read-more p {
+  line-height: 24px;
+  margin-top: 18px;
+  margin-bottom: 18px;
+  text-align: left;
+}
+
 #recommendation .content .read-more h2 {
   background: var(--recommend-title-bg-color);
   font-size: 12pt;
