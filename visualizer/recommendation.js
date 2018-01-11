@@ -68,6 +68,9 @@ class Recomendation extends EventEmitter {
     this.readMoreColumns = this.readMore.append('div')
       .classed('columns', true)
 
+    this.readMoreArticle = this.readMoreColumns.append('div')
+      .classed('article', true)
+
     this.pages = this.menu.append('ul')
     const pagesLiEnter = this.pages
       .selectAll('li')
@@ -146,10 +149,10 @@ class Recomendation extends EventEmitter {
       this.summary.node().appendChild(recommendation.getSummary())
     }
 
-    this.readMoreColumns.html(null)
+    this.readMoreArticle.html(null)
     this.container.classed('has-read-more', recommendation.hasReadMore())
     if (recommendation.hasReadMore()) {
-      this.readMoreColumns.node().appendChild(recommendation.getReadMore())
+      this.readMoreArticle.node().appendChild(recommendation.getReadMore())
     }
 
     // set space height such that the fixed element don't have to hide

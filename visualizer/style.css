@@ -499,6 +499,10 @@ svg#toggle-theme {
   orphans: 4;
 }
 
+#recommendation.has-read-more .content .read-more .article {
+  max-width: 550px;
+}
+
 #recommendation .menu {
   border-bottom: 1px solid var(--recommend-menu-selected-color);
 }
