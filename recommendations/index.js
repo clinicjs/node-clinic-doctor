@@ -36,8 +36,8 @@ const recommendations = [
   new Recommendation({
     category: 'gc',
     issue: true,
-    title: 'Potential Garabage Collection issue detected',
-    menu: 'Garabage Collection',
+    title: 'Potential Garbage Collection issue detected',
+    menu: 'Garbage Collection',
     order: 1,
     summary: path.resolve(__dirname, 'gc-summary.md'),
     readMore: path.resolve(__dirname, 'gc-readmore.md')
