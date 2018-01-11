@@ -479,12 +479,6 @@ svg#toggle-theme {
   display: block;
 }
 
-#recommendation .content .read-more .columns {
-  columns: 400px 4;
-  text-align: justify;
-  hyphens: auto;
-}
-
 #recommendation .content .read-more h2 {
   background: var(--recommend-title-bg-color);
   font-size: 12pt;
