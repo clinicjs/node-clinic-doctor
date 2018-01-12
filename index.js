@@ -1,6 +1,7 @@
 'use strict'
 
 const fs = require('fs')
+const os = require('os')
 const path = require('path')
 const pump = require('pump')
 const stream = require('stream')
@@ -47,7 +48,13 @@ class ClinicDoctor {
     const paths = getLoggingPaths({ identifier: proc.pid })
 
     // relay SIGINT to process
-    process.once('SIGINT', () => proc.kill('SIGINT'))
+    process.once('SIGINT', function () {
+      // we cannot kill(SIGINT) on windows but it seems
+      // to relay the ctrl-c signal per default, so only do this
+      // if not windows
+      /* istanbul ignore else: windows hack */
+      if (os.platform() !== 'win32') proc.kill('SIGINT')
+    })
 
     proc.once('exit', function (code, signal) {
       // the process did not exit normally
