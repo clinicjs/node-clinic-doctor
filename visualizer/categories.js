@@ -1,5 +1,6 @@
 'use strict'
 const d3 = require('./d3.js')
+const kebabCase = require('lodash.kebabcase')
 
 class CategoryContent {
   constructor (node) {
@@ -10,6 +11,7 @@ class CategoryContent {
     this.title = node.dataset.title
     this.summary = null
     this.readMore = null
+    this.readMoreHeadings = null
   }
 
   addContent (node) {
@@ -19,6 +21,10 @@ class CategoryContent {
         break
       case 'read-more':
         this.readMore = document.adoptNode(node.content)
+        this.readMoreHeadings = Array.from(this.readMore.querySelectorAll('h2'))
+        for (const readMoreHeading of this.readMoreHeadings) {
+          readMoreHeading.id = 'article-' + kebabCase(readMoreHeading.textContent)
+        }
         break
       default:
         throw new Error('unknow type: ' + node.dataset.type)

@@ -11,9 +11,21 @@ class RecomendationWrapper {
     this.category = this.content.category
     this.menu = this.content.menu
     this.title = this.content.title
+    this.readMoreHeadings = this.content.readMoreHeadings;
 
     this.selected = false
     this.detected = false
+  }
+
+  get readMoreMenuItems () {
+
+    return this.readMoreHeadings.map((headingNode) => {
+
+      const link = document.createElement('a');
+      link.href = '#' + headingNode.id
+      link.textContent = headingNode.textContent
+      return link
+    })
   }
 
   get order () {
@@ -67,6 +79,9 @@ class Recomendation extends EventEmitter {
       .classed('read-more', true)
     this.readMoreColumns = this.readMore.append('div')
       .classed('columns', true)
+
+    this.readMoreMenu = this.readMoreColumns.append('div')
+      .classed('article-menu', true)
 
     this.readMoreArticle = this.readMoreColumns.append('div')
       .classed('article', true)
@@ -123,6 +138,14 @@ class Recomendation extends EventEmitter {
     this.selectedCategory = newCategory
     this.recommendations.get(oldCategory).selected = false
     this.recommendations.get(newCategory).selected = true
+
+    const recommendation = this.recommendations.get(this.selectedCategory);
+    if (recommendation.hasReadMore()) {
+      this.readMoreMenu.html(null)
+      for (const menuItem of recommendation.readMoreMenuItems) {
+        this.readMoreMenu.node().appendChild(menuItem)
+      }
+    }
   }
 
   draw () {
