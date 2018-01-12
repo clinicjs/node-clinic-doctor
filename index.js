@@ -3,6 +3,7 @@
 const fs = require('fs')
 const path = require('path')
 const pump = require('pump')
+const once = require('once')
 const stream = require('stream')
 const { spawn } = require('child_process')
 const analysis = require('./analysis/index.js')
@@ -77,6 +78,8 @@ class ClinicDoctor {
   }
 
   visualize (dataDirname, outputFilename, callback) {
+    callback = once(callback)
+
     const fakeDataPath = path.join(__dirname, 'visualizer', 'data.json')
     const stylePath = path.join(__dirname, 'visualizer', 'style.css')
     const scriptPath = path.join(__dirname, 'visualizer', 'main.js')
@@ -85,10 +88,13 @@ class ClinicDoctor {
     // Load data
     const paths = getLoggingPaths({ path: dataDirname })
     const SystemInfoReader = fs.createReadStream(paths['/systeminfo'])
+      .on('error', callback)
       .pipe(new SystemInfoDecoder())
     const traceEventReader = fs.createReadStream(paths['/traceevent'])
+      .on('error', callback)
       .pipe(new TraceEventDecoder(SystemInfoReader))
     const processStatReader = fs.createReadStream(paths['/processstat'])
+      .on('error', callback)
       .pipe(new ProcessStatDecoder())
 
     // create analysis

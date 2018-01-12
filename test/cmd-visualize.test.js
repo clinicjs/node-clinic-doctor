@@ -6,7 +6,7 @@ const async = require('async')
 const rimraf = require('rimraf')
 const ClinicDoctor = require('../index.js')
 
-test('cmd - test visualization', function (t) {
+test('cmd - test visualization - data exists', function (t) {
   const tool = new ClinicDoctor()
 
   function cleanup (err, dirname) {
@@ -36,6 +36,19 @@ test('cmd - test visualization', function (t) {
           cleanup(null, dirname)
         })
       })
+    }
+  )
+})
+
+test('cmd - test visualization - missing data', function (t) {
+  const tool = new ClinicDoctor()
+
+  tool.visualize(
+    'missing.clinic-doctor',
+    'missing.clinic-doctor.html',
+    function (err) {
+      t.ok(err.message.includes('ENOENT: no such file or directory'))
+      t.end()
     }
   )
 })
