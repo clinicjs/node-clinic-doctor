@@ -1,6 +1,7 @@
 'use strict'
 
 const test = require('tap').test
+const os = require('os')
 const path = require('path')
 const async = require('async')
 const { spawn } = require('child_process')
