@@ -46,7 +46,7 @@ test('Collect - process stat - delay usage', function (t) {
   stat.refresh()
   sleep(20)
   const sample = stat.sample()
-  t.ok(sample.delay < 12 && sample.delay > 9)
+  t.ok(sample.delay < 25 && sample.delay > 5)
 
   t.end()
 })
