@@ -17,13 +17,13 @@ test('Collect - logging path - identifier', function (t) {
 })
 
 test('Collect - logging path - path', function (t) {
-  const paths = getLoggingPaths({ path: '/root/1062.clinic-doctor' })
+  const paths = getLoggingPaths({ path: path.join('root', '1062.clinic-doctor') })
 
   t.strictDeepEqual(paths, {
-    '/': path.join('/root', '1062.clinic-doctor'),
-    '/traceevent': path.join('/root', '1062.clinic-doctor/1062.clinic-doctor-traceevent'),
-    '/systeminfo': path.join('/root', '1062.clinic-doctor/1062.clinic-doctor-systeminfo'),
-    '/processstat': path.join('/root', '1062.clinic-doctor/1062.clinic-doctor-processstat')
+    '/': path.join('root', '1062.clinic-doctor'),
+    '/traceevent': path.join('root', '1062.clinic-doctor', '1062.clinic-doctor-traceevent'),
+    '/systeminfo': path.join('root', '1062.clinic-doctor', '1062.clinic-doctor-systeminfo'),
+    '/processstat': path.join('root', '1062.clinic-doctor', '1062.clinic-doctor-processstat')
   })
   t.end()
 })
