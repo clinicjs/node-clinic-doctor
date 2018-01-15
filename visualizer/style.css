@@ -83,6 +83,8 @@ html, body {
 
 body {
   background: var(--main-bg-color);
+  overflow-x: hidden; /* Hover box padding can overflow. Scrollbar appearing moves recommendation box. */ 
+                      /* If that causes mouse to leave hover area, scrollbar flashes on and off in loop. */
 }
 
 #front-matter {
@@ -94,7 +96,7 @@ body {
 
 #front-matter #alert {
   flex: 1 1 0px;
-  min-width: 0; /* don't consider children for min-width calcultion */
+  min-width: 0; /* don't consider children for min-width calculation */
 }
 
 #front-matter #menu {
