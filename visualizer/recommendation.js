@@ -11,17 +11,15 @@ class RecomendationWrapper {
     this.category = this.content.category
     this.menu = this.content.menu
     this.title = this.content.title
-    this.readMoreHeadings = this.content.readMoreHeadings;
+    this.articleHeadings = this.content.articleHeadings
 
     this.selected = false
     this.detected = false
   }
 
-  get readMoreMenuItems () {
-
-    return this.readMoreHeadings.map((headingNode) => {
-
-      const link = document.createElement('a');
+  get articleMenuItems () {
+    return this.articleHeadings.map((headingNode) => {
+      const link = document.createElement('a')
       link.href = '#' + headingNode.id
       link.textContent = headingNode.textContent
       return link
@@ -80,10 +78,10 @@ class Recomendation extends EventEmitter {
     this.readMoreColumns = this.readMore.append('div')
       .classed('columns', true)
 
-    this.readMoreMenu = this.readMoreColumns.append('div')
+    this.articleMenu = this.readMoreColumns.append('nav')
       .classed('article-menu', true)
 
-    this.readMoreArticle = this.readMoreColumns.append('div')
+    this.readMoreArticle = this.readMoreColumns.append('article')
       .classed('article', true)
 
     this.pages = this.menu.append('ul')
@@ -139,11 +137,14 @@ class Recomendation extends EventEmitter {
     this.recommendations.get(oldCategory).selected = false
     this.recommendations.get(newCategory).selected = true
 
-    const recommendation = this.recommendations.get(this.selectedCategory);
+    const recommendation = this.recommendations.get(this.selectedCategory)
+    this.articleMenu.html(null)
     if (recommendation.hasReadMore()) {
-      this.readMoreMenu.html(null)
-      for (const menuItem of recommendation.readMoreMenuItems) {
-        this.readMoreMenu.node().appendChild(menuItem)
+      this.articleMenu.append('h2')
+        .classed('plain', true)
+        .text('Jump to section')
+      for (const menuItem of recommendation.articleMenuItems) {
+        this.articleMenu.node().appendChild(menuItem)
       }
     }
   }

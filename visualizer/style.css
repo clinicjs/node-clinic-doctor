@@ -40,6 +40,8 @@ html {
   --recommend-menu-alert-color: rgb(233, 67, 100);
   --recommend-bg-color: rgba(55, 61, 79, 0.99);
 
+  --article-menu-color: rgb(27, 30, 39);
+
   --special-scrollbar-bg: rgba(255, 255, 255, .5);
   --special-scrollbar-shadow: rgba(0, 0, 0, .5);
 }
@@ -68,6 +70,8 @@ html.light-theme {
 
   --special-scrollbar-bg: rgba(0, 0, 0, .5);
   --special-scrollbar-shadow: rgba(255, 255, 255, .5);
+
+  --article-menu-color: rgb(227, 227, 227);
 }
 
 /* Main layout */
@@ -486,21 +490,49 @@ svg#toggle-theme {
   text-align: left;
 }
 
-#recommendation .content .read-more h2 {
+#recommendation.open.read-more-open .article {
+ display: inline-block;
+ max-width: 550px;
+}
+
+#recommendation.open.read-more-open .article-menu {
+ margin-right: 40px;
+ max-width: 550px;
+ position: sticky;
+ top: 0;
+ align-self: flex-start;
+}
+
+#recommendation.open.read-more-open .columns {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+#recommendation .content .read-more h2:not(.plain), #recommendation.open.read-more-open .article-menu a {
   background: var(--recommend-title-bg-color);
   font-size: 12pt;
   padding: 12px;
   break-after: avoid;
   break-before: auto;
   margin: 0; /* let p and ul tags dominate margin collapse */
+  font-weight: bold;
+  color: var(--recommend-text-color);
+}
+
+#recommendation.open.read-more-open .article-menu a {
+ display: block;
+ margin-bottom: 6px;
+ background-color: var(--article-menu-color);
+}
+
+#recommendation .content .read-more h2.plain {
+  font-size: 12pt;
+  padding-left: 12px;
 }
 
 #recommendation .content .read-more li {
   orphans: 4;
-}
-
-#recommendation.has-read-more .content .read-more .article {
-  max-width: 550px;
 }
 
 #recommendation .menu {
@@ -523,7 +555,7 @@ svg#toggle-theme {
   margin-right: 30px;
   cursor: pointer;
 }
-#recommendation .menu ul li.selected {
+#recommendation .menu ul li.selected, #recommendation.open.read-more-open .article-menu a.selected {
   border-bottom: 4px solid var(--recommend-menu-selected-color);
   font-weight: bold;
 }
@@ -687,6 +719,16 @@ svg#toggle-theme {
 
   #graph .sub-graph .header .legend .legend-item .short-legend {
     display: unset;
+  }
+
+  #recommendation.open.read-more-open .columns {
+    flex-direction: column;
+  }
+
+  #recommendation.open.read-more-open .article-menu {
+   margin-right: 0;
+   position: static;
+   align-self: unset;
   }
 }
 

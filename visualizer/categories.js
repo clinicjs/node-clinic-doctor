@@ -11,7 +11,7 @@ class CategoryContent {
     this.title = node.dataset.title
     this.summary = null
     this.readMore = null
-    this.readMoreHeadings = null
+    this.articleHeadings = null
   }
 
   addContent (node) {
@@ -21,9 +21,9 @@ class CategoryContent {
         break
       case 'read-more':
         this.readMore = document.adoptNode(node.content)
-        this.readMoreHeadings = Array.from(this.readMore.querySelectorAll('h2'))
-        for (const readMoreHeading of this.readMoreHeadings) {
-          readMoreHeading.id = 'article-' + kebabCase(readMoreHeading.textContent)
+        this.articleHeadings = Array.from(this.readMore.querySelectorAll('h2'))
+        for (const articleHeading of this.articleHeadings) {
+          articleHeading.id = 'article-' + kebabCase(articleHeading.textContent)
         }
         break
       default:
