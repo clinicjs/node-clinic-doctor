@@ -62,7 +62,7 @@ class Recomendation extends EventEmitter {
       .classed('summary', true)
     this.readMoreButton = this.content.append('div')
       .classed('read-more-button', true)
-      .on('click', () => this.emit(this.readMoreOpened ? 'less' : 'more'))
+      .on('click', () => this.emit(this.readMoreOpened ? 'close' : 'open', 'readMore'))
     this.readMore = this.content.append('div')
       .classed('read-more', true)
     this.readMoreColumns = this.readMore.append('div')
@@ -74,6 +74,7 @@ class Recomendation extends EventEmitter {
       .data(this.recommendationsAsArray, (d) => d.category)
       .enter()
         .append('li')
+          .classed('recommendation-tab', true)
           .on('click', (d) => this.emit('change-page', d.category))
     pagesLiEnter.append('span')
       .classed('menu-text', true)
@@ -81,6 +82,14 @@ class Recomendation extends EventEmitter {
     pagesLiEnter.append('svg')
       .classed('warning-icon', true)
       .call(icons.insertIcon('warning'))
+
+    // Add button to show-hide tabs described undetected issues
+    this.pages.append('li')
+      .classed('show-hide', true)
+      .append('a')
+        .classed('show-hide-button', true)
+        .classed('menu-text', true)
+        .on('click', () => this.emit(this.undetectedOpened ? 'close' : 'open', 'undetectedTabs'))
 
     this.menu.append('svg')
       .classed('close', true)
@@ -108,7 +117,7 @@ class Recomendation extends EventEmitter {
 
     // reorder pages, such that the detected page selector comes first
     this.pages
-      .selectAll('li')
+      .selectAll('li.recommendation-tab')
       .sort((a, b) => a.order - b.order)
 
     // set the default page
@@ -124,10 +133,11 @@ class Recomendation extends EventEmitter {
 
   draw () {
     this.pages
-      .selectAll('li')
+      .selectAll('li.recommendation-tab')
       .data(this.recommendationsAsArray, (d) => d.category)
       .classed('detected', (d) => d.detected)
       .classed('selected', (d) => d.selected)
+      .classed('has-read-more', (d) => d.hasReadMore())
 
     const recommendation = this.recommendations.get(this.selectedCategory)
 
@@ -135,6 +145,7 @@ class Recomendation extends EventEmitter {
     this.container
       .classed('open', this.opened)
       .classed('read-more-open', this.readMoreOpened)
+      .classed('undetected-opened', this.undetectedOpened)
       .classed('detected', recommendation.detected)
 
     // set content
@@ -157,20 +168,21 @@ class Recomendation extends EventEmitter {
     this.space.style('height', this.details.node().offsetHeight + 'px')
   }
 
-  open () {
-    this.opened = true
-  }
-
-  close () {
-    this.opened = false
-  }
-
-  openReadMore () {
-    this.readMoreOpened = true
-  }
-
-  closeReadMore () {
-    this.readMoreOpened = false
+  openClose (action, target = 'panel') {
+    const openCloseTargets = {
+      panel: (isOpening) => {
+        document.documentElement.classList[isOpening ? 'add' : 'remove']('recommendation-open')
+        this.opened = isOpening
+      },
+      readMore: (isOpening) => {
+        this.readMoreOpened = isOpening
+      },
+      undetectedTabs: (isOpening) => {
+        this.undetectedOpened = isOpening
+      }
+    }
+    openCloseTargets[ target ](action === 'open')
+    this.draw()
   }
 }
 

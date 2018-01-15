@@ -31,32 +31,17 @@ graph.on('hover-hide', () => graph.hoverHide())
 graph.on('hover-update', (unitX) => graph.hoverUpdate(unitX))
 
 graph.on('alert-click', function () {
-  document.documentElement.classList.add('recommendation-open')
-  recommendation.open()
-  recommendation.draw()
+  recommendation.openClose('open', 'panel')
+})
+recommendation.on('open', function (target) {
+  recommendation.openClose('open', target)
+})
+recommendation.on('close', function (target) {
+  recommendation.openClose('close', target)
 })
 
-recommendation.on('open', function () {
-  document.documentElement.classList.add('recommendation-open')
-  recommendation.open()
-  recommendation.draw()
-})
-recommendation.on('close', function () {
-  document.documentElement.classList.remove('recommendation-open')
-  recommendation.close()
-  recommendation.draw()
-})
 recommendation.on('change-page', function (category) {
   recommendation.setPage(category)
-  recommendation.draw()
-})
-
-recommendation.on('more', function () {
-  recommendation.openReadMore()
-  recommendation.draw()
-})
-recommendation.on('less', function () {
-  recommendation.closeReadMore()
   recommendation.draw()
 })
 
