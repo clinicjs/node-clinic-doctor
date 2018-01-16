@@ -1,6 +1,6 @@
 'use strict'
 
-const stream = require('stream')
+const stream = require('../lib/destroyable-stream')
 const endpoint = require('endpoint')
 const JSONStream = require('JSONStream')
 
@@ -35,6 +35,7 @@ class TraceEventDecoder extends stream.Transform {
     // backpresure
     this.parser = JSONStream.parse('traceEvents.*')
     this.parser.on('data', (data) => this._process(data))
+    this.systemInfoReader.on('error', (err) => this.destroy(err))
   }
 
   _process (traceEvent) {
@@ -98,7 +99,7 @@ class TraceEventDecoder extends stream.Transform {
     if (this.clockOffset === null) {
       this.systemInfoReader
         .pipe(endpoint({ objectMode: true }, function (err, data) {
-          if (err) return self.emit('error', err)
+          if (err) return // emitted in the constructor
 
           // Save clock offset
           const systemInfo = data[0]

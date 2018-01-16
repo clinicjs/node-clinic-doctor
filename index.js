@@ -3,8 +3,8 @@
 const fs = require('fs')
 const path = require('path')
 const pump = require('pump')
-const once = require('once')
-const stream = require('stream')
+const pumpify = require('pumpify')
+const stream = require('./lib/destroyable-stream')
 const { spawn } = require('child_process')
 const analysis = require('./analysis/index.js')
 const Stringify = require('streaming-json-stringify')
@@ -78,8 +78,6 @@ class ClinicDoctor {
   }
 
   visualize (dataDirname, outputFilename, callback) {
-    callback = once(callback)
-
     const fakeDataPath = path.join(__dirname, 'visualizer', 'data.json')
     const stylePath = path.join(__dirname, 'visualizer', 'style.css')
     const scriptPath = path.join(__dirname, 'visualizer', 'main.js')
@@ -87,35 +85,47 @@ class ClinicDoctor {
 
     // Load data
     const paths = getLoggingPaths({ path: dataDirname })
-    const SystemInfoReader = fs.createReadStream(paths['/systeminfo'])
-      .on('error', callback)
-      .pipe(new SystemInfoDecoder())
-    const traceEventReader = fs.createReadStream(paths['/traceevent'])
-      .on('error', callback)
-      .pipe(new TraceEventDecoder(SystemInfoReader))
-    const processStatReader = fs.createReadStream(paths['/processstat'])
-      .on('error', callback)
-      .pipe(new ProcessStatDecoder())
+
+    const systemInfoReader = pumpify.obj(
+      fs.createReadStream(paths['/systeminfo']),
+      new SystemInfoDecoder()
+    )
+    const traceEventReader = pumpify.obj(
+      fs.createReadStream(paths['/traceevent']),
+      new TraceEventDecoder(systemInfoReader)
+    )
+    const processStatReader = pumpify.obj(
+      fs.createReadStream(paths['/processstat']),
+      new ProcessStatDecoder()
+    )
 
     // create analysis
-    const analysisStringified = analysis(traceEventReader, processStatReader)
-      .pipe(new stream.Transform({
+    const analysisStringified = pumpify.obj(
+      analysis(traceEventReader, processStatReader),
+      new stream.Transform({
         readableObjectMode: false,
         writableObjectMode: true,
         transform (data, encoding, callback) {
           callback(null, JSON.stringify(data))
         }
-      }))
+      })
+    )
 
-    const traceEventStringify = traceEventReader.pipe(new Stringify({
-      seperator: ',\n',
-      stringifier: JSON.stringify
-    }))
+    const traceEventStringify = pumpify.obj(
+      traceEventReader,
+      new Stringify({
+        seperator: ',\n',
+        stringifier: JSON.stringify
+      })
+    )
 
-    const processStatStringify = processStatReader.pipe(new Stringify({
-      seperator: ',\n',
-      stringifier: JSON.stringify
-    }))
+    const processStatStringify = pumpify.obj(
+      processStatReader,
+      new Stringify({
+        seperator: ',\n',
+        stringifier: JSON.stringify
+      })
+    )
 
     const dataFile = streamTemplate`
       {
@@ -146,6 +156,10 @@ class ClinicDoctor {
 
     // create style-file stream
     const styleFile = fs.createReadStream(stylePath)
+
+    // forward dataFile erros to the styleFile explicitly
+    // we cannot use destroy until nodejs/node#18172 and nodejs/node#18171 are fixed
+    dataFile.on('error', (err) => scriptFile.emit('error', err))
 
     // build output file
     const outputFile = streamTemplate`
