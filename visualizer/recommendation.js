@@ -112,8 +112,8 @@ class Recomendation extends EventEmitter {
   }
 
   setData (data) {
-    const category = data.analysis.issueCategory
-    this.recommendations.get(category).detected = true
+    this.defaultCategory = data.analysis.issueCategory
+    this.recommendations.get(this.defaultCategory).detected = true
 
     // reorder pages, such that the detected page selector comes first
     this.pages
@@ -121,7 +121,7 @@ class Recomendation extends EventEmitter {
       .sort((a, b) => a.order - b.order)
 
     // set the default page
-    this.setPage(category)
+    this.setPage(this.defaultCategory)
   }
 
   setPage (newCategory) {
@@ -179,6 +179,11 @@ class Recomendation extends EventEmitter {
       },
       undetectedTabs: (isOpening) => {
         this.undetectedOpened = isOpening
+
+        // If user closes undetected tabs while one is selected, switch to default tab
+        if (!isOpening && !this.recommendations.get(this.selectedCategory).detected) {
+          this.emit('change-page', this.defaultCategory)
+        }
       }
     }
     openCloseTargets[ target ](action === 'open')
