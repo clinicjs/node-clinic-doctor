@@ -216,6 +216,8 @@ class SubGraph extends EventEmitter {
       this.lineElements[i].attr('d', this.lineDrawers[i])
     }
 
+    this.hover.availableHeight = height + margin.bottom + margin.top
+
     // since the xScale was changed, update the hover box
     if (this.hover.showen) {
       this.hoverUpdate(this.hover.point)
