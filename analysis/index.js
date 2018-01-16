@@ -2,7 +2,7 @@
 
 const async = require('async')
 const stream = require('stream')
-const endpoint = require('endpoint')
+const collect = require('stream-collector')
 const guessInterval = require('./guess-interval.js')
 const analyseCPU = require('./analyse-cpu.js')
 const analyseDelay = require('./analyse-delay.js')
@@ -27,10 +27,10 @@ function analysis (traceEventReader, processStatReader) {
 
   async.parallel({
     traceEvent (done) {
-      traceEventReader.pipe(endpoint({ objectMode: true }, done))
+      collect(traceEventReader, done)
     },
     processStat (done) {
-      processStatReader.pipe(endpoint({ objectMode: true }, done))
+      collect(processStatReader, done)
     }
   }, function (err, data) {
     if (err) return result.emit('error', err)
