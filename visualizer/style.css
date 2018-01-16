@@ -91,6 +91,10 @@ body {
                       /* If that causes mouse to leave hover area, scrollbar flashes on and off in loop. */
 }
 
+body.read-more-open {
+  overflow-y: hidden;
+}
+
 #front-matter {
   display: flex;
   align-items: flex-start;

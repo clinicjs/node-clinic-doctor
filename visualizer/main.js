@@ -54,10 +54,12 @@ recommendation.on('change-page', function (category) {
 recommendation.on('more', function () {
   recommendation.openReadMore()
   recommendation.draw()
+  document.querySelector('body').classList.add('read-more-open')
 })
 recommendation.on('less', function () {
   recommendation.closeReadMore()
   recommendation.draw()
+  document.querySelector('body').classList.remove('read-more-open')
 })
 
 loaddata(function maybeDone (err, data) {
