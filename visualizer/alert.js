@@ -5,10 +5,17 @@ const icons = require('./icons.js')
 const categories = require('./categories.js')
 const EventEmitter = require('events')
 
-function getTextNodeBoundingRect (node) {
+function getTextNodeBoundingRect (node, container) {
+  const getPseudoContent = (position) => container ? window.getComputedStyle(container, position).getPropertyValue('content') : ''
+  const originalContent = node.textContent
+
+  node.textContent = getPseudoContent(':before') + originalContent + getPseudoContent(':after')
   const range = document.createRange()
   range.selectNode(node)
-  return range.getBoundingClientRect()
+  const boundingBox = range.getBoundingClientRect()
+  node.textContent = originalContent
+
+  return boundingBox
 }
 
 class Issue {
@@ -84,7 +91,8 @@ class Alert extends EventEmitter {
         .text((d) => d.title)
 
     this.titleTextNode.textContent = content.title
-    this.fullTitleWidth = getTextNodeBoundingRect(this.titleTextNode).width
+
+    this.fullTitleWidth = getTextNodeBoundingRect(this.titleTextNode, this.title.node()).width
   }
 
   draw () {
@@ -94,7 +102,7 @@ class Alert extends EventEmitter {
     // If there is not enough space, shorten the title text
     const titleNode = this.title.node()
     if (parseInt(window.getComputedStyle(titleNode).width) < this.fullTitleWidth) {
-      this.titleTextNode.textContent = content.issue ? 'Issue detected' : 'No issue'
+      this.titleTextNode.textContent = content.issue ? 'issue' : 'no issue'
     }
   }
 
