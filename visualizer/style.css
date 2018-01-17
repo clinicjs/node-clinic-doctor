@@ -24,7 +24,7 @@ html {
   --graph-alert-color: rgb(233, 67, 100);
 
   --hover-text-color: rgb(255, 255, 255);
-  --hover-bg-color: rgb(82, 87, 111);
+  --hover-bg-color: rgba(82, 87, 111, 0.92);
   --hover-line-color: rgb(100, 107, 127);
 
   --recommendbar-text-color: rgb(255, 255, 255);
@@ -718,6 +718,10 @@ svg#toggle-theme {
 
 #graph .sub-graph .hover .legend {
   font-weight: bold;
+}
+
+#graph .sub-graph .hover.above-curve .pointer.below-curve, #graph .sub-graph .hover.below-curve .pointer.above-curve {
+  display: none;
 }
 
 #graph .sub-graph svg.chart {
