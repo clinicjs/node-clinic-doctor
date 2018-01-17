@@ -4,7 +4,6 @@ const d3 = require('./d3.js')
 const icons = require('./icons.js')
 const categories = require('./categories.js')
 const EventEmitter = require('events')
-const kebabCase = require('lodash.kebabcase')
 
 class RecomendationWrapper {
   constructor (categoryContent) {
@@ -65,9 +64,9 @@ class RecomendationWrapper {
     const readMore = this.content.getReadMore()
 
     this.articleHeadings = Array.from(readMore.querySelectorAll('h2'))
-    for (const articleHeading of this.articleHeadings) {
-      articleHeading.id = 'article-' + kebabCase(articleHeading.textContent)
-    }
+    this.articleHeadings.forEach((articleHeading, i) => {
+      articleHeading.id = `article-section-${i}`
+    })
 
     this.articleMenuItems = this.articleHeadings.map((articleHeading) => {
       const link = document.createElement('a')
