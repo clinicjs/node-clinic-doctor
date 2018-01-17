@@ -17,15 +17,7 @@ class RecomendationWrapper {
     this.detected = false
 
     this.articleHeadings = null
-  }
-
-  get articleMenuItems () {
-    return this.articleHeadings.map((headingNode) => {
-      const link = document.createElement('a')
-      link.href = '#' + headingNode.id
-      link.textContent = headingNode.textContent
-      return link
-    })
+    this.articleMenuItems = []
   }
 
   get order () {
@@ -37,10 +29,19 @@ class RecomendationWrapper {
   hasSummary () { return this.content.hasSummary() }
   getReadMore () {
     const readMore = this.content.getReadMore()
+
     this.articleHeadings = Array.from(readMore.querySelectorAll('h2'))
     for (const articleHeading of this.articleHeadings) {
       articleHeading.id = 'article-' + kebabCase(articleHeading.textContent)
     }
+
+    this.articleMenuItems = this.articleHeadings.map((articleHeading) => {
+      const link = document.createElement('a')
+      link.href = '#' + articleHeading.id
+      link.textContent = articleHeading.textContent
+      return link
+    })
+
     return readMore
   }
   hasReadMore () { return this.content.hasReadMore() }
