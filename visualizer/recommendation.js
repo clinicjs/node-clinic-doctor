@@ -4,6 +4,7 @@ const d3 = require('./d3.js')
 const icons = require('./icons.js')
 const categories = require('./categories.js')
 const EventEmitter = require('events')
+const kebabCase = require('lodash.kebabcase')
 
 class RecomendationWrapper {
   constructor (categoryContent) {
@@ -11,10 +12,11 @@ class RecomendationWrapper {
     this.category = this.content.category
     this.menu = this.content.menu
     this.title = this.content.title
-    this.articleHeadings = this.content.articleHeadings
 
     this.selected = false
     this.detected = false
+
+    this.articleHeadings = null
   }
 
   get articleMenuItems () {
@@ -33,7 +35,14 @@ class RecomendationWrapper {
 
   getSummary () { return this.content.getSummary() }
   hasSummary () { return this.content.hasSummary() }
-  getReadMore () { return this.content.getReadMore() }
+  getReadMore () {
+    const readMore = this.content.getReadMore()
+    this.articleHeadings = Array.from(readMore.querySelectorAll('h2'))
+    for (const articleHeading of this.articleHeadings) {
+      articleHeading.id = 'article-' + kebabCase(articleHeading.textContent)
+    }
+    return readMore
+  }
   hasReadMore () { return this.content.hasReadMore() }
 }
 
@@ -136,8 +145,12 @@ class Recomendation extends EventEmitter {
     this.recommendations.get(newCategory).selected = true
 
     const recommendation = this.recommendations.get(this.selectedCategory)
+    this.container.classed('has-read-more', recommendation.hasReadMore())
+    this.readMoreArticle.html(null)
     this.articleMenu.html(null)
     if (recommendation.hasReadMore()) {
+      this.readMoreArticle.node().appendChild(recommendation.getReadMore())
+
       this.articleMenu.append('h2')
         .classed('plain', true)
         .text('Jump to section')
@@ -171,11 +184,6 @@ class Recomendation extends EventEmitter {
       this.summary.node().appendChild(recommendation.getSummary())
     }
 
-    this.readMoreArticle.html(null)
-    this.container.classed('has-read-more', recommendation.hasReadMore())
-    if (recommendation.hasReadMore()) {
-      this.readMoreArticle.node().appendChild(recommendation.getReadMore())
-    }
 
     // set space height such that the fixed element don't have to hide
     // something in the background.
