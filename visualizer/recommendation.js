@@ -17,12 +17,41 @@ class RecomendationWrapper {
     this.detected = false
 
     this.articleHeadings = null
+    this.articleSplits = []
     this.articleMenuItems = []
+
+    this.selectedArticleSection = null
   }
 
   get order () {
     // always make the detected issue appear first
     return this.detected ? 0 : this.content.order
+  }
+
+  // should be done only when scrollingContainer's scrollTop === 0
+  computeArticleSplits () {
+    let startPos
+    this.articleSplits = this.articleHeadings.map((articleHeading, i) => {
+      const top = articleHeading.getBoundingClientRect().top
+      if (i === 0) {
+        startPos = top
+      }
+      return top - startPos
+    })
+  }
+
+  updateSelectedArticleSection (scrollingContainer) {
+    const scrollPos = scrollingContainer.node().scrollTop
+    const maxScroll = scrollingContainer.node().scrollHeight - scrollingContainer.node().clientHeight
+    let sectionIndex = scrollPos === maxScroll ? this.articleSplits.length - 1 : d3.bisect(this.articleSplits, scrollPos) - 1
+    sectionIndex = Math.min(this.articleSplits.length - 1, sectionIndex)
+    if (this.selectedArticleSection !== sectionIndex) {
+      if (this.selectedArticleSection !== null) {
+        this.articleMenuItems[this.selectedArticleSection].classList.remove('selected') // TODO: update recommendation.selectedArticleSection on a href click // TODO: end-of-page logic
+      }
+      this.articleMenuItems[sectionIndex].classList.add('selected')
+      this.selectedArticleSection = sectionIndex
+    }
   }
 
   getSummary () { return this.content.getSummary() }
@@ -162,6 +191,17 @@ class Recomendation extends EventEmitter {
       for (const menuItem of recommendation.articleMenuItems) {
         this.articleMenu.node().appendChild(menuItem)
       }
+
+      if (this.readMoreOpened) {
+        const content = this.content
+        content.node().scrollTo(0, 0)
+        recommendation.computeArticleSplits()
+        recommendation.updateSelectedArticleSection(content)
+        content
+          .on('scroll.scroller', () => {
+            recommendation.updateSelectedArticleSection(content)
+          })
+      }
     }
   }
 
@@ -188,7 +228,6 @@ class Recomendation extends EventEmitter {
     if (recommendation.hasSummary()) {
       this.summary.node().appendChild(recommendation.getSummary())
     }
-
 
     // set space height such that the fixed element don't have to hide
     // something in the background.

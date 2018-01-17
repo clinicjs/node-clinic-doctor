@@ -54,6 +54,7 @@ recommendation.on('change-page', function (category) {
 recommendation.on('more', function () {
   recommendation.openReadMore()
   recommendation.draw()
+  recommendation.setPage(recommendation.selectedCategory)
   document.querySelector('body').classList.add('read-more-open')
 })
 recommendation.on('less', function () {
