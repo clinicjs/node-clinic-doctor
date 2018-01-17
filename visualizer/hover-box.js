@@ -90,14 +90,10 @@ class HoverBox {
   }
 
   setPosition (x, y) {
-    let belowCurve = false
-    // flip down if above half way
-    if (y - this.height < 0) {
-      belowCurve = true
-      this.dataBox.attr('transform', `translate(0, ${this.size.pointHeight})`)
-    } else {
-      this.dataBox.attr('transform', 'translate(0, 0)')
-    }
+    // flip down if hover title text overflows above graph header and y is in top half of outer wrapper
+    const belowCurve = (y - this.height < 0 - this.size.titleHeight / 4) && (y < this.availableHeight / 2)
+
+    this.dataBox.attr('transform', `translate(0, ${(belowCurve ? this.size.pointHeight : 0)})`)
     this.svg
       .style('top', Math.round(belowCurve ? y : y - this.height) + 'px')
       .style('left', Math.round(x - this.width / 2) + 'px')
