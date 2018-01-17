@@ -51,7 +51,7 @@ class RecomendationWrapper {
     sectionIndex = Math.min(this.articleSplits.length - 1, sectionIndex)
     if (this.selectedArticleSection !== sectionIndex) {
       if (this.selectedArticleSection !== null) {
-        this.articleMenuItems[this.selectedArticleSection].classList.remove('selected') // TODO: update recommendation.selectedArticleSection on a href click // TODO: end-of-page logic
+        this.articleMenuItems[this.selectedArticleSection].classList.remove('selected')
       }
       this.articleMenuItems[sectionIndex].classList.add('selected')
       this.selectedArticleSection = sectionIndex
