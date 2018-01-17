@@ -1,8 +1,8 @@
 'use strict'
 
 const async = require('async')
-const stream = require('stream')
 const endpoint = require('endpoint')
+const stream = require('../lib/destroyable-stream')
 const guessInterval = require('./guess-interval.js')
 const analyseCPU = require('./analyse-cpu.js')
 const analyseDelay = require('./analyse-delay.js')
@@ -33,7 +33,7 @@ function analysis (traceEventReader, processStatReader) {
       processStatReader.pipe(endpoint({ objectMode: true }, done))
     }
   }, function (err, data) {
-    if (err) return result.emit('error', err)
+    if (err) return result.destroy(err)
     const { traceEvent, processStat } = data
 
     // guess the interval for where the benchmarker ran

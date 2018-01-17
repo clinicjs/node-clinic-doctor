@@ -1,6 +1,6 @@
 'use strict'
 
-const stream = require('stream')
+const stream = require('../lib/destroyable-stream')
 
 const FRAME_PREFIX_SIZE = 2 // uint16 is 2 bytes
 
