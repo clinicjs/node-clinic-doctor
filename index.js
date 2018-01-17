@@ -100,7 +100,7 @@ class ClinicDoctor {
     )
 
     // create analysis
-    const analysisStringified = pumpify.obj(
+    const analysisStringified = pumpify(
       analysis(traceEventReader, processStatReader),
       new stream.Transform({
         readableObjectMode: false,
@@ -111,7 +111,7 @@ class ClinicDoctor {
       })
     )
 
-    const traceEventStringify = pumpify.obj(
+    const traceEventStringify = pumpify(
       traceEventReader,
       new Stringify({
         seperator: ',\n',
@@ -119,7 +119,7 @@ class ClinicDoctor {
       })
     )
 
-    const processStatStringify = pumpify.obj(
+    const processStatStringify = pumpify(
       processStatReader,
       new Stringify({
         seperator: ',\n',
@@ -157,7 +157,7 @@ class ClinicDoctor {
     // create style-file stream
     const styleFile = fs.createReadStream(stylePath)
 
-    // forward dataFile erros to the styleFile explicitly
+    // forward dataFile errors to the scriptFile explicitly
     // we cannot use destroy until nodejs/node#18172 and nodejs/node#18171 are fixed
     dataFile.on('error', (err) => scriptFile.emit('error', err))
 
