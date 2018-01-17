@@ -15,7 +15,8 @@ class HoverBox {
       marginTop: 3,
       marginBottom: 3,
       legendHeight: 28,
-      pointHeight: 10
+      pointHeight: 10,
+      containerHeight: container.node().getBoundingClientRect().height
     }
 
     const legendTopOffset = this.size.titleHeight + this.size.lineWidth +
@@ -91,7 +92,7 @@ class HoverBox {
 
   setPosition (x, y) {
     // flip down if hover title text overflows above graph header and y is in top half of outer wrapper
-    const belowCurve = (y - this.height < 0 - this.size.titleHeight / 4) && (y < this.availableHeight / 2)
+    const belowCurve = (y - this.height < 0 - this.size.titleHeight / 4) && (y < this.size.containerHeight / 2)
 
     this.dataBox.attr('transform', `translate(0, ${(belowCurve ? this.size.pointHeight : 0)})`)
     this.svg
