@@ -406,12 +406,10 @@ svg#toggle-theme {
 @media (max-height: 700px) {
   #recommendation .details .content {
     display: block; /* disable flexbox layout for .content content */
-    overflow-y: scroll;
     padding-right: 7px;
   }
 
   #recommendation .details .content .read-more {
-    overflow-y: unset;
     padding-right: 0px;
   }
 }
