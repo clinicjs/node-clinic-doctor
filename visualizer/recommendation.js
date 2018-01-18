@@ -39,6 +39,10 @@ class RecomendationWrapper {
       const link = document.createElement('a')
       link.href = '#' + articleHeading.id
       link.textContent = articleHeading.textContent
+      d3.select(link).on('click', () => {
+        window.event.preventDefault()
+        d3.select('#' + articleHeading.id).node().scrollIntoView({ behavior: 'smooth', block: 'start' })
+      })
       return link
     })
 
