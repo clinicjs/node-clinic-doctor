@@ -37,8 +37,13 @@ test('Collect - process stat - memory usage', function (t) {
 })
 
 function sleep (time) {
-  const future = Date.now() + time
-  while (Date.now() < future);
+  const now = process.hrtime()
+  while (ms() < time);
+
+  function ms () {
+    const delta = process.hrtime(now)
+    return delta[0] * 1e3 + delta[1] * 1e-6
+  }
 }
 
 test('Collect - process stat - delay usage', function (t) {

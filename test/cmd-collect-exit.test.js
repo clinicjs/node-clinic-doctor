@@ -1,6 +1,7 @@
 'use strict'
 
 const test = require('tap').test
+const os = require('os')
 const path = require('path')
 const async = require('async')
 const { spawn } = require('child_process')
@@ -8,6 +9,12 @@ const endpoint = require('endpoint')
 const CollectAndRead = require('./collect-and-read.js')
 
 test('cmd - collect - external SIGINT is relayed', function (t) {
+  if (os.platform() === 'win32') {
+    t.pass('Skip test as we cannot easily send SIGINT on windows')
+    t.end()
+    return
+  }
+
   const child = spawn(
     process.execPath, [
       path.resolve(__dirname, 'cmd-collect-exit-sigint.script.js')
