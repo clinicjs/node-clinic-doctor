@@ -21,7 +21,11 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: npm install
+      - run:
+         name: npm update
+         command: |
+           npm update
+           npm update --save-dev # https://github.com/npm/npm/issues/16901
 
       - save_cache:
           paths:

@@ -2,7 +2,7 @@
   "name": "@nearform/clinic-doctor",
   "description": "Programmable interface to clinic doctor",
   "repository": "nearform/node-clinic-doctor",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "scripts": {
     "test": "standard | snazzy && tap --no-cov test/*.test.js",
     "ci-lint": "standard | snazzy",
@@ -24,9 +24,10 @@
     "distributions": "^1.1.0",
     "endpoint": "^0.4.5",
     "protocol-buffers": "^3.2.1",
-    "pump": "^1.0.2",
+    "pump": "^1.0.3",
+    "pumpify": "^1.3.6",
     "showdown": "^1.7.6",
-    "stream-template": "0.0.4",
+    "stream-template": "0.0.6",
     "streaming-json-stringify": "^3.1.0",
     "summary": "^1.0.0",
     "ttest": "^1.1.0"

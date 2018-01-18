@@ -1,9 +1,11 @@
 'use strict'
 
 const fs = require('fs')
+const os = require('os')
 const path = require('path')
 const pump = require('pump')
-const stream = require('stream')
+const pumpify = require('pumpify')
+const stream = require('./lib/destroyable-stream')
 const { spawn } = require('child_process')
 const analysis = require('./analysis/index.js')
 const Stringify = require('streaming-json-stringify')
@@ -47,7 +49,13 @@ class ClinicDoctor {
     const paths = getLoggingPaths({ identifier: proc.pid })
 
     // relay SIGINT to process
-    process.once('SIGINT', () => proc.kill('SIGINT'))
+    process.once('SIGINT', function () {
+      // we cannot kill(SIGINT) on windows but it seems
+      // to relay the ctrl-c signal per default, so only do this
+      // if not windows
+      /* istanbul ignore else: windows hack */
+      if (os.platform() !== 'win32') proc.kill('SIGINT')
+    })
 
     proc.once('exit', function (code, signal) {
       // the process did not exit normally
@@ -84,32 +92,47 @@ class ClinicDoctor {
 
     // Load data
     const paths = getLoggingPaths({ path: dataDirname })
-    const SystemInfoReader = fs.createReadStream(paths['/systeminfo'])
-      .pipe(new SystemInfoDecoder())
-    const traceEventReader = fs.createReadStream(paths['/traceevent'])
-      .pipe(new TraceEventDecoder(SystemInfoReader))
-    const processStatReader = fs.createReadStream(paths['/processstat'])
-      .pipe(new ProcessStatDecoder())
+
+    const systemInfoReader = pumpify.obj(
+      fs.createReadStream(paths['/systeminfo']),
+      new SystemInfoDecoder()
+    )
+    const traceEventReader = pumpify.obj(
+      fs.createReadStream(paths['/traceevent']),
+      new TraceEventDecoder(systemInfoReader)
+    )
+    const processStatReader = pumpify.obj(
+      fs.createReadStream(paths['/processstat']),
+      new ProcessStatDecoder()
+    )
 
     // create analysis
-    const analysisStringified = analysis(traceEventReader, processStatReader)
-      .pipe(new stream.Transform({
+    const analysisStringified = pumpify(
+      analysis(traceEventReader, processStatReader),
+      new stream.Transform({
         readableObjectMode: false,
         writableObjectMode: true,
         transform (data, encoding, callback) {
           callback(null, JSON.stringify(data))
         }
-      }))
+      })
+    )
 
-    const traceEventStringify = traceEventReader.pipe(new Stringify({
-      seperator: ',\n',
-      stringifier: JSON.stringify
-    }))
+    const traceEventStringify = pumpify(
+      traceEventReader,
+      new Stringify({
+        seperator: ',\n',
+        stringifier: JSON.stringify
+      })
+    )
 
-    const processStatStringify = processStatReader.pipe(new Stringify({
-      seperator: ',\n',
-      stringifier: JSON.stringify
-    }))
+    const processStatStringify = pumpify(
+      processStatReader,
+      new Stringify({
+        seperator: ',\n',
+        stringifier: JSON.stringify
+      })
+    )
 
     const dataFile = streamTemplate`
       {
@@ -140,6 +163,10 @@ class ClinicDoctor {
 
     // create style-file stream
     const styleFile = fs.createReadStream(stylePath)
+
+    // forward dataFile errors to the scriptFile explicitly
+    // we cannot use destroy until nodejs/node#18172 and nodejs/node#18171 are fixed
+    dataFile.on('error', (err) => scriptFile.emit('error', err))
 
     // build output file
     const outputFile = streamTemplate`
