@@ -14,6 +14,7 @@ class HoverBox {
       lineWidth: 1,
       marginTop: 3,
       marginBottom: 3,
+      titlePaddingTop: 5,
       legendHeight: 28,
       pointHeight: 10,
       containerHeight: container.node().getBoundingClientRect().height
@@ -63,7 +64,7 @@ class HoverBox {
     // create title text
     this.title = this.dataBox.append('text')
       .classed('title', true)
-      .attr('y', 5)
+      .attr('y', this.size.titlePaddingTop)
       .attr('x', this.width / 2)
       .attr('dy', '1em')
 
@@ -91,8 +92,16 @@ class HoverBox {
   }
 
   setPosition (x, y) {
-    // flip down if hover title text overflows above graph header and y is in top half of outer wrapper
-    const belowCurve = (y - this.height < 0 - this.size.titleHeight / 4) && (y < this.size.containerHeight / 2)
+    // Check if we should flip the hover box so it is below the data point, pointing up.
+    // First check if any inner content of the hover box pokes above this graph area
+    const titleOverflowsTop = y - this.height < 0 - this.size.titlePaddingTop
+
+    // We shouldn't flip if this box starts closer to the container's bottom than the top
+    // because it will overflow the bottom by further than it would have overflowed the top
+    const startsCloserToTop = y < this.size.containerHeight / 2
+
+    // So: flip if it overflows the top by less than flipping would overflow the bottom
+    const belowCurve = titleOverflowsTop && startsCloserToTop
 
     this.dataBox.attr('transform', `translate(0, ${(belowCurve ? this.size.pointHeight : 0)})`)
     this.svg
