@@ -178,16 +178,18 @@ class ClinicDoctor {
 
       <style>${styleFile}</style>
 
-      <div id="banner">
-        ${logoFile}
-      </div>
-      <div id="front-matter">
-        <div id="alert"></div>
-        <div id="menu"></div>
-      </div>
-      <div id="graph"></div>
-      <div id="recommendation-space"></div>
-      <div id="recommendation"></div>
+      <section id="main">
+        <div id="banner">
+          ${logoFile}
+        </div>
+        <div id="front-matter">
+          <div id="alert"></div>
+          <div id="menu"></div>
+        </div>
+        <div id="graph"></div>
+        <div id="recommendation-space"></div>
+      </section>
+      <section id="recommendation"></section>
 
       ${recommendations}
 
