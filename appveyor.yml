@@ -13,8 +13,8 @@ init:
 
 install:
   - ps: Install-Product node $env:nodejs_version
-  - npm install
   - npm update
+  - npm update --save-dev # https://github.com/npm/npm/issues/16901
 
 build: off
 
