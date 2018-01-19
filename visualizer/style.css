@@ -393,12 +393,13 @@ svg#toggle-theme {
 #recommendation .details .content .read-more {
   display: none;
   flex: 0 1 auto;
-  overflow-y: scroll;
   min-height: 0px; /* make auto be the available space instead of content space */
   padding-right: 7px;
+  flex-direction: row;
+  justify-content: center;
 }
 #recommendation.read-more-open .details .content .read-more {
-  display: block;
+  display: flex;
 }
 
 /* change the scroll area to be the entire content if the screen-size is
@@ -501,12 +502,6 @@ svg#toggle-theme {
  position: sticky;
  top: 0;
  align-self: flex-start;
-}
-
-#recommendation.open.read-more-open .columns {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
 }
 
 #recommendation .content .read-more h2:not(.plain), #recommendation.open.read-more-open .article-menu a {
