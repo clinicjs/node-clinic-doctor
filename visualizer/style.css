@@ -759,10 +759,6 @@ svg#toggle-theme {
     display: unset;
   }
 
-  #recommendation.open.read-more-open .columns {
-    flex-direction: column;
-  }
-
   #recommendation.open.read-more-open .article-menu {
    margin-right: 0;
    position: static;
