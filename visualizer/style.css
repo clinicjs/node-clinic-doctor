@@ -230,6 +230,10 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   overflow: hidden;
 }
 
+#alert .summary .title::before {
+  content: 'Detected ';
+}
+
 #alert .summary .toggle {
   display: none;
   flex: 0 0 auto;
@@ -456,17 +460,25 @@ svg#toggle-theme {
 }
 
 #recommendation .content .summary-title {
-  display: none;
+  display: block;
   padding-top: 16px;
 }
-#recommendation .content .summary-title::after {
-  content: ':'
-}
-#recommendation.detected .content .summary-title {
-  display: block;
+#recommendation .content .summary-title::before {
+  content: 'Doctor has not found evidence of ';
 }
 
-#recommendation .content .read-more-button {
+#recommendation .content .summary-title::after {
+  content: '. When such issues are present:'
+}
+#recommendation.detected .content .summary-title::before {
+  content: 'Doctor has found ';
+}
+#recommendation.detected .content .summary-title::after {
+  content: ':'
+}
+
+
+#recommendation .content .read-more-button, #recommendation .menu .show-hide-button {
   display: none;
   color: var(--recommend-link-color);
   cursor: pointer;
@@ -481,6 +493,18 @@ svg#toggle-theme {
 #recommendation.read-more-open .content .read-more-button::before {
   content: 'Read less';
 }
+
+#recommendation .menu ul li .show-hide-button {
+  display: block;
+  align-self: unset;
+}
+#recommendation .menu ul li .menu-text.show-hide-button::before {
+  content: 'Browse undetected issues ‹';
+}
+#recommendation.undetected-opened .menu ul li .menu-text.show-hide-button::before {
+  content: 'Hide ›';
+}
+
 
 #recommendation.has-read-more .content .read-more-button {
   display: block;
@@ -516,8 +540,7 @@ svg#toggle-theme {
 }
 
 #recommendation .menu ul li {
-  display: flex;
-  float: left;
+  float: right;
   height: 35px;
   box-sizing: border-box;
   padding: 0px 4px 0 4px;
@@ -525,6 +548,22 @@ svg#toggle-theme {
   margin-right: 30px;
   cursor: pointer;
 }
+
+#recommendation .menu ul li.recommendation-tab {
+  display: none;
+}
+
+#recommendation .menu ul li, 
+#recommendation .menu ul li.detected,
+#recommendation .menu ul li.selected,
+#recommendation.undetected-opened .menu ul li.has-read-more {
+  display: flex;
+}
+
+#recommendation .menu ul li.detected {
+  float: left;
+}
+
 #recommendation .menu ul li.selected {
   border-bottom: 4px solid var(--recommend-menu-selected-color);
   font-weight: bold;
