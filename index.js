@@ -89,6 +89,7 @@ class ClinicDoctor {
     const stylePath = path.join(__dirname, 'visualizer', 'style.css')
     const scriptPath = path.join(__dirname, 'visualizer', 'main.js')
     const logoPath = path.join(__dirname, 'visualizer', 'app-logo.svg')
+    const nearFormLogoPath = path.join(__dirname, 'visualizer', 'nearform-logo.svg')
 
     // Load data
     const paths = getLoggingPaths({ path: dataDirname })
@@ -147,6 +148,7 @@ class ClinicDoctor {
 
     // open logo
     const logoFile = fs.createReadStream(logoPath)
+    const nearFormLogoFile = fs.createReadStream(nearFormLogoPath)
 
     // create script-file stream
     const b = browserify({
@@ -180,6 +182,7 @@ class ClinicDoctor {
 
       <div id="banner">
         ${logoFile}
+        ${nearFormLogoFile}
       </div>
       <div id="front-matter">
         <div id="alert"></div>
