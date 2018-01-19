@@ -14,6 +14,12 @@ class RecomendationWrapper {
 
     this.selected = false
     this.detected = false
+
+    this.articleHeadings = null
+    this.articleSplits = []
+    this.articleMenuItems = []
+
+    this.selectedArticleSection = null
   }
 
   get order () {
@@ -21,9 +27,60 @@ class RecomendationWrapper {
     return this.detected ? 0 : this.content.order
   }
 
+  // .scrollTop must be 0. Called each time read-more becomes visible or its content changes
+  computeArticleSplits () {
+    let startPos
+    this.articleSplits = this.articleHeadings.map((articleHeading, i) => {
+      const top = articleHeading.getBoundingClientRect().top
+      if (i === 0) {
+        startPos = top
+      }
+      return top - startPos
+    })
+    this.selectedArticleSection = null
+  }
+
+  updateSelectedArticleSection () {
+    const scrollPos = document.documentElement.scrollTop
+
+    // - 15 and >= comparison to allow for rounding issues and small browser inconsistencies
+    const maxScroll = document.documentElement.scrollHeight - document.documentElement.clientHeight - 15
+
+    let sectionIndex = scrollPos >= maxScroll ? this.articleSplits.length - 1 : d3.bisect(this.articleSplits, scrollPos) - 1
+
+    sectionIndex = Math.min(this.articleSplits.length - 1, sectionIndex)
+    if (this.selectedArticleSection !== sectionIndex) {
+      if (this.selectedArticleSection !== null) {
+        this.articleMenuItems[this.selectedArticleSection].classList.remove('selected')
+      }
+      this.articleMenuItems[sectionIndex].classList.add('selected')
+      this.selectedArticleSection = sectionIndex
+    }
+  }
+
   getSummary () { return this.content.getSummary() }
   hasSummary () { return this.content.hasSummary() }
-  getReadMore () { return this.content.getReadMore() }
+  getReadMore () {
+    const readMore = this.content.getReadMore()
+
+    this.articleHeadings = Array.from(readMore.querySelectorAll('h2'))
+    this.articleHeadings.forEach((articleHeading, i) => {
+      articleHeading.id = `article-section-${i}`
+    })
+
+    this.articleMenuItems = this.articleHeadings.map((articleHeading) => {
+      const link = document.createElement('a')
+      link.href = '#' + articleHeading.id
+      link.textContent = articleHeading.textContent
+      d3.select(link).on('click', () => {
+        window.event.preventDefault()
+        d3.select('#' + articleHeading.id).node().scrollIntoView({ behavior: 'smooth', block: 'start' })
+      })
+      return link
+    })
+
+    return readMore
+  }
   hasReadMore () { return this.content.hasReadMore() }
 }
 
@@ -65,8 +122,12 @@ class Recomendation extends EventEmitter {
       .on('click', () => this.emit(this.readMoreOpened ? 'less' : 'more'))
     this.readMore = this.content.append('div')
       .classed('read-more', true)
-    this.readMoreColumns = this.readMore.append('div')
-      .classed('columns', true)
+
+    this.articleMenu = this.readMore.append('nav')
+      .classed('article-menu', true)
+
+    this.readMoreArticle = this.readMore.append('article')
+      .classed('article', true)
 
     this.pages = this.menu.append('ul')
     const pagesLiEnter = this.pages
@@ -120,6 +181,26 @@ class Recomendation extends EventEmitter {
     this.selectedCategory = newCategory
     this.recommendations.get(oldCategory).selected = false
     this.recommendations.get(newCategory).selected = true
+
+    const recommendation = this.recommendations.get(this.selectedCategory)
+    this.container.classed('has-read-more', recommendation.hasReadMore())
+    this.readMoreArticle.html(null)
+    this.articleMenu.html(null)
+    if (recommendation.hasReadMore()) {
+      this.readMoreArticle.node().appendChild(recommendation.getReadMore())
+
+      this.articleMenu.append('h2')
+        .classed('plain', true)
+        .text('Jump to section')
+      for (const menuItem of recommendation.articleMenuItems) {
+        this.articleMenu.node().appendChild(menuItem)
+      }
+
+      if (this.readMoreOpened) {
+        recommendation.computeArticleSplits()
+        recommendation.updateSelectedArticleSection()
+      }
+    }
   }
 
   draw () {
@@ -146,15 +227,33 @@ class Recomendation extends EventEmitter {
       this.summary.node().appendChild(recommendation.getSummary())
     }
 
-    this.readMoreColumns.html(null)
-    this.container.classed('has-read-more', recommendation.hasReadMore())
-    if (recommendation.hasReadMore()) {
-      this.readMoreColumns.node().appendChild(recommendation.getReadMore())
-    }
-
     // set space height such that the fixed element don't have to hide
     // something in the background.
     this.space.style('height', this.details.node().offsetHeight + 'px')
+
+    const main = d3.select('#main')
+    const top = parseFloat(main.style('top'))
+
+    if (this.opened && this.readMoreOpened) {
+      d3.select(window)
+        .on('scroll.scroller', () => {
+          recommendation.updateSelectedArticleSection()
+        })
+
+      // Freeze in #main's former scroll position before class makes position become fixed
+      // Only do this if it hasn't already been done, else it's reset by switching tabs etc
+      if (!top && window.pageYOffset) {
+        main.style('top', 0 - window.pageYOffset + 'px')
+        document.documentElement.scrollTop = 0
+      }
+    } else {
+      d3.select(window).on('scroll.scroller', null)
+      if (top) {
+        // Reapply #main's old scroll position if there was one, after class removes position: fixed
+        document.documentElement.scrollTop = 0 - top
+      }
+      main.style('top', 0)
+    }
   }
 
   open () {
