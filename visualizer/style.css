@@ -494,10 +494,10 @@ svg#toggle-theme {
   align-self: unset;
 }
 #recommendation .menu ul li .menu-text.show-hide-button::before {
-  content: 'Browse undetected issues ‹';
+  content: 'Browse undetected issues ❮';
 }
 #recommendation.undetected-opened .menu ul li .menu-text.show-hide-button::before {
-  content: 'Hide ›';
+  content: 'Hide ❯';
 }
 
 
