@@ -479,7 +479,7 @@ svg#toggle-theme {
   display: block;
 }
 
-#recommendation.has-read-more .content .read-more p {
+#recommendation .content .read-more p {
   line-height: 24px;
   margin-top: 18px;
   margin-bottom: 18px;
