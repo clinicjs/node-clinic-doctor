@@ -1,25 +1,80 @@
-# Clinic Doctor is an OPEN Open Source Project
+# Welcome to Clinic!
 
-## What?
+Please take a second to read over this before opening an issue. Providing complete information upfront will help us address any issue (and ship new features!) faster.
 
-Individuals making significant and valuable contributions are given commit-access to the project to contribute as they see fit. This project is more like an open wiki than a standard guarded open source project.
+We greatly appreciate bug fixes, documentation improvements and new features, however when contributing a new major feature, it is a good idea to idea to first open an issue, to make sure the feature it fits with the goal of the project, so we don't waste your or our time.
 
-## Rules
+## Bug Reports
 
-There are a few basic ground-rules for contributors:
+A perfect bug report would have the following:
 
-1. **No `--force` pushes** on `master` or modifying the Git history in any way after a PR has been merged.
-1. **Non-master branches** ought to be used for ongoing work.
-1. **External API changes and significant modifications** ought to be subject to an **internal pull-request** to solicit feedback from other contributors.
-1. Internal pull-requests to solicit feedback are *encouraged* for any other non-trivial contribution but left to the discretion of the contributor.
-1. Contributors should attempt to adhere to the prevailing code-style.
+1. Summary of the issue you are experiencing.
+2. Details on what versions of node and clinic you have (`node -v` and `clinic -v`).
+3. A simple repeatable test case for us to run. Please try to run through it 2-3 times to ensure it is completely repeatable.
 
-## Releases
+We would like to avoid issues that require a follow up questions to identify the bug. These follow ups are difficult to do unless we have a repeatable test case.
 
-Declaring formal releases remains the prerogative of the project maintainer.
+In addition, it is helpful if you upload your clinic data to help us diagnose your issues.
+Use the `clinic upload` tool to do this:
 
-## Changes to this arrangement
+```
+clinic upload 10000.clinic-doctor
+```
 
-This is an experiment and feedback is welcome! This document may also be subject to pull-requests or changes by contributors where you believe you have something valuable to add or change.
+After the upload has finished, add the printed upload id to your issue.
+
+## For Developers
+
+All constributings should fit the [standard](https://github.com/standard/standard) linter, and pass the tests.
+You can test this by running:
+
+```
+npm test
+```
+
+In addition, make sure to add tests for any new features.
+You can test the test coverage by running:
+
+```
+npm run ci-cov
+```
+
+## For Collaborators
+
+Make sure to get a `:thumbsup:`, `+1` or `LGTM` from another collaborator before merging a PR. If you aren't sure if a release should happen, open an issue.
+
+Release process:
+
+- `npm test`
+- `npm version <major|minor|patch>`
+- `git push && git push --tags`
+- `npm publish`
 
 -----------------------------------------
+
+<a id="developers-certificate-of-origin"></a>
+## Developer's Certificate of Origin 1.1
+
+By making a contribution to this project, I certify that:
+
+* (a) The contribution was created in whole or in part by me and I
+  have the right to submit it under the open source license
+  indicated in the file; or
+
+* (b) The contribution is based upon previous work that, to the best
+  of my knowledge, is covered under an appropriate open source
+  license and I have the right under that license to submit that
+  work with modifications, whether created in whole or in part
+  by me, under the same open source license (unless I am
+  permitted to submit under a different license), as indicated
+  in the file; or
+
+* (c) The contribution was provided directly to me by some other
+  person who certified (a), (b) or (c) and I have not modified
+  it.
+
+* (d) I understand and agree that this project and the contribution
+  are public and that a record of the contribution (including all
+  personal information I submit with it, including my sign-off) is
+  maintained indefinitely and may be redistributed consistent with
+  this project or the open source license(s) involved.
