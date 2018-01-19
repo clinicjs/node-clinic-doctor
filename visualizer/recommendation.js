@@ -27,7 +27,7 @@ class RecomendationWrapper {
     return this.detected ? 0 : this.content.order
   }
 
-  // .scrollTop must be 0. Called each time read-more becomes visible or its content changes
+  // should be done only when scrollingContainer's scrollTop === 0
   computeArticleSplits () {
     let startPos
     this.articleSplits = this.articleHeadings.map((articleHeading, i) => {
@@ -37,17 +37,12 @@ class RecomendationWrapper {
       }
       return top - startPos
     })
-    this.selectedArticleSection = null
   }
 
-  updateSelectedArticleSection () {
-    const scrollPos = document.documentElement.scrollTop
-
-    // - 15 and >= comparison to allow for rounding issues and small browser inconsistencies
-    const maxScroll = document.documentElement.scrollHeight - document.documentElement.clientHeight - 15
-
-    let sectionIndex = scrollPos >= maxScroll ? this.articleSplits.length - 1 : d3.bisect(this.articleSplits, scrollPos) - 1
-
+  updateSelectedArticleSection (scrollingContainer) {
+    const scrollPos = scrollingContainer.node().scrollTop
+    const maxScroll = scrollingContainer.node().scrollHeight - scrollingContainer.node().clientHeight
+    let sectionIndex = scrollPos === maxScroll ? this.articleSplits.length - 1 : d3.bisect(this.articleSplits, scrollPos) - 1
     sectionIndex = Math.min(this.articleSplits.length - 1, sectionIndex)
     if (this.selectedArticleSection !== sectionIndex) {
       if (this.selectedArticleSection !== null) {
@@ -206,8 +201,14 @@ class Recomendation extends EventEmitter {
       }
 
       if (this.readMoreOpened) {
+        const content = this.content
+        content.node().scrollTo(0, 0)
         recommendation.computeArticleSplits()
-        recommendation.updateSelectedArticleSection()
+        recommendation.updateSelectedArticleSection(content)
+        content
+          .on('scroll.scroller', () => {
+            recommendation.updateSelectedArticleSection(content)
+          })
       }
     }
   }
@@ -241,30 +242,6 @@ class Recomendation extends EventEmitter {
     // set space height such that the fixed element don't have to hide
     // something in the background.
     this.space.style('height', this.details.node().offsetHeight + 'px')
-
-    const main = d3.select('#main')
-    const top = parseFloat(main.style('top'))
-
-    if (this.panelOpened && this.readMoreOpened) {
-      d3.select(window)
-        .on('scroll.scroller', () => {
-          recommendation.updateSelectedArticleSection()
-        })
-
-      // Freeze in #main's former scroll position before class makes position become fixed
-      // Only do this if it hasn't already been done, else it's reset by switching tabs etc
-      if (!top && window.pageYOffset) {
-        main.style('top', 0 - window.pageYOffset + 'px')
-        document.documentElement.scrollTop = 0
-      }
-    } else {
-      d3.select(window).on('scroll.scroller', null)
-      if (top) {
-        // Reapply #main's old scroll position if there was one, after class removes position: fixed
-        document.documentElement.scrollTop = 0 - top
-      }
-      main.style('top', 0)
-    }
   }
 
   openPanel () {

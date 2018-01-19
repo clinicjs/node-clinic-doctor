@@ -91,6 +91,9 @@ body {
                       /* If that causes mouse to leave hover area, scrollbar flashes on and off in loop. */
 }
 
+body.read-more-open {
+  overflow-y: hidden;
+}
 
 #front-matter {
   display: flex;
@@ -314,6 +317,7 @@ svg#toggle-theme {
   position: fixed;
   bottom: 0;
   z-index: 2;
+  max-height: calc(100vh - 65px); /* 100% - #banner[height] */
   width: 100%;
 
   flex-direction: column;
@@ -327,6 +331,7 @@ svg#toggle-theme {
   min-height: 255px; /* prevent jumps for no-issue and unknow-issue */
 
   display: none;
+  overflow: hidden;
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
@@ -379,6 +384,8 @@ svg#toggle-theme {
   flex-direction: column;
   justify-content: flex-end;
   align-items: stretch;
+
+  overflow-y: scroll;
 }
 
 #recommendation .details .content .summary-title {
@@ -515,7 +522,7 @@ svg#toggle-theme {
 #recommendation.open.read-more-open .article {
  display: inline-block;
  max-width: 550px;
- margin-bottom: 96px;
+ margin-bottom: 128px;
 }
 
 #recommendation.open.read-more-open .article-menu {
@@ -524,8 +531,6 @@ svg#toggle-theme {
  position: sticky;
  top: 0;
  align-self: flex-start;
- display: inline-block;
- vertical-align: top;
 }
 
 #recommendation .content .read-more h2:not(.plain), #recommendation.open.read-more-open .article-menu a {
@@ -671,19 +676,6 @@ svg#toggle-theme {
 #recommendation:not(.open) .bar .arrow svg.arrow-down { display: none; }
 #recommendation.open .bar .arrow svg.arrow-up { display: none; }
 
-/* Switch browser scroll focus, when read-more section is both open and visible */
-.recommendation-open .read-more-open #main {
-  position: fixed;
-}
-.recommendation-open .read-more-open #recommendation {
-  position: relative;
-  top: 65px; /* #banner[height] */
-}
-.recommendation-open .read-more-open #recommendation .bar {
-  position: fixed;
-  bottom: 0;
-}
-
 /* Graph layout */
 #graph .sub-graph {
   position: relative;
@@ -768,26 +760,14 @@ svg#toggle-theme {
     display: unset;
   }
 
+  #recommendation.open.read-more-open .columns {
+    flex-direction: column;
+  }
+
   #recommendation.open.read-more-open .article-menu {
-    margin-right: 0;
-    position: static;
-    align-self: unset;
-    margin-bottom: 18px;
-  }
-
-  #recommendation.read-more-open .details .content .read-more {
-    /* Stack nav.article-menu above article */
-    display: block;
-  }
-
-  #recommendation.read-more-open .details .content .article-menu {
-    /* TODO: improve design of jump menu on narrow screens */
-    position: static;
-  }
-
-  #recommendation.open.read-more-open .article-menu a.selected {
-    /* TODO: make jump menu features work on narrow screens e.g. sticky show/hide hamburger icon */
-    border-bottom: none;
+   margin-right: 0;
+   position: static;
+   align-self: unset;
   }
 }
 
