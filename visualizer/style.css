@@ -392,9 +392,11 @@ svg#toggle-theme {
   overflow-y: scroll;
   min-height: 0px; /* make auto be the available space instead of content space */
   padding-right: 7px;
+  flex-direction: row;
+  justify-content: center;
 }
 #recommendation.read-more-open .details .content .read-more {
-  display: block;
+  display: flex;
 }
 
 /* change the scroll area to be the entire content if the screen-size is
