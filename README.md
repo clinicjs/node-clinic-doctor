@@ -52,13 +52,13 @@ Will consume the datafile specified by `dataFilename`, this datafile will be pro
 [0]: https://img.shields.io/badge/stability-experimental-orange.svg?style=flat-square
 [1]: https://nodejs.org/api/documentation.html#documentation_stability_index
 [2]: https://img.shields.io/npm/v/@nearform/clinic-doctor.svg?style=flat-square
-[3]: https://npmjs.org/package/@nearform/clinic-doctor
+[3]: https://npmjs.org/@nearform/clinic-doctor
 [4]: https://circleci.com/gh/nearform/node-clinic-doctor/tree/master.svg?style=shield&circle-token=c26d5926558ff909ef0384756c3b70bc6151866e
 [5]: https://circleci.com/gh/nearform/node-clinic-doctor
 [6]: https://img.shields.io/codecov/c/github/nearform/node-clinic-doctor/master.svg?style=flat-square
 [7]: https://codecov.io/github/nearform/node-clinic-doctor
 [8]: http://img.shields.io/npm/dm/@nearform/clinic-doctor.svg?style=flat-square
-[9]: https://npmjs.org/package/@nearform/clinic-doctor
+[9]: https://npmjs.org/@nearform/clinic-doctor
 [10]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square
 [11]: https://github.com/feross/standard
 [12]: https://github.com/nearform/node-clinic
