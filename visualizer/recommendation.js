@@ -149,7 +149,7 @@ class Recomendation extends EventEmitter {
 
     this.menu.append('svg')
       .classed('close', true)
-      .on('click', () => this.emit('close'))
+      .on('click', () => this.emit('close-panel'))
       .call(icons.insertIcon('close'))
 
     this.bar = this.container.append('div')
