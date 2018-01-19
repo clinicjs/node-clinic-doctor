@@ -766,7 +766,6 @@ svg#toggle-theme {
    display: block; /* Allows .article-menu to move above content */
   }
 }
-}
 
 #graph .sub-graph .hover-area {
   position: absolute;
