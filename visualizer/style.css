@@ -339,6 +339,13 @@ svg#toggle-theme {
 #recommendation.open.read-more-open .details {
   min-height: calc(100vh - 65px - 65px); /* 100% - #banner[height] .bar[height] */
 }
+
+#recommendation.open.read-more-open .details .content {
+  display: block;
+  padding-right: 7px;
+  overflow-y: scroll;
+}
+
 /* change the scroll area to be the entire content if the screen-size is
    very small */
 @media (max-height: 385px) {
@@ -384,8 +391,6 @@ svg#toggle-theme {
   flex-direction: column;
   justify-content: flex-end;
   align-items: stretch;
-
-  overflow-y: scroll;
 }
 
 #recommendation .details .content .summary-title {
@@ -410,19 +415,6 @@ svg#toggle-theme {
 }
 #recommendation.read-more-open .details .content .read-more {
   display: flex;
-}
-
-/* change the scroll area to be the entire content if the screen-size is
-   very small */
-@media (max-height: 700px) {
-  #recommendation .details .content {
-    display: block; /* disable flexbox layout for .content content */
-    padding-right: 7px;
-  }
-
-  #recommendation .details .content .read-more {
-    padding-right: 0px;
-  }
 }
 
 #recommendation .bar {
