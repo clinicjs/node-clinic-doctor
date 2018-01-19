@@ -10,6 +10,7 @@ class CategoryContent {
     this.title = node.dataset.title
     this.summary = null
     this.readMore = null
+    this.articleHeadings = null
   }
 
   addContent (node) {

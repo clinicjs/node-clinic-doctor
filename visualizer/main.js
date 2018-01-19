@@ -32,31 +32,45 @@ graph.on('hover-update', (unitX) => graph.hoverUpdate(unitX))
 
 graph.on('alert-click', function () {
   document.documentElement.classList.add('recommendation-open')
-  recommendation.open()
+  recommendation.openPanel()
   recommendation.draw()
 })
 
-recommendation.on('open', function () {
+recommendation.on('open-panel', function () {
   document.documentElement.classList.add('recommendation-open')
-  recommendation.open()
+  recommendation.openPanel()
   recommendation.draw()
 })
-recommendation.on('close', function () {
+recommendation.on('close-panel', function () {
+  recommendation.closePanel()
+  // Remove class before draw so we can rescroll #main element
   document.documentElement.classList.remove('recommendation-open')
-  recommendation.close()
   recommendation.draw()
 })
+
 recommendation.on('change-page', function (category) {
   recommendation.setPage(category)
   recommendation.draw()
 })
 
-recommendation.on('more', function () {
+recommendation.on('open-read-more', function () {
   recommendation.openReadMore()
   recommendation.draw()
+  recommendation.setPage(recommendation.selectedCategory)
+  document.querySelector('body').classList.add('read-more-open')
 })
-recommendation.on('less', function () {
+recommendation.on('close-read-more', function () {
   recommendation.closeReadMore()
+  recommendation.draw()
+  document.querySelector('body').classList.remove('read-more-open')
+})
+
+recommendation.on('open-undetected', function () {
+  recommendation.openUndetected()
+  recommendation.draw()
+})
+recommendation.on('close-undetected', function () {
+  recommendation.closeUndetected()
   recommendation.draw()
 })
 

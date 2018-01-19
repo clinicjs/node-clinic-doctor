@@ -40,6 +40,8 @@ html {
   --recommend-menu-alert-color: rgb(233, 67, 100);
   --recommend-bg-color: rgba(55, 61, 79, 0.99);
 
+  --article-menu-color: rgb(27, 30, 39);
+
   --special-scrollbar-bg: rgba(255, 255, 255, .5);
   --special-scrollbar-shadow: rgba(0, 0, 0, .5);
 }
@@ -68,6 +70,8 @@ html.light-theme {
 
   --special-scrollbar-bg: rgba(0, 0, 0, .5);
   --special-scrollbar-shadow: rgba(255, 255, 255, .5);
+
+  --article-menu-color: rgb(227, 227, 227);
 }
 
 /* Main layout */
@@ -85,6 +89,10 @@ body {
   background: var(--main-bg-color);
   overflow-x: hidden; /* Hover box padding can overflow. Scrollbar appearing moves recommendation box. */ 
                       /* If that causes mouse to leave hover area, scrollbar flashes on and off in loop. */
+}
+
+.recommendation-open body.read-more-open {
+  overflow-y: hidden;
 }
 
 #front-matter {
@@ -230,6 +238,10 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   overflow: hidden;
 }
 
+#alert .summary .title::before {
+  content: 'Detected ';
+}
+
 #alert .summary .toggle {
   display: none;
   flex: 0 0 auto;
@@ -334,6 +346,13 @@ svg#toggle-theme {
 #recommendation.open.read-more-open .details {
   min-height: calc(100vh - 65px - 65px); /* 100% - #banner[height] .bar[height] */
 }
+
+#recommendation.open.read-more-open .details .content {
+  display: block;
+  padding-right: 7px;
+  overflow-y: scroll;
+}
+
 /* change the scroll area to be the entire content if the screen-size is
    very small */
 @media (max-height: 385px) {
@@ -396,27 +415,13 @@ svg#toggle-theme {
 #recommendation .details .content .read-more {
   display: none;
   flex: 0 1 auto;
-  overflow-y: scroll;
   min-height: 0px; /* make auto be the available space instead of content space */
   padding-right: 7px;
+  flex-direction: row;
+  justify-content: center;
 }
 #recommendation.read-more-open .details .content .read-more {
-  display: block;
-}
-
-/* change the scroll area to be the entire content if the screen-size is
-   very small */
-@media (max-height: 700px) {
-  #recommendation .details .content {
-    display: block; /* disable flexbox layout for .content content */
-    overflow-y: scroll;
-    padding-right: 7px;
-  }
-
-  #recommendation .details .content .read-more {
-    overflow-y: unset;
-    padding-right: 0px;
-  }
+  display: flex;
 }
 
 #recommendation .bar {
@@ -456,17 +461,25 @@ svg#toggle-theme {
 }
 
 #recommendation .content .summary-title {
-  display: none;
+  display: block;
   padding-top: 16px;
 }
-#recommendation .content .summary-title::after {
-  content: ':'
-}
-#recommendation.detected .content .summary-title {
-  display: block;
+#recommendation .content .summary-title::before {
+  content: 'Doctor has not found evidence of ';
 }
 
-#recommendation .content .read-more-button {
+#recommendation .content .summary-title::after {
+  content: '. When such issues are present:'
+}
+#recommendation.detected .content .summary-title::before {
+  content: 'Doctor has found ';
+}
+#recommendation.detected .content .summary-title::after {
+  content: ':'
+}
+
+
+#recommendation .content .read-more-button, #recommendation .menu .show-hide-button {
   display: none;
   color: var(--recommend-link-color);
   cursor: pointer;
@@ -482,23 +495,63 @@ svg#toggle-theme {
   content: 'Read less';
 }
 
+#recommendation .menu ul li .show-hide-button {
+  display: block;
+  align-self: unset;
+}
+#recommendation .menu ul li .menu-text.show-hide-button::before {
+  content: 'Browse undetected issues ❮';
+}
+#recommendation.undetected-opened .menu ul li .menu-text.show-hide-button::before {
+  content: 'Hide ❯';
+}
+
+
 #recommendation.has-read-more .content .read-more-button {
   display: block;
 }
 
-#recommendation .content .read-more .columns {
-  columns: 400px 4;
-  text-align: justify;
-  hyphens: auto;
+#recommendation.has-read-more .content .read-more p {
+  line-height: 24px;
+  margin-top: 18px;
+  margin-bottom: 18px;
+  text-align: left;
 }
 
-#recommendation .content .read-more h2 {
+#recommendation.open.read-more-open .article {
+ display: inline-block;
+ max-width: 550px;
+ margin-bottom: 128px;
+}
+
+#recommendation.open.read-more-open .article-menu {
+ margin-right: 40px;
+ max-width: 550px;
+ position: sticky;
+ top: 0;
+ align-self: flex-start;
+}
+
+#recommendation .content .read-more h2:not(.plain), #recommendation.open.read-more-open .article-menu a {
   background: var(--recommend-title-bg-color);
   font-size: 12pt;
   padding: 12px;
   break-after: avoid;
   break-before: auto;
   margin: 0; /* let p and ul tags dominate margin collapse */
+  font-weight: bold;
+  color: var(--recommend-text-color);
+}
+
+#recommendation.open.read-more-open .article-menu a {
+ display: block;
+ margin-bottom: 6px;
+ background-color: var(--article-menu-color);
+}
+
+#recommendation .content .read-more h2.plain {
+  font-size: 12pt;
+  padding-left: 12px;
 }
 
 #recommendation .content .read-more li {
@@ -516,8 +569,7 @@ svg#toggle-theme {
 }
 
 #recommendation .menu ul li {
-  display: flex;
-  float: left;
+  float: right;
   height: 35px;
   box-sizing: border-box;
   padding: 0px 4px 0 4px;
@@ -525,7 +577,23 @@ svg#toggle-theme {
   margin-right: 30px;
   cursor: pointer;
 }
-#recommendation .menu ul li.selected {
+
+#recommendation .menu ul li.recommendation-tab {
+  display: none;
+}
+
+#recommendation .menu ul li, 
+#recommendation .menu ul li.detected,
+#recommendation .menu ul li.selected,
+#recommendation.undetected-opened .menu ul li.has-read-more {
+  display: flex;
+}
+
+#recommendation .menu ul li.detected {
+  float: left;
+}
+
+#recommendation .menu ul li.selected, #recommendation.open.read-more-open .article-menu a.selected {
   border-bottom: 4px solid var(--recommend-menu-selected-color);
   font-weight: bold;
 }
@@ -689,6 +757,16 @@ svg#toggle-theme {
 
   #graph .sub-graph .header .legend .legend-item .short-legend {
     display: unset;
+  }
+
+  #recommendation.open.read-more-open .article-menu {
+   margin-right: 0;
+   position: static;
+   align-self: unset;
+  }
+
+  #recommendation.read-more-open .details .content .read-more {
+   display: block; /* Allows .article-menu to move above content */
   }
 }
 
