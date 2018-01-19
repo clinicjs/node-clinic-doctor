@@ -89,7 +89,7 @@ class Recomendation extends EventEmitter {
     super()
 
     this.readMoreOpened = false
-    this.opened = false
+    this.panelOpened = false
     this.selectedCategory = 'unknown'
 
     // wrap content with selected and detected properties
@@ -105,7 +105,7 @@ class Recomendation extends EventEmitter {
     this.space = d3.select('#recommendation-space')
 
     this.container = d3.select('#recommendation')
-      .classed('open', this.opened)
+      .classed('open', this.panelOpened)
 
     this.details = this.container.append('div')
       .classed('details', true)
@@ -119,7 +119,7 @@ class Recomendation extends EventEmitter {
       .classed('summary', true)
     this.readMoreButton = this.content.append('div')
       .classed('read-more-button', true)
-      .on('click', () => this.emit(this.readMoreOpened ? 'less' : 'more'))
+      .on('click', () => this.emit(this.readMoreOpened ? 'close-read-more' : 'open-read-more'))
     this.readMore = this.content.append('div')
       .classed('read-more', true)
 
@@ -135,6 +135,7 @@ class Recomendation extends EventEmitter {
       .data(this.recommendationsAsArray, (d) => d.category)
       .enter()
         .append('li')
+          .classed('recommendation-tab', true)
           .on('click', (d) => this.emit('change-page', d.category))
     pagesLiEnter.append('span')
       .classed('menu-text', true)
@@ -143,6 +144,14 @@ class Recomendation extends EventEmitter {
       .classed('warning-icon', true)
       .call(icons.insertIcon('warning'))
 
+    // Add button to show-hide tabs described undetected issues
+    this.pages.append('li')
+      .classed('show-hide', true)
+      .append('a')
+        .classed('show-hide-button', true)
+        .classed('menu-text', true)
+        .on('click', () => this.emit(this.undetectedOpened ? 'close-undetected' : 'open-undetected'))
+
     this.menu.append('svg')
       .classed('close', true)
       .on('click', () => this.emit('close'))
@@ -150,7 +159,7 @@ class Recomendation extends EventEmitter {
 
     this.bar = this.container.append('div')
       .classed('bar', true)
-      .on('click', () => this.emit(this.opened ? 'close' : 'open'))
+      .on('click', () => this.emit(this.panelOpened ? 'close-panel' : 'open-panel'))
     this.bar.append('div')
       .classed('text', true)
     const arrow = this.bar.append('div')
@@ -164,16 +173,16 @@ class Recomendation extends EventEmitter {
   }
 
   setData (data) {
-    const category = data.analysis.issueCategory
-    this.recommendations.get(category).detected = true
+    this.defaultCategory = data.analysis.issueCategory
+    this.recommendations.get(this.defaultCategory).detected = true
 
     // reorder pages, such that the detected page selector comes first
     this.pages
-      .selectAll('li')
+      .selectAll('li.recommendation-tab')
       .sort((a, b) => a.order - b.order)
 
     // set the default page
-    this.setPage(category)
+    this.setPage(this.defaultCategory)
   }
 
   setPage (newCategory) {
@@ -205,17 +214,19 @@ class Recomendation extends EventEmitter {
 
   draw () {
     this.pages
-      .selectAll('li')
+      .selectAll('li.recommendation-tab')
       .data(this.recommendationsAsArray, (d) => d.category)
       .classed('detected', (d) => d.detected)
       .classed('selected', (d) => d.selected)
+      .classed('has-read-more', (d) => d.hasReadMore())
 
     const recommendation = this.recommendations.get(this.selectedCategory)
 
     // update state classes
     this.container
-      .classed('open', this.opened)
+      .classed('open', this.panelOpened)
       .classed('read-more-open', this.readMoreOpened)
+      .classed('undetected-opened', this.undetectedOpened)
       .classed('detected', recommendation.detected)
 
     // set content
@@ -234,7 +245,7 @@ class Recomendation extends EventEmitter {
     const main = d3.select('#main')
     const top = parseFloat(main.style('top'))
 
-    if (this.opened && this.readMoreOpened) {
+    if (this.panelOpened && this.readMoreOpened) {
       d3.select(window)
         .on('scroll.scroller', () => {
           recommendation.updateSelectedArticleSection()
@@ -256,21 +267,32 @@ class Recomendation extends EventEmitter {
     }
   }
 
-  open () {
-    this.opened = true
+  openPanel () {
+    this.panelOpened = true
   }
-
-  close () {
-    this.opened = false
+  closePanel () {
+    this.panelOpened = false
   }
 
   openReadMore () {
     this.readMoreOpened = true
   }
-
   closeReadMore () {
     this.readMoreOpened = false
   }
+
+  openUndetected () {
+    this.undetectedOpened = true
+  }
+  closeUndetected () {
+    this.undetectedOpened = false
+
+    // If user hides undetected tabs while one is selected, switch to default tab 
+    if (!this.recommendations.get(this.selectedCategory).detected) {
+      this.emit('change-page', this.defaultCategory)
+    }
+  }
+
 }
 
 module.exports = new Recomendation()

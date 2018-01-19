@@ -37,35 +37,47 @@ graph.on('alert-click', function () {
   document.documentElement.classList.add('recommendation-open')
 })
 
-recommendation.on('open', function () {
-  recommendation.open()
+recommendation.on('open-panel', function () {
+  recommendation.openPanel()
   recommendation.draw()
   // Add class after draw so draw can read #main element's scroll position
   document.documentElement.classList.add('recommendation-open')
 })
-recommendation.on('close', function () {
+recommendation.on('close-panel', function () {
+  recommendation.closePanel()
+  // Remove class before draw so we can rescroll #main element
   document.documentElement.classList.remove('recommendation-open')
-  recommendation.close()
   recommendation.draw()
 })
+
 recommendation.on('change-page', function (category) {
   recommendation.setPage(category)
   recommendation.draw()
 })
 
-recommendation.on('more', function () {
+recommendation.on('open-read-more', function () {
   recommendation.openReadMore()
   recommendation.draw()
   recommendation.setPage(recommendation.selectedCategory)
   // Add class after draw so draw can read #main element's scroll position
   document.querySelector('body').classList.add('read-more-open')
 })
-recommendation.on('less', function () {
+recommendation.on('close-read-more', function () {
   recommendation.closeReadMore()
   // Remove class before draw so we can rescroll #main element
   document.querySelector('body').classList.remove('read-more-open')
   recommendation.draw()
 })
+
+recommendation.on('open-undetected', function () {
+  recommendation.openUndetected()
+  recommendation.draw()
+})
+recommendation.on('close-undetected', function () {
+  recommendation.closeUndetected()
+  recommendation.draw()
+})
+
 
 loaddata(function maybeDone (err, data) {
   if (err) throw err

@@ -36,7 +36,7 @@ const recommendations = [
   new Recommendation({
     category: 'gc',
     issue: true,
-    title: 'Potential Garbage Collection issue detected',
+    title: 'a potential Garbage Collection issue',
     menu: 'Garbage Collection',
     order: 1,
     summary: path.resolve(__dirname, 'gc-summary.md'),
@@ -45,7 +45,7 @@ const recommendations = [
   new Recommendation({
     category: 'event-loop',
     issue: true,
-    title: 'Potential Event Loop issue detected',
+    title: 'a potential Event Loop issue',
     menu: 'Event Loop',
     order: 2,
     summary: path.resolve(__dirname, 'event-loop-summary.md'),
@@ -54,7 +54,7 @@ const recommendations = [
   new Recommendation({
     category: 'io',
     issue: true,
-    title: 'Potential I/O issue detected',
+    title: 'a potential I/O issue',
     menu: 'I/O',
     order: 3,
     summary: path.resolve(__dirname, 'io-summary.md'),
@@ -63,7 +63,7 @@ const recommendations = [
   new Recommendation({
     category: 'unknown',
     issue: true,
-    title: 'Unknown issue detected',
+    title: 'an unknown issue',
     menu: 'Unknown issue',
     order: 4,
     summary: path.resolve(__dirname, 'unknown-summary.md'),
@@ -72,7 +72,7 @@ const recommendations = [
   new Recommendation({
     category: 'none',
     issue: false,
-    title: 'No issue detected',
+    title: 'no issue',
     menu: 'No issue',
     order: 5,
     summary: path.resolve(__dirname, 'none-summary.md'),
