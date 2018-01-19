@@ -37,6 +37,9 @@ class RecomendationWrapper {
       }
       return top - startPos
     })
+
+    // Clear selection else nothing is selected when user returns to previously opened tab
+    this.selectedArticleSection = null
   }
 
   updateSelectedArticleSection (scrollingContainer) {
