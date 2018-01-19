@@ -761,6 +761,11 @@ svg#toggle-theme {
    position: static;
    align-self: unset;
   }
+
+  #recommendation.read-more-open .details .content .read-more {
+   display: block; /* Allows .article-menu to move above content */
+  }
+}
 }
 
 #graph .sub-graph .hover-area {
