@@ -45,6 +45,7 @@ recommendation.on('close', function () {
   document.documentElement.classList.remove('recommendation-open')
   recommendation.close()
   recommendation.draw()
+  document.querySelector('body').classList.remove('freeze-scroll')
 })
 recommendation.on('change-page', function (category) {
   recommendation.setPage(category)
@@ -54,10 +55,12 @@ recommendation.on('change-page', function (category) {
 recommendation.on('more', function () {
   recommendation.openReadMore()
   recommendation.draw()
+  document.querySelector('body').classList.add('freeze-scroll')
 })
 recommendation.on('less', function () {
   recommendation.closeReadMore()
   recommendation.draw()
+  document.querySelector('body').classList.remove('freeze-scroll')
 })
 
 loaddata(function maybeDone (err, data) {
