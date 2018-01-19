@@ -74,7 +74,6 @@ recommendation.on('close-undetected', function () {
   recommendation.draw()
 })
 
-
 loaddata(function maybeDone (err, data) {
   if (err) throw err
 

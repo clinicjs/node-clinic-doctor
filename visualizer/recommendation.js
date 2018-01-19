@@ -264,12 +264,11 @@ class Recomendation extends EventEmitter {
   closeUndetected () {
     this.undetectedOpened = false
 
-    // If user hides undetected tabs while one is selected, switch to default tab 
+    // If user hides undetected tabs while one is selected, switch to default tab
     if (!this.recommendations.get(this.selectedCategory).detected) {
       this.emit('change-page', this.defaultCategory)
     }
   }
-
 }
 
 module.exports = new Recomendation()
