@@ -65,10 +65,8 @@ class Recomendation extends EventEmitter {
       .on('click', () => this.emit(this.readMoreOpened ? 'less' : 'more'))
     this.readMore = this.content.append('div')
       .classed('read-more', true)
-    this.readMoreColumns = this.readMore.append('div')
-      .classed('columns', true)
 
-    this.readMoreArticle = this.readMoreColumns.append('div')
+    this.readMoreArticle = this.readMore.append('div')
       .classed('article', true)
 
     this.pages = this.menu.append('ul')
