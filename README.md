@@ -4,6 +4,8 @@
 
 Programmable interface to [clinic][12] doctor
 
+![banner](logo.png)
+
 ## Example
 
 ```js
