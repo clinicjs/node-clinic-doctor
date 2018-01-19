@@ -399,9 +399,11 @@ svg#toggle-theme {
   overflow-y: scroll;
   min-height: 0px; /* make auto be the available space instead of content space */
   padding-right: 7px;
+  flex-direction: row;
+  justify-content: center;
 }
 #recommendation.read-more-open .details .content .read-more {
-  display: block;
+  display: flex;
 }
 
 /* change the scroll area to be the entire content if the screen-size is
@@ -486,10 +488,11 @@ svg#toggle-theme {
   display: block;
 }
 
-#recommendation .content .read-more .columns {
-  columns: 400px 4;
-  text-align: justify;
-  hyphens: auto;
+#recommendation .content .read-more p {
+  line-height: 24px;
+  margin-top: 18px;
+  margin-bottom: 18px;
+  text-align: left;
 }
 
 #recommendation .content .read-more h2 {
@@ -503,6 +506,10 @@ svg#toggle-theme {
 
 #recommendation .content .read-more li {
   orphans: 4;
+}
+
+#recommendation.has-read-more .content .read-more .article {
+  max-width: 550px;
 }
 
 #recommendation .menu {
