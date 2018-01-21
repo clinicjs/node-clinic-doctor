@@ -46,6 +46,7 @@ class HoverBox {
       .attr('height', hoverBoxHeight)
     this.svg.append('path')
       .classed('pointer', true)
+      .classed('above-curve', true)
       .attr('d', `M${this.width / 2 - this.size.pointHeight} ${hoverBoxHeight} ` +
                  `L${this.width / 2} ${this.height} ` +
                  `L${this.width / 2 + this.size.pointHeight} ${hoverBoxHeight} Z`)
