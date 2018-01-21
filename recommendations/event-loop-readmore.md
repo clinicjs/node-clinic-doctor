@@ -36,7 +36,9 @@ the bottleneck may be distributed which would take rather more detective work.
   HTTP 503 Service Unavailable functionality (see *Load Shedding* in **Reference**)
   - This should allow the deployments Load Balance to route traffic to a different service instance
   - In the worse case the user receives the 503 in which case they must retry (this is still preferable to waiting for a timeout)
-- Use the [0x](https://www.npmjs.com/package/0x) tool to generate a flamegraph (see [Reference](#reference)).
+- Use `clinic flame` to generate a flamegraph 
+  - Run `clinic flame` help to get started
+  - see "Understanding Flamegraphs and how to use 0x" article in the **Reference** section for more information
 - Look for "hot" blocks, these are functions that are observed (at a higher relative frequency) to be at the top the stack per CPU sample – in other words, such functions are blocking the event loop
   - (In the case of a distributed bottleneck, start by looking for lots of wide tips at the top of the Flamegraph)
 
