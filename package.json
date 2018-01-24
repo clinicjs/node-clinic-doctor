@@ -42,5 +42,5 @@
     "xorshift": "^1.1.1"
   },
   "keywords": [],
-  "license": "Apache 2.0"
+  "license": "Apache-2.0"
 }
