@@ -182,7 +182,7 @@ class ClinicDoctor {
 
       <div id="banner">
         ${logoFile}
-        ${nearFormLogoFile}
+        <a href="https://nearform.com" title="nearForm">${nearFormLogoFile}</a>
       </div>
       <div id="front-matter">
         <div id="alert"></div>
