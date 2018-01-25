@@ -74,7 +74,7 @@ a core dump analysis tool to list all JS objects in a core dump file (this appro
 
 - Load Shedding
   - Express, Koa, Restify, `http`: [overload-protection](https://www.npmjs.com/package/overload-protection)
-  - Hapi: [Server load sampleInterval option](https://hapijs.com/api#new-serveroptions) & [Server connections load maxEventLoopDelay](https://hapijs.com/api#new-serveroptions)
+  - Hapi: [Server load sampleInterval option](https://hapijs.com/api#-serveroptionsload) & [Server connections load maxEventLoopDelay](https://hapijs.com/api#-serveroptionsload)
   - Fastify: [under-pressure](https://www.npmjs.com/package/under-pressure)
   - General: [loopbench](https://www.npmjs.com/package/loopbench)
 - [Chrome Devtools Docs: Fix Memory Problems](https://developers.google.com/web/tools/chrome-devtools/memory-problems/)
