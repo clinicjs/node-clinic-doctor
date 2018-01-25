@@ -59,7 +59,7 @@ class ClinicDoctor {
 
     proc.once('exit', function (code, signal) {
       // Windows uncaught SIGINT has exit code 3221225786
-      /* istanbul ignore if: windows hack */
+      /* istanbul ignore next: windows hack */
       if (code === 3221225786 && os.platform() === 'win32') signal = 'SIGINT'
 
       // Abort if the process did not exit normally.
