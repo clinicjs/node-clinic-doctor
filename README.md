@@ -6,6 +6,11 @@ Programmable interface to [clinic][12] doctor
 
 ![banner](logo.png)
 
+## Supported node versions
+
+* Node.js 9.4.0 and above
+* Node.js 8.10.0 and above (not yet released)
+
 ## Example
 
 ```js

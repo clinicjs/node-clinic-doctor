@@ -41,6 +41,9 @@
     "tap": "^10.7.2",
     "xorshift": "^1.1.1"
   },
+  "engines" : {
+    "node" : "^8.10.0 || ^9.4.0 || >=10.0.0"
+  },
   "keywords": [],
   "license": "Apache 2.0"
 }
