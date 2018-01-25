@@ -58,7 +58,12 @@ class ClinicDoctor {
     })
 
     proc.once('exit', function (code, signal) {
-      // the process did not exit normally
+      // Windows exit code STATUS_CONTROL_C_EXIT 0xC000013A returns 3221225786
+      // if not caught. See https://msdn.microsoft.com/en-us/library/cc704588.aspx
+      /* istanbul ignore next: windows hack */
+      if (code === 3221225786 && os.platform() === 'win32') signal = 'SIGINT'
+
+      // Abort if the process did not exit normally.
       if (code !== 0 && signal !== 'SIGINT') {
         if (code !== null) {
           return callback(
