@@ -58,8 +58,12 @@ class ClinicDoctor {
     })
 
     proc.once('exit', function (code, signal) {
-      // Abort if the process did not exit normally. Windows uncaught SIGINT has exit code 3221225786
-      if (code !== 0 && signal !== 'SIGINT' && !(code === 3221225786 && os.platform() === 'win32')) {
+      // Windows uncaught SIGINT has exit code 3221225786
+      /* istanbul ignore if: windows hack */
+      if (code === 3221225786 && os.platform() === 'win32') signal = 'SIGINT'
+
+      // Abort if the process did not exit normally.
+      if (code !== 0 && signal !== 'SIGINT') {
         if (code !== null) {
           return callback(
             new Error(`process exited with exit code ${code}`),
