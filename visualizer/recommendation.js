@@ -14,46 +14,11 @@ class RecomendationWrapper {
 
     this.selected = false
     this.detected = false
-
-    this.articleHeadings = null
-    this.articleSplits = []
-    this.articleMenuItems = []
-
-    this.selectedArticleSection = null
   }
 
   get order () {
     // always make the detected issue appear first
     return this.detected ? 0 : this.content.order
-  }
-
-  // should be done only when scrollingContainer's scrollTop === 0
-  computeArticleSplits () {
-    let startPos
-    this.articleSplits = this.articleHeadings.map((articleHeading, i) => {
-      const top = articleHeading.getBoundingClientRect().top
-      if (i === 0) {
-        startPos = top
-      }
-      return top - startPos
-    })
-
-    // Clear selection else nothing is selected when user returns to previously opened tab
-    this.selectedArticleSection = null
-  }
-
-  updateSelectedArticleSection (scrollingContainer) {
-    const scrollPos = scrollingContainer.node().scrollTop
-    const maxScroll = scrollingContainer.node().scrollHeight - scrollingContainer.node().clientHeight
-    let sectionIndex = scrollPos === maxScroll ? this.articleSplits.length - 1 : d3.bisect(this.articleSplits, scrollPos) - 1
-    sectionIndex = Math.min(this.articleSplits.length - 1, sectionIndex)
-    if (this.selectedArticleSection !== sectionIndex) {
-      if (this.selectedArticleSection !== null) {
-        this.articleMenuItems[this.selectedArticleSection].classList.remove('selected')
-      }
-      this.articleMenuItems[sectionIndex].classList.add('selected')
-      this.selectedArticleSection = sectionIndex
-    }
   }
 
   getSummaryTitle () {
@@ -64,31 +29,9 @@ class RecomendationWrapper {
   }
 
   getSummary () { return this.content.getSummary() }
-
   hasSummary () { return this.content.hasSummary() }
 
-  getReadMore () {
-    const readMore = this.content.getReadMore()
-
-    this.articleHeadings = Array.from(readMore.querySelectorAll('h2'))
-    this.articleHeadings.forEach((articleHeading, i) => {
-      articleHeading.id = `article-section-${i}`
-    })
-
-    this.articleMenuItems = this.articleHeadings.map((articleHeading) => {
-      const link = document.createElement('a')
-      link.href = '#' + articleHeading.id
-      link.textContent = articleHeading.textContent
-      d3.select(link).on('click', () => {
-        window.event.preventDefault()
-        d3.select('#' + articleHeading.id).node().scrollIntoView({ behavior: 'smooth', block: 'start' })
-      })
-      return link
-    })
-
-    return readMore
-  }
-
+  getReadMore () { return this.content.getReadMore() }
   hasReadMore () { return this.content.hasReadMore() }
 }
 
@@ -121,6 +64,7 @@ class Recomendation extends EventEmitter {
       .classed('menu', true)
     this.content = this.details.append('div')
       .classed('content', true)
+      .on('scroll.scroller', () => this._drawSelectedArticleMenu())
     this.summaryTitle = this.content.append('div')
       .classed('summary-title', true)
     this.summary = this.content.append('div')
@@ -198,32 +142,6 @@ class Recomendation extends EventEmitter {
     this.selectedCategory = newCategory
     this.recommendations.get(oldCategory).selected = false
     this.recommendations.get(newCategory).selected = true
-
-    const recommendation = this.recommendations.get(this.selectedCategory)
-    this.container.classed('has-read-more', recommendation.hasReadMore())
-    this.readMoreArticle.html(null)
-    this.articleMenu.html(null)
-    if (recommendation.hasReadMore()) {
-      this.readMoreArticle.node().appendChild(recommendation.getReadMore())
-
-      this.articleMenu.append('h2')
-        .classed('plain', true)
-        .text('Jump to section')
-      for (const menuItem of recommendation.articleMenuItems) {
-        this.articleMenu.node().appendChild(menuItem)
-      }
-
-      if (this.readMoreOpened) {
-        const content = this.content
-        content.node().scrollTo(0, 0)
-        recommendation.computeArticleSplits()
-        recommendation.updateSelectedArticleSection(content)
-        content
-          .on('scroll.scroller', () => {
-            recommendation.updateSelectedArticleSection(content)
-          })
-      }
-    }
   }
 
   draw () {
@@ -241,6 +159,7 @@ class Recomendation extends EventEmitter {
       .classed('open', this.panelOpened)
       .classed('read-more-open', this.readMoreOpened)
       .classed('undetected-opened', this.undetectedOpened)
+      .classed('has-read-more', recommendation.hasReadMore())
       .classed('detected', recommendation.detected)
 
     // set content
@@ -250,9 +169,51 @@ class Recomendation extends EventEmitter {
       this.summary.node().appendChild(recommendation.getSummary())
     }
 
+    this.readMoreArticle.html(null)
+    this.articleMenu.html(null)
+    if (recommendation.hasReadMore()) {
+      this.readMoreArticle.node().appendChild(recommendation.getReadMore())
+
+      this.articleMenu.append('h2')
+        .classed('plain', true)
+        .text('Jump to section')
+
+      this.articleMenu.append('ul')
+        .selectAll('li')
+        .data(this.readMoreArticle.selectAll('h2').nodes())
+        .enter()
+          .append('li')
+          .text((headerElement) => headerElement.textContent)
+          .on('click', function (headerElement) {
+            headerElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          })
+
+      this._drawSelectedArticleMenu()
+    }
+
     // set space height such that the fixed element don't have to hide
     // something in the background.
     this.space.style('height', this.details.node().offsetHeight + 'px')
+  }
+
+  _drawSelectedArticleMenu () {
+    const contentScrollTop = this.content.node().scrollTop
+    const contentClientHeight = this.content.node().clientHeight
+
+    function isAboveScrollBottom (headerElement) {
+      const elementBottom = headerElement.offsetTop + headerElement.clientHeight
+      const relativeTopPosition = elementBottom - contentScrollTop
+      return relativeTopPosition <= contentClientHeight
+    }
+
+    const selection = this.articleMenu.select('ul').selectAll('li')
+    const mostRecentHeader = selection.data()
+      .filter(isAboveScrollBottom)
+      .pop()
+
+    selection.classed('selected', function (headerElement) {
+      return headerElement === mostRecentHeader
+    })
   }
 
   openPanel () {

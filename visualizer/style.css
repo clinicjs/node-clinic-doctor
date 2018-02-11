@@ -384,6 +384,10 @@ svg#toggle-theme {
 }
 
 #recommendation .details .content {
+   /* make this the offsetParent, such that `.article h2` has a `offsetTop`
+      that is relative to `.content` */
+  position: relative;
+
   flex: 0 1 auto;
   /* in firefox `flex: 0 1 auto` takes up the content space instead of the
      available space. Set min-height to indicate that the auto height can
@@ -514,7 +518,12 @@ svg#toggle-theme {
  align-self: flex-start;
 }
 
-#recommendation .content .read-more h2:not(.plain), #recommendation.open.read-more-open .article-menu a {
+#recommendation.open.read-more-open .article-menu ul {
+  margin: 0;
+  padding: 0;
+}
+
+#recommendation .content .read-more h2:not(.plain), #recommendation.open.read-more-open .article-menu li {
   background: var(--recommend-title-bg-color);
   font-size: 12pt;
   padding: 12px;
@@ -525,10 +534,11 @@ svg#toggle-theme {
   color: var(--recommend-text-color);
 }
 
-#recommendation.open.read-more-open .article-menu a {
+#recommendation.open.read-more-open .article-menu li {
  display: block;
  margin-bottom: 6px;
  background-color: var(--article-menu-color);
+ cursor: pointer;
 }
 
 #recommendation .content .read-more h2.plain {
@@ -575,7 +585,7 @@ svg#toggle-theme {
   float: left;
 }
 
-#recommendation .menu ul li.selected, #recommendation.open.read-more-open .article-menu a.selected {
+#recommendation .menu ul li.selected, #recommendation.open.read-more-open .article-menu li.selected {
   border-bottom: 4px solid var(--recommend-menu-selected-color);
   font-weight: bold;
 }
