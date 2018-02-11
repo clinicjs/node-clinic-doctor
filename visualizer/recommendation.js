@@ -56,8 +56,17 @@ class RecomendationWrapper {
     }
   }
 
+  getSummaryTitle () {
+    if (this.detected) return `Doctor has found ${this.title}:`
+
+    return `Doctor has not found evidence of ${this.title}.` +
+           ' When such issues are present:'
+  }
+
   getSummary () { return this.content.getSummary() }
+
   hasSummary () { return this.content.hasSummary() }
+
   getReadMore () {
     const readMore = this.content.getReadMore()
 
@@ -79,6 +88,7 @@ class RecomendationWrapper {
 
     return readMore
   }
+
   hasReadMore () { return this.content.hasReadMore() }
 }
 
@@ -234,9 +244,7 @@ class Recomendation extends EventEmitter {
       .classed('detected', recommendation.detected)
 
     // set content
-    this.summaryTitle
-      .text(recommendation.title)
-
+    this.summaryTitle.text(recommendation.getSummaryTitle())
     this.summary.html(null)
     if (recommendation.hasSummary()) {
       this.summary.node().appendChild(recommendation.getSummary())

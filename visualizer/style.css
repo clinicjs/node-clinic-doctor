@@ -87,7 +87,7 @@ html, body {
 
 body {
   background: var(--main-bg-color);
-  overflow-x: hidden; /* Hover box padding can overflow. Scrollbar appearing moves recommendation box. */ 
+  overflow-x: hidden; /* Hover box padding can overflow. Scrollbar appearing moves recommendation box. */
                       /* If that causes mouse to leave hover area, scrollbar flashes on and off in loop. */
 }
 
@@ -236,10 +236,6 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-}
-
-#alert .summary .title::before {
-  content: 'Detected ';
 }
 
 #alert .summary .toggle {
@@ -464,20 +460,6 @@ svg#toggle-theme {
   display: block;
   padding-top: 16px;
 }
-#recommendation .content .summary-title::before {
-  content: 'Doctor has not found evidence of ';
-}
-
-#recommendation .content .summary-title::after {
-  content: '. When such issues are present:'
-}
-#recommendation.detected .content .summary-title::before {
-  content: 'Doctor has found ';
-}
-#recommendation.detected .content .summary-title::after {
-  content: ':'
-}
-
 
 #recommendation .content .read-more-button, #recommendation .menu .show-hide-button {
   display: none;
@@ -582,7 +564,7 @@ svg#toggle-theme {
   display: none;
 }
 
-#recommendation .menu ul li, 
+#recommendation .menu ul li,
 #recommendation .menu ul li.detected,
 #recommendation .menu ul li.selected,
 #recommendation.undetected-opened .menu ul li.has-read-more {
