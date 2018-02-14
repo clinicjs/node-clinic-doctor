@@ -48,7 +48,7 @@ recommendation.on('close-panel', function () {
   recommendation.draw()
 })
 
-recommendation.on('change-page', function (category) {
+recommendation.on('menu-click', function (category) {
   recommendation.setPage(category)
   recommendation.draw()
 })
@@ -71,6 +71,7 @@ recommendation.on('open-undetected', function () {
 })
 recommendation.on('close-undetected', function () {
   recommendation.closeUndetected()
+  recommendation.setPage(recommendation.defaultCategory)
   recommendation.draw()
 })
 

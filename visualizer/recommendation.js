@@ -88,7 +88,7 @@ class Recomendation extends EventEmitter {
       .enter()
         .append('li')
           .classed('recommendation-tab', true)
-          .on('click', (d) => this.emit('change-page', d.category))
+          .on('click', (d) => this.emit('menu-click', d.category))
     pagesLiEnter.append('span')
       .classed('menu-text', true)
       .attr('data-content', (d) => d.menu)
@@ -232,11 +232,6 @@ class Recomendation extends EventEmitter {
   }
   closeUndetected () {
     this.undetectedOpened = false
-
-    // If user hides undetected tabs while one is selected, switch to default tab
-    if (!this.recommendations.get(this.selectedCategory).detected) {
-      this.emit('change-page', this.defaultCategory)
-    }
   }
 }
 
