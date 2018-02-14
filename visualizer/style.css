@@ -578,13 +578,13 @@ svg#toggle-theme {
   cursor: pointer;
 }
 
-#recommendation .menu ul li.show-hide .show-hide-button {
+#recommendation .menu ul li.show-hide {
   color: var(--recommend-link-color);
 }
-#recommendation .menu ul li.show-hide .show-hide-button::before {
+#recommendation .menu ul li.show-hide .menu-text::before {
   content: 'Browse undetected issues ❮';
 }
-#recommendation.undetected-opened .menu ul li.show-hide .show-hide-button::before {
+#recommendation.undetected-opened .menu ul li.show-hide .menu-text::before {
   content: 'Hide ❯';
 }
 

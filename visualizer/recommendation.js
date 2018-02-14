@@ -99,10 +99,9 @@ class Recomendation extends EventEmitter {
     // Add button to show-hide tabs described undetected issues
     this.pages.append('li')
       .classed('show-hide', true)
-      .append('a')
-        .classed('show-hide-button', true)
+      .on('click', () => this.emit(this.undetectedOpened ? 'close-undetected' : 'open-undetected'))
+      .append('span')
         .classed('menu-text', true)
-        .on('click', () => this.emit(this.undetectedOpened ? 'close-undetected' : 'open-undetected'))
 
     this.menu.append('svg')
       .classed('close', true)
@@ -160,7 +159,6 @@ class Recomendation extends EventEmitter {
       .classed('read-more-open', this.readMoreOpened)
       .classed('undetected-opened', this.undetectedOpened)
       .classed('has-read-more', recommendation.hasReadMore())
-      .classed('detected', recommendation.detected)
 
     // set content
     this.summaryTitle.text(recommendation.getSummaryTitle())
@@ -175,7 +173,6 @@ class Recomendation extends EventEmitter {
       this.readMoreArticle.node().appendChild(recommendation.getReadMore())
 
       this.articleMenu.append('h2')
-        .classed('plain', true)
         .text('Jump to section')
 
       this.articleMenu.append('ul')
