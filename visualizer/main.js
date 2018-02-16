@@ -42,9 +42,8 @@ recommendation.on('open-panel', function () {
   recommendation.draw()
 })
 recommendation.on('close-panel', function () {
-  recommendation.closePanel()
-  // Remove class before draw so we can rescroll #main element
   document.documentElement.classList.remove('recommendation-open')
+  recommendation.closePanel()
   recommendation.draw()
 })
 
@@ -54,15 +53,15 @@ recommendation.on('menu-click', function (category) {
 })
 
 recommendation.on('open-read-more', function () {
+  document.documentElement.classList.add('recommendation-read-more-open')
   recommendation.openReadMore()
   recommendation.draw()
   recommendation.setPage(recommendation.selectedCategory)
-  document.querySelector('body').classList.add('read-more-open')
 })
 recommendation.on('close-read-more', function () {
+  document.documentElement.classList.remove('recommendation-read-more-open')
   recommendation.closeReadMore()
   recommendation.draw()
-  document.querySelector('body').classList.remove('read-more-open')
 })
 
 recommendation.on('open-undetected', function () {

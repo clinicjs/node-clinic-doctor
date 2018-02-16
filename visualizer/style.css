@@ -85,7 +85,9 @@ body {
                       /* If that causes mouse to leave hover area, scrollbar flashes on and off in loop. */
 }
 
-.recommendation-open body.read-more-open {
+/* TODO(16-02-2018): Remove once overscroll-behavior-y gets better browser
+  support. Currently only supported by Chrome and the next version of Firefox. */
+html.recommendation-open.recommendation-read-more-open {
   overflow-y: hidden;
 }
 
