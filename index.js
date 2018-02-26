@@ -1,5 +1,6 @@
 'use strict'
 
+const events = require('events')
 const fs = require('fs')
 const os = require('os')
 const path = require('path')
@@ -17,14 +18,18 @@ const TraceEventDecoder = require('./format/trace-event-decoder.js')
 const ProcessStatDecoder = require('./format/process-stat-decoder.js')
 const RenderRecommendations = require('./recommendations/index.js')
 
-class ClinicDoctor {
+class ClinicDoctor extends events.EventEmitter {
   constructor (settings = {}) {
+    super()
+
     // define default parameters
     const {
-      sampleInterval = 10
+      sampleInterval = 10,
+      http = false
     } = settings
 
     this.sampleInterval = sampleInterval
+    this.http = http
   }
 
   collect (args, callback) {
@@ -35,8 +40,17 @@ class ClinicDoctor {
       '-r', samplerPath,
       '--trace-events-enabled', '--trace-event-categories', 'v8'
     ]
+
+    const stdio = ['inherit', 'inherit', 'inherit']
+
+    if (this.http) {
+      const detectPortPath = path.resolve(__dirname, 'detect-port.js')
+      logArgs.push('-r', detectPortPath)
+      stdio.push('pipe')
+    }
+
     const proc = spawn(args[0], args.slice(1), {
-      stdio: 'inherit',
+      stdio,
       env: Object.assign({}, process.env, {
         NODE_OPTIONS: logArgs.join(' ') + (
           process.env.NODE_OPTIONS ? ' ' + process.env.NODE_OPTIONS : ''
@@ -44,6 +58,10 @@ class ClinicDoctor {
         NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL: this.sampleInterval
       })
     })
+
+    if (this.http) {
+      proc.stdio[3].once('data', data => this.emit('listening', Number(data)))
+    }
 
     // get logging directory structure
     const paths = getLoggingPaths({ identifier: proc.pid })

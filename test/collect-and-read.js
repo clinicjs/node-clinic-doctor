@@ -14,7 +14,7 @@ class CollectAndRead extends events.EventEmitter {
   constructor (options, ...args) {
     super()
     const self = this
-    const tool = new ClinicDoctor(options)
+    const tool = this.tool = new ClinicDoctor(options)
 
     tool.collect([process.execPath, ...args], function (err, dirname) {
       self.files = getLoggingPaths({ path: dirname })
