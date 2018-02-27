@@ -25,11 +25,11 @@ class ClinicDoctor extends events.EventEmitter {
     // define default parameters
     const {
       sampleInterval = 10,
-      http = false
+      detectPort = false
     } = settings
 
     this.sampleInterval = sampleInterval
-    this.http = http
+    this.detectPort = detectPort
   }
 
   collect (args, callback) {
@@ -43,7 +43,7 @@ class ClinicDoctor extends events.EventEmitter {
 
     const stdio = ['inherit', 'inherit', 'inherit']
 
-    if (this.http) {
+    if (this.detectPort) {
       const detectPortPath = path.resolve(__dirname, 'detect-port.js')
       logArgs.push('-r', detectPortPath)
       stdio.push('pipe')
@@ -59,8 +59,8 @@ class ClinicDoctor extends events.EventEmitter {
       })
     })
 
-    if (this.http) {
-      proc.stdio[3].once('data', data => this.emit('listening', Number(data)))
+    if (this.detectPort) {
+      proc.stdio[3].once('data', data => this.emit('port', Number(data), proc))
     }
 
     // get logging directory structure
