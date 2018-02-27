@@ -43,7 +43,7 @@ process.nextTick(function () {
 })
 
 // before process exits, flush the encoded data to the sample file
-process.once('beforeexit', function () {
+process.once('beforeExit', function () {
   clearTimeout(timer)
   processStatEncoder.end()
 })
