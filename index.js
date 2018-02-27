@@ -60,7 +60,9 @@ class ClinicDoctor extends events.EventEmitter {
     })
 
     if (this.http) {
-      proc.stdio[3].once('data', data => this.emit('listening', Number(data)))
+      proc.stdio[3].once('data', data => {
+        this.emit('listening', Number(data), proc)
+      })
     }
 
     // get logging directory structure
