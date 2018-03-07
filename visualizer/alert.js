@@ -5,17 +5,10 @@ const icons = require('./icons.js')
 const categories = require('./categories.js')
 const EventEmitter = require('events')
 
-function getTextNodeBoundingRect (node, container) {
-  const getPseudoContent = (position) => container ? window.getComputedStyle(container, position).getPropertyValue('content') : ''
-  const originalContent = node.textContent
-
-  node.textContent = getPseudoContent(':before') + originalContent + getPseudoContent(':after')
+function getTextNodeBoundingRect (textNode) {
   const range = document.createRange()
-  range.selectNode(node)
-  const boundingBox = range.getBoundingClientRect()
-  node.textContent = originalContent
-
-  return boundingBox
+  range.selectNode(textNode)
+  return range.getBoundingClientRect()
 }
 
 class Issue {
@@ -63,6 +56,10 @@ class Alert extends EventEmitter {
       .classed('details', true)
   }
 
+  _setTitleText (title) {
+    this.titleTextNode.textContent = `Detected ${title}`
+  }
+
   setData (data) {
     this.analysis = data.analysis
 
@@ -90,19 +87,20 @@ class Alert extends EventEmitter {
         .on('click', (d) => this.emit('click', d.graphId))
         .text((d) => d.title)
 
-    this.titleTextNode.textContent = content.title
-
-    this.fullTitleWidth = getTextNodeBoundingRect(this.titleTextNode, this.title.node()).width
+    // Set title text now, such that the width is calculated correctly
+    this._setTitleText(content.title)
+    this.fullTitleWidth = getTextNodeBoundingRect(this.titleTextNode).width
   }
 
   draw () {
     const content = categories.getContent(this.analysis.issueCategory)
-    this.titleTextNode.textContent = content.title
 
     // If there is not enough space, shorten the title text
     const titleNode = this.title.node()
     if (parseInt(window.getComputedStyle(titleNode).width) < this.fullTitleWidth) {
-      this.titleTextNode.textContent = content.issue ? 'issue' : 'no issue'
+      this._setTitleText(content.issue ? 'issue' : 'no issue')
+    } else {
+      this._setTitleText(content.title)
     }
   }
 

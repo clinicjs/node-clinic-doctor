@@ -41,9 +41,6 @@ html {
   --recommend-bg-color: rgba(55, 61, 79, 0.99);
 
   --article-menu-color: rgb(27, 30, 39);
-
-  --special-scrollbar-bg: rgba(255, 255, 255, .5);
-  --special-scrollbar-shadow: rgba(0, 0, 0, .5);
 }
 
 html.light-theme {
@@ -68,9 +65,6 @@ html.light-theme {
   --recommend-close-color: rgb(63, 125, 198);
   --recommend-bg-color: rgb(209, 211, 218);
 
-  --special-scrollbar-bg: rgba(0, 0, 0, .5);
-  --special-scrollbar-shadow: rgba(255, 255, 255, .5);
-
   --article-menu-color: rgb(227, 227, 227);
 }
 
@@ -87,11 +81,13 @@ html, body {
 
 body {
   background: var(--main-bg-color);
-  overflow-x: hidden; /* Hover box padding can overflow. Scrollbar appearing moves recommendation box. */ 
+  overflow-x: hidden; /* Hover box padding can overflow. Scrollbar appearing moves recommendation box. */
                       /* If that causes mouse to leave hover area, scrollbar flashes on and off in loop. */
 }
 
-.recommendation-open body.read-more-open {
+/* TODO(16-02-2018): Remove once overscroll-behavior-y gets better browser
+  support. Currently only supported by Chrome and the next version of Firefox. */
+html.recommendation-open.recommendation-read-more-open {
   overflow-y: hidden;
 }
 
@@ -238,10 +234,6 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   overflow: hidden;
 }
 
-#alert .summary .title::before {
-  content: 'Detected ';
-}
-
 #alert .summary .toggle {
   display: none;
   flex: 0 0 auto;
@@ -343,14 +335,11 @@ svg#toggle-theme {
   justify-content: flex-start;
   align-items: stretch;
 }
+#recommendation.open .details {
+  display: flex;
+}
 #recommendation.open.read-more-open .details {
   min-height: calc(100vh - 65px - 65px); /* 100% - #banner[height] .bar[height] */
-}
-
-#recommendation.open.read-more-open .details .content {
-  display: block;
-  padding-right: 7px;
-  overflow-y: scroll;
 }
 
 /* change the scroll area to be the entire content if the screen-size is
@@ -359,11 +348,6 @@ svg#toggle-theme {
   #recommendation .details {
     min-height: unset;
   }
-}
-
-
-#recommendation.open .details {
-  display: flex;
 }
 
 #recommendation .details .menu {
@@ -388,41 +372,44 @@ svg#toggle-theme {
 }
 
 #recommendation .details .content {
+   /* make this the offsetParent, such that `.article h2` has a `offsetTop`
+      that is relative to `.content` */
+  position: relative;
+
   flex: 0 1 auto;
   /* in firefox `flex: 0 1 auto` takes up the content space instead of the
      available space. Set min-height to indicate that the auto height can
      be less than the content. */
   min-height: 0px;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: stretch;
-}
-
-#recommendation .details .content .summary-title {
-  flex: 0 0 auto;
-}
-
-#recommendation .details .content .summary {
-  flex: 0 0 auto;
-}
-
-#recommendation .details .content .read-more-button {
-  flex: 0 0 auto;
+  overflow-y: scroll;
+  overscroll-behavior-y: contain; /* prevent scolling the main window */
 }
 
 #recommendation .details .content .read-more {
   display: none;
-  flex: 0 1 auto;
-  min-height: 0px; /* make auto be the available space instead of content space */
-  padding-right: 7px;
-  flex-direction: row;
-  justify-content: center;
 }
 #recommendation.read-more-open .details .content .read-more {
   display: flex;
 }
+
+#recommendation .content .read-more .article {
+  max-width: 550px;
+  flex: 1 1 auto;
+}
+
+#recommendation .content .read-more .article-menu {
+  flex: 0 0 240px;
+  align-self: flex-start;
+  position: sticky;
+  top: 0;
+}
+@media (max-width: 670px) {
+  #recommendation .content .read-more .article-menu {
+    display: none;
+  }
+}
+
 
 #recommendation .bar {
   flex: 0 0 65px;
@@ -442,7 +429,6 @@ svg#toggle-theme {
   padding: 18px 28px;
   font-size: 12pt;
   line-height: 1.5em;
-  overscroll-behavior-y: contain; /* prevent scolling the main window */
 }
 
 #recommendation .content a {
@@ -450,36 +436,11 @@ svg#toggle-theme {
   text-decoration: none;
 }
 
-#recommendation ::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 7px;
-}
-#recommendation ::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: var(--special-scrollbar-bg);
-  -webkit-box-shadow: 0 0 1px var(--special-shadow-bg);
-}
-
 #recommendation .content .summary-title {
-  display: block;
   padding-top: 16px;
 }
-#recommendation .content .summary-title::before {
-  content: 'Doctor has not found evidence of ';
-}
 
-#recommendation .content .summary-title::after {
-  content: '. When such issues are present:'
-}
-#recommendation.detected .content .summary-title::before {
-  content: 'Doctor has found ';
-}
-#recommendation.detected .content .summary-title::after {
-  content: ':'
-}
-
-
-#recommendation .content .read-more-button, #recommendation .menu .show-hide-button {
+#recommendation .content .read-more-button {
   display: none;
   color: var(--recommend-link-color);
   cursor: pointer;
@@ -487,7 +448,9 @@ svg#toggle-theme {
 #recommendation .content .read-more-button::before {
   content: 'Read more';
 }
-
+#recommendation.has-read-more .content .read-more-button {
+  display: block;
+}
 #recommendation.read-more-open .content .read-more-button {
   margin-bottom: 10px;
 }
@@ -495,67 +458,43 @@ svg#toggle-theme {
   content: 'Read less';
 }
 
-#recommendation .menu ul li .show-hide-button {
-  display: block;
-  align-self: unset;
-}
-#recommendation .menu ul li .menu-text.show-hide-button::before {
-  content: 'Browse undetected issues ❮';
-}
-#recommendation.undetected-opened .menu ul li .menu-text.show-hide-button::before {
-  content: 'Hide ❯';
-}
-
-
-#recommendation.has-read-more .content .read-more-button {
-  display: block;
-}
-
-#recommendation.has-read-more .content .read-more p {
-  line-height: 24px;
-  margin-top: 18px;
-  margin-bottom: 18px;
-  text-align: left;
-}
-
-#recommendation.open.read-more-open .article {
- display: inline-block;
- max-width: 550px;
- margin-bottom: 128px;
-}
-
-#recommendation.open.read-more-open .article-menu {
- margin-right: 40px;
- max-width: 550px;
- position: sticky;
- top: 0;
- align-self: flex-start;
-}
-
-#recommendation .content .read-more h2:not(.plain), #recommendation.open.read-more-open .article-menu a {
+#recommendation .content .article h2 {
   background: var(--recommend-title-bg-color);
   font-size: 12pt;
   padding: 12px;
-  break-after: avoid;
-  break-before: auto;
   margin: 0; /* let p and ul tags dominate margin collapse */
   font-weight: bold;
   color: var(--recommend-text-color);
 }
 
-#recommendation.open.read-more-open .article-menu a {
- display: block;
- margin-bottom: 6px;
- background-color: var(--article-menu-color);
+#recommendation .content .article p {
+  line-height: 24px;
+  margin-top: 18px;
+  margin-bottom: 18px;
 }
 
-#recommendation .content .read-more h2.plain {
+#recommendation .content .article-menu {
+  margin-right: 40px;
+}
+
+#recommendation .content .article-menu h2 {
   font-size: 12pt;
   padding-left: 12px;
 }
 
-#recommendation .content .read-more li {
-  orphans: 4;
+#recommendation .content .article-menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#recommendation .content .article-menu li {
+  margin-bottom: 6px;
+  padding: 12px;
+  background-color: var(--article-menu-color);
+  font-weight: bold;
+  color: var(--recommend-text-color);
+  cursor: pointer;
 }
 
 #recommendation .menu {
@@ -582,7 +521,7 @@ svg#toggle-theme {
   display: none;
 }
 
-#recommendation .menu ul li, 
+#recommendation .menu ul li,
 #recommendation .menu ul li.detected,
 #recommendation .menu ul li.selected,
 #recommendation.undetected-opened .menu ul li.has-read-more {
@@ -593,7 +532,7 @@ svg#toggle-theme {
   float: left;
 }
 
-#recommendation .menu ul li.selected, #recommendation.open.read-more-open .article-menu a.selected {
+#recommendation .menu ul li.selected, #recommendation.open.read-more-open .article-menu li.selected {
   border-bottom: 4px solid var(--recommend-menu-selected-color);
   font-weight: bold;
 }
@@ -639,6 +578,16 @@ svg#toggle-theme {
 #recommendation .menu svg.close {
   fill: var(--recommend-close-color);
   cursor: pointer;
+}
+
+#recommendation .menu ul li.show-hide {
+  color: var(--recommend-link-color);
+}
+#recommendation .menu ul li.show-hide .menu-text::before {
+  content: 'Browse undetected issues ❮';
+}
+#recommendation.undetected-opened .menu ul li.show-hide .menu-text::before {
+  content: 'Hide ❯';
 }
 
 #recommendation .bar {
@@ -757,16 +706,6 @@ svg#toggle-theme {
 
   #graph .sub-graph .header .legend .legend-item .short-legend {
     display: unset;
-  }
-
-  #recommendation.open.read-more-open .article-menu {
-   margin-right: 0;
-   position: static;
-   align-self: unset;
-  }
-
-  #recommendation.read-more-open .details .content .read-more {
-   display: block; /* Allows .article-menu to move above content */
   }
 }
 
