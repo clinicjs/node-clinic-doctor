@@ -1,4 +1,6 @@
 # node-clinic-doctor
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/nearform/node-clinic-doctor.svg)](https://greenkeeper.io/)
 [![npm version][2]][3] [![build status][4]][5] [![build status][13]][14]
 [![downloads][8]][9] [![js-standard-style][10]][11]
 
