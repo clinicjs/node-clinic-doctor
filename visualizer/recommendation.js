@@ -86,9 +86,9 @@ class Recomendation extends EventEmitter {
       .selectAll('li')
       .data(this.recommendationsAsArray, (d) => d.category)
       .enter()
-        .append('li')
-          .classed('recommendation-tab', true)
-          .on('click', (d) => this.emit('menu-click', d.category))
+      .append('li')
+      .classed('recommendation-tab', true)
+      .on('click', (d) => this.emit('menu-click', d.category))
     pagesLiEnter.append('span')
       .classed('menu-text', true)
       .attr('data-content', (d) => d.menu)
@@ -101,7 +101,7 @@ class Recomendation extends EventEmitter {
       .classed('show-hide', true)
       .on('click', () => this.emit(this.undetectedOpened ? 'close-undetected' : 'open-undetected'))
       .append('span')
-        .classed('menu-text', true)
+      .classed('menu-text', true)
 
     this.menu.append('svg')
       .classed('close', true)
@@ -179,11 +179,11 @@ class Recomendation extends EventEmitter {
         .selectAll('li')
         .data(this.readMoreArticle.selectAll('h2').nodes())
         .enter()
-          .append('li')
-          .text((headerElement) => headerElement.textContent)
-          .on('click', function (headerElement) {
-            headerElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
-          })
+        .append('li')
+        .text((headerElement) => headerElement.textContent)
+        .on('click', function (headerElement) {
+          headerElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        })
 
       this._drawSelectedArticleMenu()
     }

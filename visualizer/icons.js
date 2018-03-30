@@ -13,7 +13,7 @@ class Icon {
     const template = document.createElement('template')
     template.innerHTML = content
     this.svgTemplateNode = document.adoptNode(template.content)
-                                   .querySelector('svg')
+      .querySelector('svg')
 
     // Extract svg content into a template for easier insertion
     this.svgTemplateContent = document.createDocumentFragment()

@@ -55,11 +55,11 @@ class SubGraph extends EventEmitter {
           .attr('width', 30)
           .attr('height', 18)
           .append('line')
-            .attr('stroke-dasharray', this.setup.lineStyle[i])
-            .attr('x1', 0)
-            .attr('x2', 30)
-            .attr('y1', 9)
-            .attr('y2', 9)
+          .attr('stroke-dasharray', this.setup.lineStyle[i])
+          .attr('x1', 0)
+          .attr('x2', 30)
+          .attr('y1', 9)
+          .attr('y2', 9)
 
         legendItem.append('span')
           .classed('long-legend', true)
@@ -80,7 +80,7 @@ class SubGraph extends EventEmitter {
       .classed('chart', true)
     this.graph = this.svg.append('g')
       .attr('transform',
-            'translate(' + margin.left + ',' + margin.top + ')')
+        'translate(' + margin.left + ',' + margin.top + ')')
 
     // setup hover events
     this.hoverArea = this.container.append('div')
@@ -124,15 +124,15 @@ class SubGraph extends EventEmitter {
     this.lineElements = []
     for (let i = 0; i < this.setup.numLines; i++) {
       const lineDrawer = d3.line()
-          .x((d) => this.xScale(d.x))
-          .y((d) => this.yScale(d.y[i]))
-          .curve(d3[this.setup.interpolation || 'curveLinear'])
+        .x((d) => this.xScale(d.x))
+        .y((d) => this.yScale(d.y[i]))
+        .curve(d3[this.setup.interpolation || 'curveLinear'])
 
       this.lineDrawers.push(lineDrawer)
 
       const lineElement = this.graph.append('path')
-          .attr('class', 'line')
-          .attr('stroke-dasharray', this.setup.lineStyle[i])
+        .attr('class', 'line')
+        .attr('stroke-dasharray', this.setup.lineStyle[i])
 
       this.lineElements.push(lineElement)
     }
@@ -206,10 +206,10 @@ class SubGraph extends EventEmitter {
 
     // update axis
     this.xAxisElement
-        .attr('transform', 'translate(0,' + height + ')')
-        .call(this.xAxis)
+      .attr('transform', 'translate(0,' + height + ')')
+      .call(this.xAxis)
     this.yAxisElement
-        .call(this.yAxis)
+      .call(this.yAxis)
 
     // update lines
     for (let i = 0; i < this.setup.numLines; i++) {

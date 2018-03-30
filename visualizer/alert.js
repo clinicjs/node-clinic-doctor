@@ -83,9 +83,9 @@ class Alert extends EventEmitter {
       .selectAll('li')
       .data(issuesAsData)
       .enter()
-        .append('li')
-        .on('click', (d) => this.emit('click', d.graphId))
-        .text((d) => d.title)
+      .append('li')
+      .on('click', (d) => this.emit('click', d.graphId))
+      .text((d) => d.title)
 
     // Set title text now, such that the width is calculated correctly
     this._setTitleText(content.title)

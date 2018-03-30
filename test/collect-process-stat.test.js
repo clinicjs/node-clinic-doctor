@@ -62,13 +62,13 @@ test('Collect - process stat - cpu usage', function (t) {
   sleep(200)
   const sample = stat.sample()
   t.ok(sample.cpu >= 0.6 && sample.cpu <= 1.1,
-       'sleep has high usage, usage was: ' + sample.cpu)
+    'sleep has high usage, usage was: ' + sample.cpu)
 
   stat.refresh()
   setTimeout(function () {
     const sample = stat.sample()
     t.ok(sample.cpu >= 0 && sample.cpu <= 0.4,
-         'timeout has low usage, usage was: ' + sample.cpu)
+      'timeout has low usage, usage was: ' + sample.cpu)
     t.end()
   }, 200)
 })
