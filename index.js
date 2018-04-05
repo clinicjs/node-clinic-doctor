@@ -197,7 +197,7 @@ class ClinicDoctor extends events.EventEmitter {
     // build output file
     const outputFile = streamTemplate`
       <!DOCTYPE html>
-      <html lang="en">
+      <html lang="en" class="grid-layout">
       <meta charset="utf8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>Clinic Doctor</title>
