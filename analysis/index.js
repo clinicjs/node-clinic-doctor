@@ -38,6 +38,12 @@ function analysis (traceEventReader, processStatReader) {
 
     // guess the interval for where the benchmarker ran
     const intervalIndex = guessInterval(processStat)
+
+    if (processStat.length < 2) {
+      const msg = 'Not enough data, try running a longer benchmark'
+      return result.destroy(new Error(msg))
+    }
+
     const intervalTime = [
       processStat[intervalIndex[0]].timestamp,
       processStat[intervalIndex[1] - 1].timestamp
