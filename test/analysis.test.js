@@ -28,6 +28,15 @@ async function getAnalysis (processStatData, traceEventData) {
   })
 }
 
+test('Analysis - pipeline - too little data error', async function (t) {
+  try {
+    await getAnalysis([], [])
+  } catch (e) {
+    t.ok(/not enough data/i.test(e.message))
+    t.end()
+  }
+})
+
 test('Analysis - pipeline - error', async function (t) {
   const error = new Error('expected error')
   try {
