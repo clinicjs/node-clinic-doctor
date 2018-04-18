@@ -52,4 +52,5 @@ the bottleneck may be distributed which would take rather more detective work.
 - [Concurrency model and Event Loop
 ](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop)
 - [Overview of Blocking vs Non-Blocking](https://nodejs.org/en/docs/guides/blocking-vs-non-blocking/)
+- [Don't Block the Event Loop (or the Worker Pool)](https://nodejs.org/en/docs/guides/dont-block-the-event-loop/)
 - Understanding Flamegraphs and how to use 0x: [Tuning Node.js app performance with autocannon and 0x](https://www.nearform.com/blog/tuning-node-js-app-performance-with-autocannon-and-0x/)
