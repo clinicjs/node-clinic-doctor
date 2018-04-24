@@ -185,7 +185,7 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   margin-left: 28px;
 }
 
-#banner svg:last-child {
+#banner a:last-child svg {
   position: absolute;
   height: 40px;
   right: 28px;
