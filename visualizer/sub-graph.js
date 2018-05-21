@@ -235,7 +235,13 @@ class SubGraph extends EventEmitter {
 
     // get position of curve there is at the top
     const xInGraphPositon = this.xScale(point.x)
-    const yInGraphPositon = this.yScale(Math.max(...point.y))
+    let yMetric = Math.max(...point.y)
+    if (this.setup.className === 'memory') {
+      // by default, hover box picks the highest value
+      // in case of memory subgraph, we always want to point at heap usage
+      yMetric = point.y[2]
+    }
+    const yInGraphPositon = this.yScale(yMetric)
 
     // calculate graph position relative to `this.container`.
     // The `this.container` has `position:relative`, which is why that is
