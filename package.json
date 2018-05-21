@@ -24,6 +24,7 @@
     "debug": "^3.1.0",
     "distributions": "^1.1.0",
     "endpoint": "^0.4.5",
+    "node-trace-log-join": "^1.0.0",
     "on-net-listen": "^1.0.0",
     "protocol-buffers": "^4.0.4",
     "pump": "^3.0.0",
