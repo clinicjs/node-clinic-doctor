@@ -52,3 +52,11 @@ process.once('beforeExit', function () {
 process.on('SIGINT', function () {
   if (process.listenerCount('SIGINT') === 1) process.exit(0)
 })
+
+process.on('SIGUSR2', function () {
+  // noop to avoid process ending on SIGUSR2
+})
+
+process.on('SIGUSR!', function () {
+  // noop to avoid process ending on SIGUSR1
+})
