@@ -57,6 +57,6 @@ process.on('SIGUSR2', function () {
   // noop to avoid process ending on SIGUSR2
 })
 
-process.on('SIGUSR!', function () {
+process.on('SIGUSR1', function () {
   // noop to avoid process ending on SIGUSR1
 })
