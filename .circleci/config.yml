@@ -7,70 +7,66 @@ defaults: &defaults
   docker:
     - image: circleci/node:latest
 
-version: 2
+lint: &lint
+  name: Lint
+  command: npm run ci-lint
+
+test: &test
+  name: Test
+  command: npm run ci-test
+
+coverage: &coverage
+  name: Coverage
+  command: npm run ci-cov
+
+build_and_test: &build_and_test
+  - checkout
+
+  - run:
+      name: Version check
+      command: node -v
+
+  # Download and cache dependencies
+  - restore_cache:
+      keys:
+      - v1-dependencies-{{ checksum "package.json" }}
+      # fallback to using the latest cache if no exact match is found
+      - v1-dependencies-
+
+  - run:
+     name: Update dependencies
+     command: |
+       npm config set package-lock false
+       npm update --save-dev # https://github.com/npm/npm/issues/16901
+       npm update
+
+  - save_cache:
+      paths:
+        - node_modules
+      key: v1-dependencies-{{ checksum "package.json" }}
+
+  - run: *lint
+
+  - run: *test
+
+  - run: *coverage
+
 jobs:
-  build:
+  node-v8:
     <<: *defaults
-    steps:
-      - checkout
+    docker:
+      - image: node:8
+    steps: *build_and_test
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
-      - run:
-         name: npm update
-         command: |
-           npm config set package-lock false
-           npm update --save-dev # https://github.com/npm/npm/issues/16901
-           npm update
-
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - workspace
-
-  lint:
+  node-v10:
     <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/
-      - run: npm run ci-lint
-
-  test:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/
-      - run: npm run ci-test
-
-  coverage:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/
-      - run: npm run ci-cov
+    docker:
+      - image: node:10
+    steps: *build_and_test
 
 workflows:
   version: 2
-  build-lint-test:
+  node-multi-build:
     jobs:
-      - build
-      - lint:
-          requires:
-            - build
-      - test:
-          requires:
-            - build
-      - coverage:
-          requires:
-            - lint
-            - test
+      - node-v8
+      - node-v10
