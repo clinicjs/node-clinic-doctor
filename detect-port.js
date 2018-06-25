@@ -1,12 +1,19 @@
 const onlisten = require('on-net-listen')
 const fs = require('fs')
+const net = require('net')
 
 onlisten(function (addr) {
   this.destroy()
   const port = Buffer.from(addr.port + '')
-  const buf = Buffer.alloc(1)
   fs.writeSync(3, port, 0, port.length)
-  fs.read(3, buf, 0, 1, null, function () {
+  signal(3, function () {
     process.exit(0)
   })
 })
+
+function signal (fd, cb) {
+  const s = new net.Socket({fd, readable: true, writable: false})
+  s.unref()
+  s.on('error', () => {})
+  s.on('close', cb)
+}
