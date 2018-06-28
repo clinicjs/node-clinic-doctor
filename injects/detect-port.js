@@ -7,7 +7,7 @@ onlisten(function (addr) {
   const port = Buffer.from(addr.port + '')
   fs.writeSync(3, port, 0, port.length)
   signal(3, function () {
-    process.exit(0)
+    process.emit('beforeExit')
   })
 })
 

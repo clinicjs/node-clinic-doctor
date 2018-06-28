@@ -14,7 +14,7 @@ fs.mkdirSync(paths['/'])
 fs.writeFileSync(paths['/systeminfo'], JSON.stringify(systemInfo(), null, 2))
 
 const processStatEncoder = new ProcessStatEncoder()
-processStatEncoder.pipe(fs.createWriteStream(paths['/processstat']))
+const out = processStatEncoder.pipe(fs.createWriteStream(paths['/processstat']))
 
 // sample every 10ms
 const processStat = new ProcessStat(parseInt(
@@ -46,6 +46,9 @@ process.nextTick(function () {
 process.once('beforeExit', function () {
   clearTimeout(timer)
   processStatEncoder.end()
+  out.on('close', function () {
+    process.exit()
+  })
 })
 
 // NOTE: Workaround until https://github.com/nodejs/node/issues/18476 is solved
