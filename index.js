@@ -34,25 +34,24 @@ class ClinicDoctor extends events.EventEmitter {
   }
 
   collect (args, callback) {
-    const samplerPath = path.resolve(__dirname, 'sampler.js')
-
     // run program, but inject the sampler
     const logArgs = [
-      '-r', samplerPath,
+      '-r', 'sampler.js',
       '--trace-events-enabled', '--trace-event-categories', 'v8'
     ]
 
     const stdio = ['inherit', 'inherit', 'inherit']
 
     if (this.detectPort) {
-      const detectPortPath = path.resolve(__dirname, 'detect-port.js')
-      logArgs.push('-r', detectPortPath)
+      logArgs.push('-r', 'detect-port.js')
       stdio.push('pipe')
     }
 
     const proc = spawn(args[0], args.slice(1), {
       stdio,
       env: Object.assign({}, process.env, {
+        // use NODE_PATH to work around issues with spaces in inject path
+        NODE_PATH: path.join(__dirname, 'injects'),
         NODE_OPTIONS: logArgs.join(' ') + (
           process.env.NODE_OPTIONS ? ' ' + process.env.NODE_OPTIONS : ''
         ),
