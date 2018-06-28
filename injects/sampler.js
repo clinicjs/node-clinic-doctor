@@ -53,7 +53,7 @@ process.once('beforeExit', function () {
 
 // NOTE: Workaround until https://github.com/nodejs/node/issues/18476 is solved
 process.on('SIGINT', function () {
-  if (process.listenerCount('SIGINT') === 1) process.exit(0)
+  if (process.listenerCount('SIGINT') === 1) process.emit('beforeExit')
 })
 
 process.on('SIGUSR2', function () {
