@@ -1,10 +1,10 @@
 'use strict'
 
 const fs = require('fs')
-const systemInfo = require('./collect/system-info.js')
-const ProcessStat = require('./collect/process-stat.js')
-const getLoggingPaths = require('./collect/get-logging-paths.js')
-const ProcessStatEncoder = require('./format/process-stat-encoder.js')
+const systemInfo = require('../collect/system-info.js')
+const ProcessStat = require('../collect/process-stat.js')
+const getLoggingPaths = require('../collect/get-logging-paths.js')
+const ProcessStatEncoder = require('../format/process-stat-encoder.js')
 
 // create encoding files and directory
 const paths = getLoggingPaths({ identifier: process.pid })
