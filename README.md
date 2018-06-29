@@ -15,7 +15,7 @@ Programmable interface to [clinic][12] doctor
 
 Node.js 8.9.4 also works, however you have to listen to `SIGINT` and shutdown
 the process nicely. You can find examples in
-[node-clinic-examples](https://github.com/nearform/node-clinic-examples/blob/master/slow-io/index.js#L29)
+[node-clinic-doctor-examples](https://github.com/nearform/node-clinic-doctor-examples/blob/master/slow-io/index.js#L29)
 
 ## Example
 
