@@ -53,3 +53,28 @@ test('Analysis - issue category', function (t) {
 
   t.end()
 })
+
+test('Analysis - issue category detect cpu noise', function (t) {
+  const issues = {
+    cpu: true,
+    memory: {external: false, rss: false, heapTotal: false, heapUsed: false},
+    delay: true,
+    handles: false
+  }
+  const category = issueCategory(issues, {detectNoise: true})
+  t.strictEqual(category, 'event-loop')
+  t.strictEqual(issues.cpuNoise, true)
+  t.end()
+})
+
+test('Analysis - issue category noise unknown issue', function (t) {
+  const issues = {
+    cpu: true,
+    memory: {external: false, rss: false, heapTotal: false, heapUsed: false},
+    delay: true,
+    handles: true
+  }
+  const category = issueCategory(issues, {detectNoise: true})
+  t.strictEqual(category, 'unknown')
+  t.end()
+})
