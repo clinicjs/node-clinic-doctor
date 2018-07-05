@@ -65,7 +65,7 @@ function analysis (traceEventReader, processStatReader) {
       'memory': analyseMemory(processStatSubset, traceEventSubset),
       'handles': analyseHandles(processStatSubset, traceEventSubset)
     }
-    const category = issueCategory(issues)
+    const category = issueCategory(issues, {detectNoise: true})
 
     result.push({
       'interval': intervalTime,
