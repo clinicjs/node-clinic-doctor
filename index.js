@@ -114,7 +114,7 @@ class ClinicDoctor extends events.EventEmitter {
     const scriptPath = path.join(__dirname, 'visualizer', 'main.js')
     const logoPath = path.join(__dirname, 'visualizer', 'app-logo.svg')
     const nearFormLogoPath = path.join(__dirname, 'visualizer', 'nearform-logo.svg')
-    const nearFormFaviconPath = path.join(__dirname, 'visualizer', 'nearform-favicon.png.b64')
+    const clinicFaviconPath = path.join(__dirname, 'visualizer', 'clinic-favicon.png.b64')
 
     // Load data
     const paths = getLoggingPaths({ path: dataDirname })
@@ -174,7 +174,7 @@ class ClinicDoctor extends events.EventEmitter {
     // open logo
     const logoFile = fs.createReadStream(logoPath)
     const nearFormLogoFile = fs.createReadStream(nearFormLogoPath)
-    const nearFormFaviconBase64 = fs.createReadStream(nearFormFaviconPath)
+    const clinicFaviconBase64 = fs.createReadStream(clinicFaviconPath)
 
     // create script-file stream
     const b = browserify({
@@ -202,7 +202,7 @@ class ClinicDoctor extends events.EventEmitter {
       <html lang="en" class="grid-layout">
       <meta charset="utf8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="shortcut icon" type="image/png" href="${nearFormFaviconBase64}">
+      <link rel="shortcut icon" type="image/png" href="${clinicFaviconBase64}">
       <title>Clinic Doctor</title>
 
       <style>${styleFile}</style>
