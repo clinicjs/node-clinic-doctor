@@ -13,29 +13,20 @@ The profiled process has been observed is unusually idle under load, typically t
 it's waiting for external I/O because there's nothing else to do until the I/O completes.
 
 To solve I/O issues we have to track down the asynchronous call(s) which are taking an
-abnormally long time to complete.
+abnormally long time to complete. I/O root cause analysis is mostly a reasoning exercise.
 
-I/O root cause analysis is mostly a reasoning exercises, or requires advanced knowledge and
-expertise with specialist Node.js logging flags and (very new) asynchronous tracking API's.
-
-At nearForm we care a lot about this problem and we are developing a new tool to make
-I/O debugging easier... stay tuned!
+It used to requires advanced knowledge and
+expertise with specialist Node.js logging flags and (very new) asynchronous tracking API's – however, we care a lot about this problem at nearForm, and have developed a new Clinic tool to make I/O debugging easier: [Clinic Bubbleprof](https://clinicjs.org/bubbleprof)
 
 ## Next Steps
-- Use (or create) an external architecture diagram (logical, hardware, whatever is available) to
-understand all I/O "touch points", that is all I/O to/from the Node.js process (e.g. databases, network requests, filesystem...)
-- Measure the response times of each of the I/O touch points
-  - One approach is to instrument the Node.js process with `console.time` before an asynchronous call
-    and `console.timeEnd` at the top of the callback (or promise `then` handler, or after an `await` or whatever the asynchronous abstraction)
-  - Another approach is write benchmarks specifically for the I/O touch points
-    - Be sure to duplicate the exact conditions as generated in the Node.js process
-- Run these measurements multiple times, look for unreasonably high response times
-- Once slow I/O touch points have been discovered a strategy for speeding up the I/O is required  
+- Make sure you are aware of the application's I/O "touch points": that is, I/O to and from the Node.js process (e.g. databases, network requests, filesystem...)
+- Use `clinic bubbleprof` to create a diagram of the application's asynchronous flow.
+  - See `clinic bubbleprof --help` for how to generate the profile
+  - Visit https://clinicjs.org/bubbleprof/walkthrough for a guide on how to use and interpret this output
 
-**Advanced**: For more advanced, lower overhead, timing functionality, check out the experimental `perf_hooks` API  
-
-**Advanced:** An alternative to the approach outlined above is to make use of the experimental
-Node.js `async_hooks` API, in combination with a timer and stack trace generation.
+- Explore the Bubbleprof diagram. Look for long lines and large circles, representing persistent delays, then drill down to reveal the lines of code responsible
+- Pay particular attention to "userland" delays, originating from code in the profiled application itself.
+- Use your understanding of the application's I/O touch points to identify possible optimization targets, such as operations in series which could be executed in parallel, or slow operations that can be optimised externally (for example with caching or indexing). Some large processes will have good reasons for being almost constantly in the queue (for example, some server handlers)
 
 ## Reference
 
