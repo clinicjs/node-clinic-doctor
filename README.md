@@ -20,7 +20,7 @@ the process nicely. You can find examples in
 ## Example
 
 ```js
-const ClinicDoctor = require('clinic-doctor')
+const ClinicDoctor = require('@nearform/doctor')
 const doctor = new ClinicDoctor()
 
 doctor.collect(['node', './path-to-script.js'], function (err, filepath) {
@@ -35,7 +35,7 @@ doctor.collect(['node', './path-to-script.js'], function (err, filepath) {
 ## Documentation
 
 ```js
-const ClinicDoctor = require('clinic-doctor')
+const ClinicDoctor = require('@nearform/doctor')
 const doctor = new ClinicDoctor()
 ```
 
