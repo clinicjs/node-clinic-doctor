@@ -13,20 +13,20 @@ The profiled process has been observed is unusually idle under load, typically t
 it's waiting for external I/O because there's nothing else to do until the I/O completes.
 
 To solve I/O issues we have to track down the asynchronous call(s) which are taking an
-abnormally long time to complete. I/O root cause analysis is mostly a reasoning exercise.
+abnormally long time to complete.
 
-It used to requires advanced knowledge and
-expertise with specialist Node.js logging flags and (very new) asynchronous tracking API's – however, we care a lot about this problem at nearForm, and have developed a new Clinic tool to make I/O debugging easier: [Clinic Bubbleprof](https://clinicjs.org/bubbleprof)
+I/O root cause analysis is mostly a reasoning exercise. [Clinic Bubbleprof](https://clinicjs.org/bubbleprof) is a tool developed specifically to inform and ease this kind of reasoning.
 
 ## Next Steps
-- Make sure you are aware of the application's I/O "touch points": that is, I/O to and from the Node.js process (e.g. databases, network requests, filesystem...)
 - Use `clinic bubbleprof` to create a diagram of the application's asynchronous flow.
   - See `clinic bubbleprof --help` for how to generate the profile
   - Visit https://clinicjs.org/bubbleprof/walkthrough for a guide on how to use and interpret this output
-
-- Explore the Bubbleprof diagram. Look for long lines and large circles, representing persistent delays, then drill down to reveal the lines of code responsible
+- Explore the Bubbleprof diagram. Look for long lines and large circles representing persistent delays, then drill down to reveal the lines of code responsible
 - Pay particular attention to "userland" delays, originating from code in the profiled application itself.
-- Use your understanding of the application's I/O touch points to identify possible optimization targets, such as operations in series which could be executed in parallel, or slow operations that can be optimised externally (for example with caching or indexing). Some large processes will have good reasons for being almost constantly in the queue (for example, some server handlers)
+- Identify possible optimization targets using knowledge of the application's I/O touch points (the I/O to and from the Node.js process, such as databases, network requests, and filesystem access). For example:
+  - Look for operations in series which could be executed in parallel
+  - Look for slow operations that can be optimised externally (for example with caching or indexing)
+  - Consider if a large processes has good reasons for being almost constantly in the queue (for example, some server handlers)
 
 ## Reference
 
