@@ -25,7 +25,10 @@ class Icon {
   }
 
   insert (svgNode) {
-    for (const attr of this.svgTemplateNode.attributes) {
+    // DOM node attributes list is not iterable in MS Edge, but can be turned into an array
+    const attributes = this.svgTemplateNode.attributes
+    const iterableAttributes = typeof attributes[Symbol.iterator] === 'function' ? attributes : Array.from(attributes)
+    for (const attr of iterableAttributes) {
       svgNode.setAttribute(attr.name, attr.value)
     }
     svgNode.appendChild(this.svgTemplateContent.cloneNode(true))
@@ -74,9 +77,8 @@ class Icons {
   insertIcon (name) {
     const icon = this._icons.get(name)
     return function (selection) {
-      for (const node of selection.nodes()) {
-        icon.insert(node)
-      }
+      // d3's selection.nodes() is an array, but for ... of breaks MS Edge, can't see the array's [Symbol.iterator]
+      selection.nodes().forEach(node => icon.insert(node))
     }
   }
 }
