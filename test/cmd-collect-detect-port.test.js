@@ -59,7 +59,7 @@ test('cmd - collect - detect server port and cb', function (t) {
   })
 })
 
-process.on('exit', function () {
+process.on('beforeExit', function () {
   for (const cmd of cmds) {
     cmd.cleanup()
   }
