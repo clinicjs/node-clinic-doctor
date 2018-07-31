@@ -5,7 +5,7 @@
 version: "{build}"
 
 environment:
-  nodejs_version: 9
+  nodejs_version: 10
 
 # fix line endings in Windows
 init:
