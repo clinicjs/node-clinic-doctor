@@ -3,6 +3,7 @@
 const test = require('tap').test
 const http = require('http')
 const CollectAndRead = require('./collect-and-read.js')
+const cmds = []
 
 test('cmd - collect - detect server port', function (t) {
   const cmd = new CollectAndRead({detectPort: true}, '-e', `
@@ -14,6 +15,7 @@ test('cmd - collect - detect server port', function (t) {
       res.end('from server')
     }
   `)
+  cmds.push(cmd)
 
   cmd.tool.on('port', function (port) {
     t.ok(typeof port === 'number')
@@ -39,6 +41,7 @@ test('cmd - collect - detect server port and cb', function (t) {
       res.end('from server')
     }
   `)
+  cmds.push(cmd)
 
   cmd.tool.on('port', function (port, proc, cb) {
     t.ok(typeof port === 'number')
@@ -54,4 +57,10 @@ test('cmd - collect - detect server port and cb', function (t) {
       })
     })
   })
+})
+
+process.on('beforeExit', function () {
+  for (const cmd of cmds) {
+    cmd.cleanup()
+  }
 })
