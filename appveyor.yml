@@ -5,7 +5,9 @@
 version: "{build}"
 
 environment:
-  nodejs_version: 9
+  matrix:
+    - nodejs_version: "8"
+    - nodejs_version: "10"
 
 # fix line endings in Windows
 init:
@@ -13,14 +15,13 @@ init:
 
 install:
   - ps: Install-Product node $env:nodejs_version
+  - node -v
+  - npm -v
   - npm config set package-lock false
   - npm update --save-dev # https://github.com/npm/npm/issues/16901
   - npm update
 
 build: off
-
-cache:
-  - node_modules -> package.json
 
 configuration: build-lint-test
 
