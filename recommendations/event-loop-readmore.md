@@ -34,21 +34,21 @@ the bottleneck may be distributed which would take rather more detective work.
 ## Next Steps
 - If the system is already deployed, mitigate the issue immediately by implementing
   HTTP 503 Service Unavailable functionality (see *Load Shedding* in **Reference**)
-  - This should allow the deployments Load Balance to route traffic to a different service instance
-  - In the worse case the user receives the 503 in which case they must retry (this is still preferable to waiting for a timeout)
+    + This should allow the deployments Load Balance to route traffic to a different service instance
+    + In the worse case the user receives the 503 in which case they must retry (this is still preferable to waiting for a timeout)
 - Use `clinic flame` to generate a flamegraph
-  - Run `clinic flame` help to get started
-  - see "Understanding Flamegraphs and how to use [0x](https://www.npmjs.com/package/0x)" article in the **Reference** section for more information
+    + Run `clinic flame` help to get started
+    + see "Understanding Flamegraphs and how to use [0x](https://www.npmjs.com/package/0x)" article in the **Reference** section for more information
 - Look for "hot" blocks, these are functions that are observed (at a higher relative frequency) to be at the top the stack per CPU sample – in other words, such functions are blocking the event loop
   - (In the case of a distributed bottleneck, start by looking for lots of wide tips at the top of the Flamegraph)
 
 ## Reference
 
 - Load Shedding
-  - Express, Koa, Restify, `http`: [overload-protection](https://www.npmjs.com/package/overload-protection)
-  - Hapi: [Server load sampleInterval option](https://hapijs.com/api#new-serveroptions) & [Server connections load maxEventLoopDelay](https://hapijs.com/api#-serveroptionsload)
-  - Fastify: [under-pressure](https://www.npmjs.com/package/under-pressure)
-  - General: [loopbench](https://www.npmjs.com/package/loopbench)
+    + Express, Koa, Restify, `http`: [overload-protection](https://www.npmjs.com/package/overload-protection)
+    + Hapi: [Server load sampleInterval option](https://hapijs.com/api#new-serveroptions) & [Server connections load maxEventLoopDelay](https://hapijs.com/api#-serveroptionsload)
+    + Fastify: [under-pressure](https://www.npmjs.com/package/under-pressure)
+    + General: [loopbench](https://www.npmjs.com/package/loopbench)
 - [Concurrency model and Event Loop
 ](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop)
 - [Overview of Blocking vs Non-Blocking](https://nodejs.org/en/docs/guides/blocking-vs-non-blocking/)

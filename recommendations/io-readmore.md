@@ -19,14 +19,14 @@ I/O root cause analysis is mostly a reasoning exercise. [Clinic Bubbleprof](http
 
 ## Next Steps
 - Use `clinic bubbleprof` to create a diagram of the application's asynchronous flow.
-  - See `clinic bubbleprof --help` for how to generate the profile
-  - Visit the [Bubbleprof walkthrough](https://clinicjs.org/bubbleprof/walkthrough) for a guide on how to use and interpret this output
+    + See `clinic bubbleprof --help` for how to generate the profile
+    + Visit the [Bubbleprof walkthrough](https://clinicjs.org/bubbleprof/walkthrough) for a guide on how to use and interpret this output
 - Explore the Bubbleprof diagram. Look for long lines and large circles representing persistent delays, then drill down to reveal the lines of code responsible
 - Pay particular attention to "userland" delays, originating from code in the profiled application itself.
 - Identify possible optimization targets using knowledge of the application's I/O touch points (the I/O to and from the Node.js process, such as databases, network requests, and filesystem access). For example:
-  - Look for operations in series which could be executed in parallel
-  - Look for slow operations that can be optimised externally (for example with caching or indexing)
-  - Consider if a large processes has good reasons for being almost constantly in the queue (for example, some server handlers)
+    + Look for operations in series which could be executed in parallel
+    + Look for slow operations that can be optimised externally (for example with caching or indexing)
+    + Consider if a large processes has good reasons for being almost constantly in the queue (for example, some server handlers)
 
 ## Reference
 
