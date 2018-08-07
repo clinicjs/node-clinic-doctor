@@ -61,9 +61,9 @@ root cause behind the high memory consumption.
   or object size, categorized by constructor type
 - Use the interactive trees in the Constructor column to drill down into the specifics
 - Use the *Retainers* panel to understand the chain of object references
-  - This can lead to useful clues about the origins of an object
-  - Retained size (the aggregate total space used due to references *from* an object) may be important where a reference to a large amount of objects is relevant
-  - Shallow size (the actual space used by the object itself) will be pertinent when there are particularly large objects in play
+    + This can lead to useful clues about the origins of an object
+    + Retained size (the aggregate total space used due to references *from* an object) may be important where a reference to a large amount of objects is relevant
+    + Shallow size (the actual space used by the object itself) will be pertinent when there are particularly large objects in play
 
 **Advanced**: Other Devtools memory profiling functionality, Record allocation profile and Record allocation timeline may also be very helpful
 
@@ -73,10 +73,10 @@ a core dump analysis tool to list all JS objects in a core dump file (this appro
 ## Reference
 
 - Load Shedding
-  - Express, Koa, Restify, `http`: [overload-protection](https://www.npmjs.com/package/overload-protection)
-  - Hapi: [Server load sampleInterval option](https://hapijs.com/api#-serveroptionsload) & [Server connections load maxEventLoopDelay](https://hapijs.com/api#-serveroptionsload)
-  - Fastify: [under-pressure](https://www.npmjs.com/package/under-pressure)
-  - General: [loopbench](https://www.npmjs.com/package/loopbench)
+    + Express, Koa, Restify, `http`: [overload-protection](https://www.npmjs.com/package/overload-protection)
+    + Hapi: [Server load sampleInterval option](https://hapijs.com/api#-serveroptionsload) & [Server connections load maxEventLoopDelay](https://hapijs.com/api#-serveroptionsload)
+    + Fastify: [under-pressure](https://www.npmjs.com/package/under-pressure)
+    + General: [loopbench](https://www.npmjs.com/package/loopbench)
 - [Chrome Devtools Docs: Fix Memory Problems](https://developers.google.com/web/tools/chrome-devtools/memory-problems/)
 - [Chrome Devtools Docs: Memory Terminology](https://developers.google.com/web/tools/chrome-devtools/memory-problems/memory-101)
 - [Chrome Devtools Docs: How to record heap snapshots](https://developers.google.com/web/tools/chrome-devtools/memory-problems/heap-snapshots)
