@@ -14,7 +14,6 @@ class RecomendationWrapper {
 
     this.selected = false
     this.detected = false
-    this.cpuNoise = false
   }
 
   get order () {
@@ -66,8 +65,6 @@ class Recomendation extends EventEmitter {
     this.content = this.details.append('div')
       .classed('content', true)
       .on('scroll.scroller', () => this._drawSelectedArticleMenu())
-    this.warning = this.content.append('div')
-      .classed('warning', true)
     this.summaryTitle = this.content.append('div')
       .classed('summary-title', true)
     this.summary = this.content.append('div')
@@ -130,10 +127,6 @@ class Recomendation extends EventEmitter {
     this.defaultCategory = data.analysis.issueCategory
     this.recommendations.get(this.defaultCategory).detected = true
 
-    if (data.analysis.issues.cpuNoise) {
-      this.recommendations.get(this.defaultCategory).cpuNoise = true
-    }
-
     // reorder pages, such that the detected page selector comes first
     this.pages
       .selectAll('li.recommendation-tab')
@@ -166,16 +159,6 @@ class Recomendation extends EventEmitter {
       .classed('read-more-open', this.readMoreOpened)
       .classed('undetected-opened', this.undetectedOpened)
       .classed('has-read-more', recommendation.hasReadMore())
-
-    // set warnings
-    if (recommendation.cpuNoise) {
-      this.warning.html(null)
-      this.warning.append('svg')
-        .classed('warning-icon', true)
-        .call(icons.insertIcon('warning'))
-      this.warning.append('span')
-        .text('High CPU noise was detected during this benchmark which might indicate another program interferring with this analysis')
-    }
 
     // set content
     this.summaryTitle.text(recommendation.getSummaryTitle())
