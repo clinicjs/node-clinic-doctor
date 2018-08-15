@@ -3,9 +3,10 @@
 const fs = require('fs')
 const getLoggingPaths = require('../collect/get-logging-paths.js')
 const analysis = require('../analysis/index.js')
-const GCEventDecoder = require('../format/gc-event-decoder.js')
+const SystemInfoDecoder = require('../format/system-info-decoder.js')
+const TraceEventDecoder = require('../format/trace-event-decoder.js')
 const ProcessStatDecoder = require('../format/process-stat-decoder.js')
-const GCEventToCSV = require('./gc-event-to-csv.js')
+const TraceEventToCSV = require('./trace-event-to-csv.js')
 const ProcessStatToCSV = require('./process-stat-to-csv.js')
 
 if (process.argv.length < 3) {
@@ -15,17 +16,22 @@ if (process.argv.length < 3) {
 
 // Load data
 const paths = getLoggingPaths({ path: process.argv[2] })
-const gcEventReader = fs.createReadStream(paths['/gcevent'])
-  .pipe(new GCEventDecoder())
+const systemInfoReader = fs.createReadStream(paths['/systeminfo'])
+  .pipe(new SystemInfoDecoder())
+const traceEventReader = fs.createReadStream(paths['/traceevent'])
+  .pipe(new TraceEventDecoder(systemInfoReader))
 const processStatReader = fs.createReadStream(paths['/processstat'])
   .pipe(new ProcessStatDecoder())
 
-analysis(gcEventReader, processStatReader)
+analysis(traceEventReader, processStatReader)
   .once('data', function (result) {
-    fs.createReadStream(paths['/gcevent'])
-      .pipe(new GCEventDecoder())
-      .pipe(new GCEventToCSV(result.interval))
-      .pipe(fs.createWriteStream(paths['/gcevent'] + '.csv'))
+    const systemInfoReader = fs.createReadStream(paths['/systeminfo'])
+      .pipe(new SystemInfoDecoder())
+
+    fs.createReadStream(paths['/traceevent'])
+      .pipe(new TraceEventDecoder(systemInfoReader))
+      .pipe(new TraceEventToCSV(result.interval))
+      .pipe(fs.createWriteStream(paths['/traceevent'] + '.csv'))
 
     fs.createReadStream(paths['/processstat'])
       .pipe(new ProcessStatDecoder())
@@ -34,5 +40,5 @@ analysis(gcEventReader, processStatReader)
   })
 
 console.log('csv file saved at:')
-console.log(`  ${paths['/gcevent']}.csv`)
+console.log(`  ${paths['/traceevent']}.csv`)
 console.log(`  ${paths['/processstat']}.csv`)
