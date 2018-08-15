@@ -1,0 +1,188 @@
+---
+title: "CPU Model"
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+library(scales)
+library(mclust)
+library(plyr)
+library(moments)
+library(depmixS4)
+```
+
+```{r}
+load.data = function (pid, name, has.issue) {
+  dat.stat = read.csv(paste0(pid, '.clinic-doctor-processstat.csv'))
+  dat.stat = dat.stat[dat.stat$interval == 1, ]
+  dat.stat$name = name
+  dat.stat$has.issue = has.issue
+  
+  dat.gc = read.csv(paste0(pid, '.clinic-doctor-traceevent.csv'))
+  dat.gc[dat.gc$interval == 1, ]
+  dat.gc$name = name
+  dat.gc$has.issue = has.issue
+
+  offset = min(c(min(dat.stat$timestamp), min(dat.gc$startTimestamp)))
+  
+  dat.stat$time = as.POSIXct((dat.stat$timestamp - offset) / 1000, origin="1970-01-01", tz="GMT")
+  dat.gc$startTime = as.POSIXct((dat.gc$startTimestamp - offset - 25) / 1000, origin="1970-01-01", tz="GMT")
+  dat.gc$endTime = as.POSIXct((dat.gc$endTimestamp - offset + 25) / 1000, origin="1970-01-01", tz="GMT")
+  
+  return(list(
+    stat=dat.stat,
+    gc=dat.gc
+  ))
+};
+
+bind.data = function (...) {
+  dat.bind = rbind(...)
+  return(list(
+    stat=do.call(rbind, c(dat.bind[,'stat'])),
+    gc=do.call(rbind, c(dat.bind[,'gc']))
+  ))
+};
+
+dat.mystery.1 = load.data("20794", "dat.mystery.1", NA)
+dat.slowio.1 = load.data("6563", "dat.slowio.1", T)
+dat.slowio.2 = load.data("8452", "dat.slowio.2", T)
+dat.slowio.3 = load.data("8515", "dat.slowio.3", T)
+dat.slowio.4 = load.data("8552", "dat.slowio.4", T)
+dat.slowev.1 = load.data("7030", "dat.slowev.1", F)
+dat.slowgc.1 = load.data("7198", "dat.slowgc.1", F)
+
+dat.slowio = bind.data(dat.slowio.1, dat.slowio.2, dat.slowio.3, dat.slowio.4)
+dat.all = bind.data(dat.mystery.1, dat.slowio, dat.slowev.1, dat.slowgc.1)
+```
+
+
+```{r}
+p = ggplot(dat.all$stat, aes(x=time, y=cpu, colour=has.issue)) +
+  geom_point() +
+  facet_wrap(~name) +
+  scale_x_datetime(labels = date_format("%S s")) +
+  scale_y_continuous(limits = c(0, NA))
+print(p)
+```
+
+
+```{r}
+p = ggplot(dat.all$stat, aes(cpu, colour=has.issue, type=name)) +
+  stat_ecdf()
+print(p)
+```
+
+```{r, fig.height=15, fig.width=8}
+p = ggplot(dat.all$stat) +
+  geom_rect(data = dat.all$gc, aes(xmin=startTime, xmax=endTime, ymin=-Inf, ymax=Inf, fill=type), alpha=0.5) +
+  geom_point(aes(x = time, y = cpu, colour=has.issue), shape='+', size = 3) +
+  facet_grid(name ~ .) +
+  scale_x_datetime(labels = date_format("%S sec")) +
+  scale_y_continuous(limits = c(0, NA)) +
+  theme(legend.position="bottom")
+print(p)
+```
+
+```{r}
+data.grouping = function (dat.stat) {
+  vec = dat.stat[, 'cpu']
+  
+  # GMM
+  model.2 = Mclust(vec, G=2, model="V", verbose=F)
+
+  mean = model.2$parameters$mean
+  variance = model.2$parameters$variance$sigmasq
+
+  kernel.1 = dnorm(vec, mean=mean[1], sd=sqrt(variance[1])) > dnorm(vec, mean=mean[2], sd=sqrt(variance[2]))
+  # Make it such that the kernel.1 is the kernel with the lowest mean
+  if (mean[1] >= mean[2]) {
+    kernel.1 = !kernel.1
+  }
+  dat.stat$mode.low.gmm = kernel.1
+  
+  # HMM
+  hmm.template.2 = depmix(response = cpu ~ 1, data = dat.stat, nstates = 2)
+  model.2 = fit(hmm.template.2, verbose = FALSE)
+  print(summary(model.2))
+  print(posterior(model.2))
+  state.1 = posterior(model.2)$state == 1
+  print(length(state.1))
+  print(which(!state.1))
+  if (mean(vec[state.1]) >= mean(vec[!state.1])) {
+    state.1 = !state.1
+  }
+  dat.stat$mode.low.hmm = state.1
+  
+  return(dat.stat)
+}
+
+dat.mystery.1$stat = data.grouping(dat.mystery.1$stat)
+dat.all$stat = ddply(dat.all$stat, "name", data.grouping)
+```
+
+```{r, fig.height=15, fig.width=8}
+p.dat.gmm = cbind(dat.all$stat)
+p.dat.gmm$mode.low = p.dat.gmm$mode.low.gmm
+p.dat.gmm$model = 'GMM'
+
+p.dat.hmm = cbind(dat.all$stat)
+p.dat.hmm$mode.low = p.dat.hmm$mode.low.hmm
+p.dat.hmm$model = 'HMM'
+
+p = ggplot(rbind(p.dat.gmm, p.dat.hmm)) +
+  geom_point(aes(x = time, y = cpu, colour=mode.low.hmm), shape='+', size = 3) +
+  facet_grid(name ~ model) +
+  scale_x_datetime(labels = date_format("%S sec")) +
+  scale_y_continuous(limits = c(0, NA)) +
+  theme(legend.position="bottom")
+print(p)
+```
+
+```{r}
+data.classify = function (dat.stat) {
+  cpu = dat.stat[, 'cpu']
+  name = dat.stat[1, 'name']
+  has.issue = dat.stat[1, 'has.issue']
+
+  seperation.gmm = (
+    mean(cpu[dat.stat$mode.low.gmm == T]) - mean(cpu[dat.stat$mode.low.gmm == F])
+  ) / (
+    2 * (sd(cpu[dat.stat$mode.low.gmm == T]) + sd(cpu[dat.stat$mode.low.gmm == F]))
+  )
+
+  if (abs(seperation.gmm) < 0.5) {
+    detected.issue.gmm = quantile(cpu, 0.9) < 0.9
+  } else {
+    detected.issue.gmm = quantile(cpu[dat.stat$mode.low.gmm == T], 0.9) < 0.9
+  }
+  
+  seperation.hmm = (
+    mean(cpu[dat.stat$mode.low.hmm == T]) - mean(cpu[dat.stat$mode.low.hmm == F])
+  ) / (
+    2 * (sd(cpu[dat.stat$mode.low.hmm == T]) + sd(cpu[dat.stat$mode.low.hmm == F]))
+  )
+  
+  print(seperation.hmm)
+
+  if (abs(seperation.hmm) < 0.5) {
+    detected.issue.hmm = quantile(cpu, 0.9) < 0.9
+  } else {
+    detected.issue.hmm = quantile(cpu[dat.stat$mode.low.hmm == T], 0.9) < 0.9
+  }
+    
+  return(data.frame(list(
+    has.issue = has.issue,
+    detected.issue.old.model = (quantile(cpu, 0.9) < 0.9),
+    detected.issue.gmm = detected.issue.gmm,
+    detected.issue.hmm = detected.issue.hmm,
+    is.bimodal.gmm = abs(seperation.gmm) >= 0.5,
+    is.bimodal.hmm = abs(seperation.hmm) >= 0.5
+  )))
+}
+
+print(ddply(dat.all$stat, "name", data.classify))
+```
+
+
+

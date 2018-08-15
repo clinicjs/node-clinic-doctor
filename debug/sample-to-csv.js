@@ -2,7 +2,7 @@
 
 const fs = require('fs')
 const getLoggingPaths = require('../collect/get-logging-paths.js')
-const analysis = require('../analysis/index.js')
+const Analysis = require('../analysis/index.js')
 const SystemInfoDecoder = require('../format/system-info-decoder.js')
 const TraceEventDecoder = require('../format/trace-event-decoder.js')
 const ProcessStatDecoder = require('../format/process-stat-decoder.js')
@@ -23,7 +23,7 @@ const traceEventReader = fs.createReadStream(paths['/traceevent'])
 const processStatReader = fs.createReadStream(paths['/processstat'])
   .pipe(new ProcessStatDecoder())
 
-analysis(traceEventReader, processStatReader)
+new Analysis(traceEventReader, processStatReader)
   .once('data', function (result) {
     const systemInfoReader = fs.createReadStream(paths['/systeminfo'])
       .pipe(new SystemInfoDecoder())
