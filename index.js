@@ -18,6 +18,7 @@ const SystemInfoDecoder = require('./format/system-info-decoder.js')
 const TraceEventDecoder = require('./format/trace-event-decoder.js')
 const ProcessStatDecoder = require('./format/process-stat-decoder.js')
 const RenderRecommendations = require('./recommendations/index.js')
+const minifyStream = require('minify-stream')
 
 class ClinicDoctor extends events.EventEmitter {
   constructor (settings = {}) {
@@ -187,7 +188,9 @@ class ClinicDoctor extends events.EventEmitter {
     })
     b.add(scriptPath)
     b.transform('brfs')
-    const scriptFile = b.bundle()
+    const scriptFile = b
+      .bundle()
+      .pipe(minifyStream({ sourceMap: false, mangle: false }))
 
     // create style-file stream
     const styleFile = fs.createReadStream(stylePath)
