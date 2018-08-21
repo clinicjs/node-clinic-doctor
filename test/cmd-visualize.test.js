@@ -41,7 +41,7 @@ test('cmd - test visualization - data exists', function (t) {
 })
 
 test('cmd - test visualization - missing data', function (t) {
-  const tool = new ClinicDoctor()
+  const tool = new ClinicDoctor({ debug: true })
 
   tool.visualize(
     'missing.clinic-doctor',
