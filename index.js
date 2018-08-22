@@ -8,7 +8,7 @@ const pump = require('pump')
 const pumpify = require('pumpify')
 const stream = require('./lib/destroyable-stream')
 const { spawn } = require('child_process')
-const analysis = require('./analysis/index.js')
+const Analysis = require('./analysis/index.js')
 const Stringify = require('streaming-json-stringify')
 const browserify = require('browserify')
 const streamTemplate = require('stream-template')
@@ -134,7 +134,7 @@ class ClinicDoctor extends events.EventEmitter {
 
     // create analysis
     const analysisStringified = pumpify(
-      analysis(traceEventReader, processStatReader),
+      new Analysis(traceEventReader, processStatReader),
       new stream.Transform({
         readableObjectMode: false,
         writableObjectMode: true,

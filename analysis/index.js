@@ -10,11 +10,20 @@ const analyseMemory = require('./analyse-memory.js')
 const analyseHandles = require('./analyse-handles.js')
 const issueCategory = require('./issue-category.js')
 
-class Analyse extends stream.Readable {
-  constructor (options) {
-    super(Object.assign({
-      objectMode: true
-    }, options))
+class Analysis extends stream.Readable {
+  constructor (traceEventReader, processStatReader) {
+    super({ objectMode: true })
+
+    async.waterfall([
+      collectData.bind(null, traceEventReader, processStatReader),
+      analyseData
+    ], this._done.bind(this))
+  }
+
+  _done (err, result) {
+    if (err) this.destroy(err)
+    this.push(result)
+    this.push(null)
   }
 
   _read () {
@@ -22,9 +31,7 @@ class Analyse extends stream.Readable {
   }
 }
 
-function analysis (traceEventReader, processStatReader) {
-  const result = new Analyse()
-
+function collectData (traceEventReader, processStatReader, callback) {
   async.parallel({
     traceEvent (done) {
       traceEventReader.pipe(endpoint({ objectMode: true }, done))
@@ -32,50 +39,60 @@ function analysis (traceEventReader, processStatReader) {
     processStat (done) {
       processStatReader.pipe(endpoint({ objectMode: true }, done))
     }
-  }, function (err, data) {
-    if (err) return result.destroy(err)
-    const { traceEvent, processStat } = data
+  }, callback)
+}
 
-    // guess the interval for where the benchmarker ran
-    const intervalIndex = guessInterval(processStat)
+function analyseData ({ traceEvent, processStat }, callback) {
+  // guess the interval for where the benchmarker ran
+  const intervalIndex = guessInterval(processStat)
 
-    if (processStat.length < 2) {
-      const msg = 'Not enough data, try running a longer benchmark'
-      return result.destroy(new Error(msg))
-    }
+  if (processStat.length < 2) {
+    const msg = 'Not enough data, try running a longer benchmark'
+    return callback(new Error(msg))
+  }
 
-    const intervalTime = [
-      processStat[intervalIndex[0]].timestamp,
-      processStat[intervalIndex[1] - 1].timestamp
-    ]
+  const intervalTime = [
+    processStat[intervalIndex[0]].timestamp,
+    processStat[intervalIndex[1] - 1].timestamp
+  ]
 
-    // subset data
-    const processStatSubset = processStat.slice(...intervalIndex)
-    const traceEventSubset = []
-    for (const datum of traceEvent) {
-      if (datum.args.startTimestamp >= intervalTime[0] &&
-          datum.args.endTimestamp <= intervalTime[1]) {
-        traceEventSubset.push(datum)
-      }
-    }
+  const { processStatSubset, traceEventSubset } = subsetData(
+    traceEvent, processStat, intervalIndex, intervalTime
+  )
+
+  // Check for issues, the CPU analysis is async
+  analyseCPU(processStatSubset, traceEventSubset, function (err, cpuIssue) {
+    /* istanbul ignore if: it is very rare that HMM doesn't converge */
+    if (err) return callback(err)
 
     const issues = {
-      'delay': analyseDelay(processStatSubset, traceEventSubset),
-      'cpu': analyseCPU(processStatSubset, traceEventSubset),
-      'memory': analyseMemory(processStatSubset, traceEventSubset),
-      'handles': analyseHandles(processStatSubset, traceEventSubset)
+      delay: analyseDelay(processStatSubset, traceEventSubset),
+      cpu: cpuIssue,
+      memory: analyseMemory(processStatSubset, traceEventSubset),
+      handles: analyseHandles(processStatSubset, traceEventSubset)
     }
-    const category = issueCategory(issues, {detectNoise: true})
 
-    result.push({
+    const category = issueCategory(issues)
+
+    callback(null, {
       'interval': intervalTime,
       'issues': issues,
       'issueCategory': category
     })
-    result.push(null)
   })
-
-  return result
 }
 
-module.exports = analysis
+function subsetData (traceEvent, processStat, intervalIndex, intervalTime) {
+  const processStatSubset = processStat.slice(...intervalIndex)
+  const traceEventSubset = []
+  for (const datum of traceEvent) {
+    if (datum.args.startTimestamp >= intervalTime[0] &&
+        datum.args.endTimestamp <= intervalTime[1]) {
+      traceEventSubset.push(datum)
+    }
+  }
+
+  return { processStatSubset, traceEventSubset }
+}
+
+module.exports = Analysis

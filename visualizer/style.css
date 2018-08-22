@@ -436,24 +436,6 @@ svg#toggle-theme {
   text-decoration: none;
 }
 
-#recommendation .content .warning {
-  display: flex;
-}
-
-#recommendation .content .warning {
-  padding-top: 16px;
-  font-weight: bold;
-}
-
-#recommendation .content .warning .warning-icon {
-  flex: 0 0 auto;
-  align-self: center;
-  margin-right: 10px;
-  height: 18px;
-  width: 18px;
-  fill: var(--recommend-menu-alert-color);
-}
-
 #recommendation .content .summary-title {
   padding-top: 16px;
 }

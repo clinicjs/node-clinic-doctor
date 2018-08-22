@@ -2,15 +2,15 @@
 
 const test = require('tap').test
 const startpoint = require('startpoint')
-const analyse = require('../analysis/index.js')
+const Analysis = require('../analysis/index.js')
 const generateProcessStat = require('./generate-process-stat.js')
 const generateTraceEvent = require('./generate-trace-event.js')
 
-async function getAnalysis (processStatData, traceEventData) {
+function getAnalysis (processStatData, traceEventData) {
   const processStatReader = startpoint(processStatData, { objectMode: true })
   const traceEventReader = startpoint(traceEventData, { objectMode: true })
 
-  const analysisResult = analyse(traceEventReader, processStatReader)
+  const analysisResult = new Analysis(traceEventReader, processStatReader)
 
   // read data
   return new Promise(function (resolve, reject) {

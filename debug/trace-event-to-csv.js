@@ -2,7 +2,7 @@
 
 const stream = require('stream')
 
-class GCEventToCSV extends stream.Transform {
+class TraceEventToCSV extends stream.Transform {
   constructor (interval) {
     super({
       readableObjectMode: false,
@@ -15,14 +15,14 @@ class GCEventToCSV extends stream.Transform {
   }
 
   _transform (data, encoding, done) {
-    const inInterval = data.startTimestamp >= this._interval[0] &&
-                       data.endTimestamp <= this._interval[1]
+    const inInterval = data.args.startTimestamp >= this._interval[0] &&
+                       data.args.endTimestamp <= this._interval[1]
 
     this.push(`${inInterval ? 1 : 0}, ` +
-              `${data.startTimestamp}, ${data.endTimestamp}, ` +
-              `${data.type}\n`)
+              `${data.args.startTimestamp}, ${data.args.endTimestamp}, ` +
+              `${data.name}\n`)
     done(null)
   }
 }
 
-module.exports = GCEventToCSV
+module.exports = TraceEventToCSV

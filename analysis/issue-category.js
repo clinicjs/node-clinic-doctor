@@ -2,7 +2,7 @@
 
 const debug = require('debug')('doctor')
 
-function issueCategory (issues, opts) {
+function issueCategory (issues) {
   debug('detected issues', issues)
   const memoryIssue = (issues.memory.external || issues.memory.rss ||
                        issues.memory.heapTotal || issues.memory.heapUsed)
@@ -17,15 +17,6 @@ function issueCategory (issues, opts) {
     category = 'io'
   } else if (!memoryIssue && !issues.delay && !issues.cpu && !issues.handles) {
     category = 'none'
-  }
-
-  if (category === 'unknown' && opts && opts.detectNoise && issues.cpu) {
-    issues.cpu = false
-    category = issueCategory(issues)
-    issues.cpu = true
-    if (category !== 'unknown') {
-      issues.cpuNoise = true
-    }
   }
 
   debug('category', category)
