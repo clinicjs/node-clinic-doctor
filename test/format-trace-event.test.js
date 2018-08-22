@@ -7,7 +7,8 @@ const SystemInfoDecoder = require('../format/system-info-decoder.js')
 const TraceEventDecoder = require('../format/trace-event-decoder.js')
 
 function traceEvent (data) {
-  return Object.assign({ pid: 10, tid: 1, ph: 'X', cat: 'v8', args: {} }, data)
+  // we put args: {}, at the end as the fast parser expects that
+  return Object.assign({ pid: 10, tid: 1, ph: 'X', cat: 'v8' }, data, { args: {} })
 }
 
 test('Format - trace event - combine', function (t) {
