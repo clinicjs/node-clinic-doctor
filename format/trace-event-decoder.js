@@ -2,7 +2,7 @@
 
 const stream = require('../lib/destroyable-stream')
 const endpoint = require('endpoint')
-const JSONStream = require('JSONStream')
+const parser = require('@nearform/trace-events-parser')
 
 // This list is from: https://github.com/catapult-project/catapult/blob/master
 //   /tracing/tracing/metrics/v8/gc_metric_test.html#L50L57
@@ -31,9 +31,9 @@ class TraceEventDecoder extends stream.Transform {
     this.systemInfoReader = systemInfoReader
     this.clockOffset = null
 
-    // JSONStream is synchronous so there is no need to think about
+    // trace-events-parser is synchronous so there is no need to think about
     // backpresure
-    this.parser = JSONStream.parse('traceEvents.*')
+    this.parser = parser()
     this.parser.on('data', (data) => this._process(data))
     this.systemInfoReader.on('error', (err) => this.destroy(err))
   }
