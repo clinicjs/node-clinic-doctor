@@ -38,7 +38,7 @@ test('cmd - collect - custom sample interval', function (t) {
       const sampleTimes = output.processStat.map((stat) => stat.timestamp)
       const timeSeparation = summary(diff(sampleTimes)).mean()
       t.ok(sampleTimes.length > 0, 'data is outputted')
-      t.ok(Math.abs(timeSeparation - 30) < 10)
+      t.ok(Math.abs(timeSeparation - 30) < 25)
 
       t.end()
     })
