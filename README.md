@@ -10,6 +10,7 @@ Programmable interface to [clinic][12] doctor
 
 ## Supported node versions
 
+* Node.js 10.0.0 and above
 * Node.js 9.4.0 and above
 * Node.js 8.10.0 and above
 
@@ -39,27 +40,42 @@ const ClinicDoctor = require('@nearform/doctor')
 const doctor = new ClinicDoctor()
 ```
 
+### new ClinicDoctor([settings])
+
+* settings [`<Object>`][]
+  * sampleInterval [`<number>`][] Time between each sample in milliseconds.
+    **Default**: 10
+  * detectPort [`<boolean>`][] **Default**: false
+  * debug [`<boolean>`][] If set to true, the generated html will not be minified.
+    **Default**: false
+
 #### `doctor.collect(args, callback)`
 
 Starts a process by using:
+
 ```js
 const { spawn } = require('child_process')
 spawn(args[0], ['-r', 'sampler.js'].concat(args.slice(1)))
 ```
 
-The injected sampler will produce a file in the current working directory, with the process PID in its filename. The filepath relative to the current working directory will be the value in the callback.
+The injected sampler will produce a file in the current working directory, with
+the process PID in its filename. The filepath relative to the current working
+directory will be the value in the callback.
 
-stdout, stderr, and stdin will be relayed to the calling process. As will the `SIGINT` event.
+stdout, stderr, and stdin will be relayed to the calling process. As will the
+`SIGINT` event.
 
 #### `doctor.visualize(dataFilename, outputFilename, callback)`
 
-Will consume the datafile specified by `dataFilename`, this datafile will be produced by the sampler using `doctor.collect`.
+Will consume the datafile specified by `dataFilename`, this datafile will be
+produced by the sampler using `doctor.collect`.
 
-`doctor.visualize` will then output a standalone HTML file to `outputFilename`. When completed the `callback` will be called with no extra arguments, except a possible error.
+`doctor.visualize` will then output a standalone HTML file to `outputFilename`.
+When completed the `callback` will be called with no extra arguments, except a
+possible error.
 
 ## License
 [GPL 3.0](LICENSE)
-
 
 [0]: https://img.shields.io/badge/stability-experimental-orange.svg?style=flat-square
 [1]: https://nodejs.org/api/documentation.html#documentation_stability_index
@@ -76,3 +92,6 @@ Will consume the datafile specified by `dataFilename`, this datafile will be pro
 [12]: https://github.com/nearform/node-clinic
 [13]: https://ci.appveyor.com/api/projects/status/xxijxjm3fhwhb5x6?svg=true
 [14]: https://ci.appveyor.com/project/nearForm/node-clinic-doctor
+[`<Object>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object
+[`<boolean>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type
+[`<number>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type
