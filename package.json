@@ -42,7 +42,7 @@
     "cheerio": "^1.0.0-rc.2",
     "rimraf": "^2.6.2",
     "snazzy": "^8.0.0",
-    "standard": "^11.0.1",
+    "standard": "^12.0.0",
     "startpoint": "^0.3.2",
     "tap": "^12.0.0",
     "xorshift": "^1.1.1"
