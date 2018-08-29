@@ -12,7 +12,7 @@ onlisten(function (addr) {
 })
 
 function signal (fd, cb) {
-  const s = new net.Socket({fd, readable: true, writable: false})
+  const s = new net.Socket({ fd, readable: true, writable: false })
   s.unref()
   s.on('error', () => {})
   s.on('close', cb)

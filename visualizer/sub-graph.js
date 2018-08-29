@@ -5,7 +5,7 @@ const icons = require('./icons.js')
 const EventEmitter = require('events')
 const HoverBox = require('./hover-box')
 
-const margin = {top: 20, right: 20, bottom: 30, left: 50}
+const margin = { top: 20, right: 20, bottom: 30, left: 50 }
 const headerHeight = 18
 
 // https://bl.ocks.org/d3noob/402dd382a51a4f6eea487f9a35566de0
