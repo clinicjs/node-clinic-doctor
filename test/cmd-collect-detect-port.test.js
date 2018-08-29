@@ -6,7 +6,7 @@ const CollectAndRead = require('./collect-and-read.js')
 const cmds = []
 
 test('cmd - collect - detect server port', function (t) {
-  const cmd = new CollectAndRead({detectPort: true}, '-e', `
+  const cmd = new CollectAndRead({ detectPort: true }, '-e', `
     const http = require('http')
     http.createServer(onrequest).listen(0)
 
@@ -33,7 +33,7 @@ test('cmd - collect - detect server port', function (t) {
 })
 
 test('cmd - collect - detect server port and cb', function (t) {
-  const cmd = new CollectAndRead({detectPort: true}, '-e', `
+  const cmd = new CollectAndRead({ detectPort: true }, '-e', `
     const http = require('http')
     http.createServer(onrequest).listen(0)
 
