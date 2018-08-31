@@ -104,11 +104,7 @@ data.grouping = function (dat.stat) {
   # HMM
   hmm.template.2 = depmix(response = cpu ~ 1, data = dat.stat, nstates = 2)
   model.2 = fit(hmm.template.2, verbose = FALSE)
-  print(summary(model.2))
-  print(posterior(model.2))
   state.1 = posterior(model.2)$state == 1
-  print(length(state.1))
-  print(which(!state.1))
   if (mean(vec[state.1]) >= mean(vec[!state.1])) {
     state.1 = !state.1
   }
@@ -163,8 +159,6 @@ data.classify = function (dat.stat) {
     2 * (sd(cpu[dat.stat$mode.low.hmm == T]) + sd(cpu[dat.stat$mode.low.hmm == F]))
   )
   
-  print(seperation.hmm)
-
   if (abs(seperation.hmm) < 0.5) {
     detected.issue.hmm = quantile(cpu, 0.9) < 0.9
   } else {
