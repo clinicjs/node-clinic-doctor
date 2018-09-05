@@ -1,10 +1,10 @@
 # node-clinic-doctor
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/nearform/node-clinic-doctor.svg)](https://greenkeeper.io/)
-[![npm version][2]][3] [![build status][4]][5] [![build status][13]][14]
-[![downloads][8]][9] [![js-standard-style][10]][11]
+[![npm version][npm-version]][npm-url] [![Stability Stable][stability-stable]][stability-docs] [![CircleCI build status][circleci-status]][circleci-url] [![Appveyor build status][appveyor-status]][appveyor-url]
+[![Downloads][npm-downloads]][npm-url] [![Code style][lint-standard]][lint-standard-url]
 
-Programmable interface to [clinic][12] doctor. Learn more about clinic: https://clinicjs.org/
+Programmable interface to [clinic][clinic-url] doctor. Learn more about clinic: https://clinicjs.org/
 
 ![banner](logo.png)
 
@@ -79,21 +79,18 @@ possible error.
 ## License
 [GPL 3.0](LICENSE)
 
-[0]: https://img.shields.io/badge/stability-stable-green.svg?style=flat-square
-[1]: https://nodejs.org/api/documentation.html#documentation_stability_index
-[2]: https://img.shields.io/npm/v/@nearform/clinic-doctor.svg?style=flat-square
-[3]: https://www.npmjs.org/@nearform/clinic-doctor
-[4]: https://circleci.com/gh/nearform/node-clinic-doctor/tree/master.svg?style=shield&circle-token=c26d5926558ff909ef0384756c3b70bc6151866e
-[5]: https://circleci.com/gh/nearform/node-clinic-doctor
-[6]: https://img.shields.io/codecov/c/github/nearform/node-clinic-doctor/master.svg?style=flat-square
-[7]: https://codecov.io/github/nearform/node-clinic-doctor
-[8]: http://img.shields.io/npm/dm/@nearform/clinic-doctor.svg?style=flat-square
-[9]: https://www.npmjs.org/@nearform/clinic-doctor
-[10]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square
-[11]: https://github.com/feross/standard
-[12]: https://github.com/nearform/node-clinic
-[13]: https://ci.appveyor.com/api/projects/status/xxijxjm3fhwhb5x6?svg=true
-[14]: https://ci.appveyor.com/project/nearForm/node-clinic-doctor
+[stability-stable]: https://img.shields.io/badge/stability-stable-green.svg?style=flat-square
+[stability-docs]: https://nodejs.org/api/documentation.html#documentation_stability_index
+[npm-version]: https://img.shields.io/npm/v/@nearform/clinic-doctor.svg?style=flat-square
+[npm-url]: https://www.npmjs.org/@nearform/clinic-doctor
+[circleci-status]: https://circleci.com/gh/nearform/node-clinic-doctor/tree/master.svg?style=shield&circle-token=c26d5926558ff909ef0384756c3b70bc6151866e
+[circleci-url]: https://circleci.com/gh/nearform/node-clinic-doctor
+[npm-downloads]: http://img.shields.io/npm/dm/@nearform/clinic-doctor.svg?style=flat-square
+[lint-standard]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square
+[lint-standard-url]: https://github.com/feross/standard
+[clinic-url]: https://github.com/nearform/node-clinic
+[appveyor-status]: https://ci.appveyor.com/api/projects/status/xxijxjm3fhwhb5x6?svg=true
+[appveyor-url]: https://ci.appveyor.com/project/nearForm/node-clinic-doctor
 [`<Object>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object
 [`<boolean>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type
 [`<number>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type
