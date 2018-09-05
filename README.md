@@ -15,8 +15,7 @@ Programmable interface to [clinic][12] doctor. Learn more about clinic: https://
 * Node.js 8.10.0 and above
 
 Node.js 8.9.4 also works, however you have to listen to `SIGINT` and shutdown
-the process nicely. You can find examples in
-[node-clinic-doctor-examples](https://github.com/nearform/node-clinic-doctor-examples/blob/master/slow-io/index.js#L29)
+the process nicely.
 
 ## Example
 
@@ -32,6 +31,9 @@ doctor.collect(['node', './path-to-script.js'], function (err, filepath) {
   });
 })
 ```
+
+You can find examples in
+[node-clinic-doctor-examples](https://github.com/nearform/node-clinic-doctor-examples)
 
 ## Documentation
 
