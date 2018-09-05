@@ -77,7 +77,7 @@ possible error.
 ## License
 [GPL 3.0](LICENSE)
 
-[0]: https://img.shields.io/badge/stability-experimental-orange.svg?style=flat-square
+[0]: https://img.shields.io/badge/stability-stable-green.svg?style=flat-square
 [1]: https://nodejs.org/api/documentation.html#documentation_stability_index
 [2]: https://img.shields.io/npm/v/@nearform/clinic-doctor.svg?style=flat-square
 [3]: https://www.npmjs.org/@nearform/clinic-doctor
