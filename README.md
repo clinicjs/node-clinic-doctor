@@ -4,7 +4,7 @@
 [![npm version][2]][3] [![build status][4]][5] [![build status][13]][14]
 [![downloads][8]][9] [![js-standard-style][10]][11]
 
-Programmable interface to [clinic][12] doctor
+Programmable interface to [clinic][12] doctor. Learn more about clinic: https://clinicjs.org/
 
 ![banner](logo.png)
 
