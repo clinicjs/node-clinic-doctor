@@ -1,14 +1,20 @@
 'use strict'
 
 const fs = require('fs')
+const makeDir = require('mkdirp')
 const systemInfo = require('../collect/system-info.js')
 const ProcessStat = require('../collect/process-stat.js')
 const getLoggingPaths = require('../collect/get-logging-paths.js')
 const ProcessStatEncoder = require('../format/process-stat-encoder.js')
 
 // create encoding files and directory
-const paths = getLoggingPaths({ identifier: process.pid })
-fs.mkdirSync(paths['/'])
+let paths = null
+if (process.env.NODE_CLINIC_DOCTOR_RESULTS_PATH) {
+  paths = getLoggingPaths({ path: process.env.NODE_CLINIC_DOCTOR_RESULTS_PATH, identifier: process.pid })
+} else {
+  paths = getLoggingPaths({ identifier: process.pid })
+}
+makeDir.sync(paths['/'])
 
 // write system file
 fs.writeFileSync(paths['/systeminfo'], JSON.stringify(systemInfo(), null, 2))

@@ -50,7 +50,7 @@ class ClinicDoctor extends events.EventEmitter {
       logArgs.push('-r', 'detect-port.js')
       stdio.push('pipe')
     }
-
+    const collectDestinationPath = args.length === 3 ? args[2] : null
     const proc = spawn(args[0], args.slice(1), {
       stdio,
       env: Object.assign({}, process.env, {
@@ -59,7 +59,8 @@ class ClinicDoctor extends events.EventEmitter {
         NODE_OPTIONS: logArgs.join(' ') + (
           process.env.NODE_OPTIONS ? ' ' + process.env.NODE_OPTIONS : ''
         ),
-        NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL: this.sampleInterval
+        NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL: this.sampleInterval,
+        NODE_CLINIC_DOCTOR_DATA_PATH: collectDestinationPath
       })
     })
 
