@@ -9,8 +9,8 @@ const ProcessStatEncoder = require('../format/process-stat-encoder.js')
 
 // create encoding files and directory
 let paths = null
-if (process.env.NODE_CLINIC_DOCTOR_RESULTS_PATH) {
-  paths = getLoggingPaths({ path: process.env.NODE_CLINIC_DOCTOR_RESULTS_PATH, identifier: process.pid })
+if (process.env.NODE_CLINIC_DOCTOR_DATA_PATH) {
+  paths = getLoggingPaths({ path: process.env.NODE_CLINIC_DOCTOR_DATA_PATH, identifier: process.pid })
 } else {
   paths = getLoggingPaths({ identifier: process.pid })
 }

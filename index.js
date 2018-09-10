@@ -28,12 +28,14 @@ class ClinicDoctor extends events.EventEmitter {
     const {
       sampleInterval = 10,
       detectPort = false,
-      debug = false
+      debug = false,
+      dataPath = null
     } = settings
 
     this.sampleInterval = sampleInterval
     this.detectPort = detectPort
     this.debug = debug
+    this.dataPath = dataPath
   }
 
   collect (args, callback) {
@@ -50,7 +52,7 @@ class ClinicDoctor extends events.EventEmitter {
       logArgs.push('-r', 'detect-port.js')
       stdio.push('pipe')
     }
-    const collectDestinationPath = args.length === 3 ? args[2] : null
+
     const proc = spawn(args[0], args.slice(1), {
       stdio,
       env: Object.assign({}, process.env, {
@@ -60,7 +62,7 @@ class ClinicDoctor extends events.EventEmitter {
           process.env.NODE_OPTIONS ? ' ' + process.env.NODE_OPTIONS : ''
         ),
         NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL: this.sampleInterval,
-        NODE_CLINIC_DOCTOR_DATA_PATH: collectDestinationPath
+        NODE_CLINIC_DOCTOR_DATA_PATH: this.dataPath
       })
     })
 
@@ -69,8 +71,9 @@ class ClinicDoctor extends events.EventEmitter {
     }
 
     // get logging directory structure
-    const paths = getLoggingPaths({ identifier: proc.pid })
+    const options = this.dataPath ? { identifier: proc.pid, path: this.dataPath } : { identifier: proc.pid }
 
+    const paths = getLoggingPaths(options)
     // relay SIGINT to process
     process.once('SIGINT', function () {
       // we cannot kill(SIGINT) on windows but it seems
