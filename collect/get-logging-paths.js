@@ -5,7 +5,7 @@ const path = require('path')
 function getLoggingPaths (options) {
   let dirpath, basename
   if (options.hasOwnProperty('identifier')) {
-    if (options.hasOwnProperty('path')) {
+    if (options.hasOwnProperty('path') && options.path) {
       dirpath = options.path
     } else {
       dirpath = ''

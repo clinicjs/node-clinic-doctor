@@ -53,17 +53,22 @@ class ClinicDoctor extends events.EventEmitter {
       stdio.push('pipe')
     }
 
+    const customEnv = {
+      // use NODE_PATH to work around issues with spaces in inject path
+      NODE_PATH: path.join(__dirname, 'injects'),
+      NODE_OPTIONS: logArgs.join(' ') + (
+        process.env.NODE_OPTIONS ? ' ' + process.env.NODE_OPTIONS : ''
+      ),
+      NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL: this.sampleInterval
+    }
+
+    if (this.dataPath) {
+      customEnv.NODE_CLINIC_DOCTOR_DATA_PATH = this.dataPath
+    }
+
     const proc = spawn(args[0], args.slice(1), {
       stdio,
-      env: Object.assign({}, process.env, {
-        // use NODE_PATH to work around issues with spaces in inject path
-        NODE_PATH: path.join(__dirname, 'injects'),
-        NODE_OPTIONS: logArgs.join(' ') + (
-          process.env.NODE_OPTIONS ? ' ' + process.env.NODE_OPTIONS : ''
-        ),
-        NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL: this.sampleInterval,
-        NODE_CLINIC_DOCTOR_DATA_PATH: this.dataPath
-      })
+      env: Object.assign({}, process.env, customEnv)
     })
 
     if (this.detectPort) {
