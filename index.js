@@ -76,8 +76,7 @@ class ClinicDoctor extends events.EventEmitter {
     }
 
     // get logging directory structure
-    const options = this.dataPath ? { identifier: proc.pid, path: this.dataPath } : { identifier: proc.pid }
-
+    const options = { identifier: proc.pid, path: this.dataPath }
     const paths = getLoggingPaths(options)
     // relay SIGINT to process
     process.once('SIGINT', function () {

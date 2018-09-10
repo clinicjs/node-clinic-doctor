@@ -8,7 +8,7 @@ function getLoggingPaths (options) {
     if (options.hasOwnProperty('path') && options.path) {
       dirpath = options.path
     } else {
-      dirpath = ''
+      dirpath = './'
     }
     basename = options.identifier.toString()
   } else if (options.hasOwnProperty('path')) {
