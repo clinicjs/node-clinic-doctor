@@ -23,7 +23,7 @@ const processStat = new ProcessStat(parseInt(
   process.env.NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL, 10
 ))
 
-// keep sample time unrefed such it doesn't interfer too much
+// keep sample time unrefed such it doesn't interfere too much
 let timer = null
 function scheduleSample () {
   timer = setTimeout(saveSample, processStat.sampleInterval)
@@ -38,7 +38,7 @@ function saveSample () {
   scheduleSample()
 }
 
-// start sampler on next tick, to avoid measureing the startup time
+// start sampler on next tick, to avoid measuring the startup time
 process.nextTick(function () {
   processStat.refresh()
   scheduleSample()
