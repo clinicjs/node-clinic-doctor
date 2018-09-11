@@ -29,13 +29,13 @@ class ClinicDoctor extends events.EventEmitter {
       sampleInterval = 10,
       detectPort = false,
       debug = false,
-      dataPath = null
+      dest = null
     } = settings
 
     this.sampleInterval = sampleInterval
     this.detectPort = detectPort
     this.debug = debug
-    this.dataPath = dataPath
+    this.dest = dest
   }
 
   collect (args, callback) {
@@ -62,8 +62,8 @@ class ClinicDoctor extends events.EventEmitter {
       NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL: this.sampleInterval
     }
 
-    if (this.dataPath) {
-      customEnv.NODE_CLINIC_DOCTOR_DATA_PATH = this.dataPath
+    if (this.dest) {
+      customEnv.NODE_CLINIC_DOCTOR_DATA_PATH = this.dest
     }
 
     const proc = spawn(args[0], args.slice(1), {
@@ -76,7 +76,7 @@ class ClinicDoctor extends events.EventEmitter {
     }
 
     // get logging directory structure
-    const options = { identifier: proc.pid, path: this.dataPath }
+    const options = { identifier: proc.pid, path: this.dest }
     const paths = getLoggingPaths(options)
     // relay SIGINT to process
     process.once('SIGINT', function () {
