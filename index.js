@@ -28,12 +28,14 @@ class ClinicDoctor extends events.EventEmitter {
     const {
       sampleInterval = 10,
       detectPort = false,
-      debug = false
+      debug = false,
+      dest = null
     } = settings
 
     this.sampleInterval = sampleInterval
     this.detectPort = detectPort
     this.debug = debug
+    this.path = dest
   }
 
   collect (args, callback) {
@@ -51,16 +53,22 @@ class ClinicDoctor extends events.EventEmitter {
       stdio.push('pipe')
     }
 
+    const customEnv = {
+      // use NODE_PATH to work around issues with spaces in inject path
+      NODE_PATH: path.join(__dirname, 'injects'),
+      NODE_OPTIONS: logArgs.join(' ') + (
+        process.env.NODE_OPTIONS ? ' ' + process.env.NODE_OPTIONS : ''
+      ),
+      NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL: this.sampleInterval
+    }
+
+    if (this.path) {
+      customEnv.NODE_CLINIC_DOCTOR_DATA_PATH = this.path
+    }
+
     const proc = spawn(args[0], args.slice(1), {
       stdio,
-      env: Object.assign({}, process.env, {
-        // use NODE_PATH to work around issues with spaces in inject path
-        NODE_PATH: path.join(__dirname, 'injects'),
-        NODE_OPTIONS: logArgs.join(' ') + (
-          process.env.NODE_OPTIONS ? ' ' + process.env.NODE_OPTIONS : ''
-        ),
-        NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL: this.sampleInterval
-      })
+      env: Object.assign({}, process.env, customEnv)
     })
 
     if (this.detectPort) {
@@ -68,8 +76,8 @@ class ClinicDoctor extends events.EventEmitter {
     }
 
     // get logging directory structure
-    const paths = getLoggingPaths({ identifier: proc.pid })
-
+    const options = { identifier: proc.pid, path: this.path }
+    const paths = getLoggingPaths(options)
     // relay SIGINT to process
     process.once('SIGINT', function () {
       // we cannot kill(SIGINT) on windows but it seems
