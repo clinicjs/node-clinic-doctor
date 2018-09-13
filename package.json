@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@nearform/trace-events-parser": "^1.0.4",
-    "@tensorflow/tfjs-core": "^0.12.11",
+    "@tensorflow/tfjs-core": "^0.13.0",
     "async": "^2.6.0",
     "brfs": "^2.0.0",
     "browserify": "^16.1.1",
