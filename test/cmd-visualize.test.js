@@ -7,7 +7,7 @@ const rimraf = require('rimraf')
 const ClinicDoctor = require('../index.js')
 
 test('cmd - test visualization - data exists', function (t) {
-  const tool = new ClinicDoctor()
+  const tool = new ClinicDoctor({ dest: './foo' })
 
   function cleanup (err, dirname) {
     t.ifError(err)
