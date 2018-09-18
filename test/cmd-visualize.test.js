@@ -13,7 +13,7 @@ test('cmd - test visualization - data exists', function (t) {
   function cleanup (err, dirname) {
     t.ifError(err)
 
-    t.match(dirname, /^foo\/[0-9]+\.clinic-doctor$/)
+    t.match(dirname, /^foo(\/|\\)[0-9]+\.clinic-doctor$/)
 
     async.parallel([
       (done) => rimraf(dirname, done),
