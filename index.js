@@ -215,10 +215,10 @@ class ClinicDoctor extends events.EventEmitter {
     })
     b.add(scriptPath)
     b.transform('brfs')
-    const scriptFile = b.bundle()
+    let scriptFile = b.bundle()
 
     if (!this.debug) {
-      scriptFile.pipe(minifyStream({ sourceMap: false, mangle: false }))
+      scriptFile = scriptFile.pipe(minifyStream({ sourceMap: false, mangle: false }))
     }
 
     // create style-file stream
