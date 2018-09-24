@@ -26,7 +26,7 @@ function analyseMemory (processStatSubset, traceEventSubset) {
     'external': false,
     // If the user has a lot of code or a huge stack, the RSS could be huge.
     // This does not necessary indicate an issue, thus RSS is never used
-    // as a measurment feature.
+    // as a measurement feature.
     'rss': false,
     // We should never see huge increases in used heap
     'heapTotal': oldSpaceTooLargeIssue,
