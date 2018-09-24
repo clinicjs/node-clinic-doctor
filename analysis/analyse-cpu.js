@@ -19,7 +19,7 @@ async function analyseCPU (processStatSubset, traceEventSubset) {
   const cpu = processStatSubset.map((d) => d.cpu)
   const summaryAll = summary(cpu)
 
-  // For extreamly small data, this algorithm doesn't work
+  // For extremely small data, this algorithm doesn't work
   if (cpu.length < 4) {
     return summaryAll.max() < 0.9
   }
@@ -29,14 +29,14 @@ async function analyseCPU (processStatSubset, traceEventSubset) {
   // collection and optimization. This causes the CPU usage for the
   // entire process, to be higher in these periods. For the analysing the
   // users application for I/O issues, the CPU usage data during the V8
-  // mode is not of interrest.
+  // mode is not of interest.
   //
   //     |         .--.      ..-          -.-
   // cpu |  .-  ..      . .     . -  .  .    .
   //     | .  -.  -    . . -     . -  .. -    ..
   //     +----------------------------------------
   //         app    v8  app   v8    app    v8  app
-  // Unfortunately, it is quite difficult to sepereate out the V8 data, even
+  // Unfortunately, it is quite difficult to separate out the V8 data, even
   // with the traceEvent data from V8.
   // NOTE(@AndreasMadsen): I don't entirely know why.
   //
@@ -45,7 +45,7 @@ async function analyseCPU (processStatSubset, traceEventSubset) {
   // would be a "Hidden Markov Model" (HMM). However, this model is a bit more
   // complex and there doesn't exists an implementation of HMM where the data
   // is continues. HMM is better because it understands that the data is a
-  // time series, which GMM doesn't. There is a comparision in the docs.
+  // time series, which GMM doesn't. There is a comparison in the docs.
   //
   const hmm = new HMM({
     states: 2,
@@ -78,27 +78,27 @@ async function analyseCPU (processStatSubset, traceEventSubset) {
     return summaryAll.quartile(0.9) < 0.9
   }
 
-  // It is not always that there are two "modes". Determin if the groups are
-  // sepereate by the seperation coefficient.
+  // It is not always that there are two "modes". Determine if the groups are
+  // separate by the separation coefficient.
   // https://en.wikipedia.org/wiki/Multimodal_distribution#Bimodal_separation
   const commonSd = 2 * (summary0.sd() + summary1.sd())
-  const seperation = (summary0.mean() - summary1.mean()) / commonSd
-  // Threat the data as one "mode", if the seperation coefficient is too small.
-  if (Math.abs(seperation) < SEPARATION_THRESHOLD) {
+  const separation = (summary0.mean() - summary1.mean()) / commonSd
+  // Threat the data as one "mode", if the separation coefficient is too small.
+  if (Math.abs(separation) < SEPARATION_THRESHOLD) {
     return summaryAll.quartile(0.9) < 0.9
   }
 
   // The mode group with the highest mean is the V8 mode, the other is the
   // application mode. This is because V8 is multi-threaded, but javascript is
   // single-threaded.
-  const summaryAplication = (
+  const summaryApplication = (
     summary0.mean() < summary1.mean() ? summary0 : summary1
   )
 
   // If the 90% quartile has less than 90% CPU load then the CPU is not
   // utilized optimally, likely because of some I/O delays. Highlight the
   // CPU curve in that case.
-  return summaryAplication.quartile(0.9) < 0.9
+  return summaryApplication.quartile(0.9) < 0.9
 }
 
 // Wrap to be a callback function
