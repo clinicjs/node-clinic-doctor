@@ -11,6 +11,7 @@
     "lint": "standard --fix | snazzy"
   },
   "dependencies": {
+    "@nearform/clinic-common": "^1.0.4",
     "@nearform/trace-events-parser": "^1.0.4",
     "@tensorflow/tfjs-core": "^0.13.0",
     "async": "^2.6.0",

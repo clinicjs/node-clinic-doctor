@@ -4,7 +4,7 @@ const fs = require('fs')
 const makeDir = require('mkdirp')
 const systemInfo = require('../collect/system-info.js')
 const ProcessStat = require('../collect/process-stat.js')
-const getLoggingPaths = require('../collect/get-logging-paths.js')
+const getLoggingPaths = require('@nearform/clinic-common/lib/get-logging-paths')('doctor')
 const ProcessStatEncoder = require('../format/process-stat-encoder.js')
 
 // create encoding files and directory
