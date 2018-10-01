@@ -1,7 +1,7 @@
 'use strict'
 
 const test = require('tap').test
-const getLoggingPaths = require('@nearform/clinic-common/lib/get-logging-paths')('doctor')
+const getLoggingPaths = require('@nearform/clinic-common').getLoggingPaths('doctor')
 const path = require('path')
 
 test('Collect - logging path - identifier', function (t) {

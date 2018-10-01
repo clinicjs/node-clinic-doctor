@@ -1,7 +1,7 @@
 'use strict'
 
 const fs = require('fs')
-const getLoggingPaths = require('@nearform/clinic-common/lib/get-logging-paths')('doctor')
+const getLoggingPaths = require('@nearform/clinic-common').getLoggingPaths('doctor')
 const Analysis = require('../analysis/index.js')
 const SystemInfoDecoder = require('../format/system-info-decoder.js')
 const TraceEventDecoder = require('../format/trace-event-decoder.js')
