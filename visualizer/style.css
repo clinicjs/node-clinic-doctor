@@ -185,11 +185,11 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   margin-left: 28px;
 }
 
-#banner a:last-child svg {
+#banner #company-logo svg {
   position: absolute;
-  height: 40px;
-  right: 28px;
-  top: 13px;
+  height: 65px;
+  right: 0;
+  top: 0;
 }
 
 /* Menu layout */
