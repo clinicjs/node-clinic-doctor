@@ -13,7 +13,7 @@
   "dependencies": {
     "@nearform/clinic-common": "^1.0.5",
     "@nearform/trace-events-parser": "^1.0.4",
-    "@tensorflow/tfjs-core": "^0.13.0",
+    "@tensorflow/tfjs-core": "^0.13.3",
     "async": "^2.6.0",
     "brfs": "^2.0.0",
     "browserify": "^16.1.1",
@@ -26,7 +26,7 @@
     "debug": "^4.0.0",
     "distributions": "^1.1.0",
     "endpoint": "^0.4.5",
-    "hidden-markov-model-tf": "^1.0.1",
+    "hidden-markov-model-tf": "^1.1.1",
     "minify-stream": "^1.2.0",
     "mkdirp": "^0.5.1",
     "node-trace-log-join": "^1.0.0",
