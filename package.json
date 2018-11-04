@@ -2,7 +2,7 @@
   "name": "@nearform/doctor",
   "description": "Programmable interface to clinic doctor",
   "repository": "nearform/node-clinic-doctor",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "scripts": {
     "test": "standard | snazzy && tap --no-cov test/*.test.js",
     "ci-lint": "standard | snazzy",
