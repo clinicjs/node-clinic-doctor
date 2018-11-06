@@ -178,10 +178,10 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   height: 65px;
   background: var(--banner-bg-color);
   justify-content: space-between;
+  padding: 0px 18px;
 }
 
 #banner #main-logo {
-  margin-left: 12px;
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -194,16 +194,15 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
 
 #banner #main-logo svg {
   display: block;
-  height: 50px;
+  height: 51px;
   width: auto;
   margin-right: 12px;
 }
 
 #banner #company-logo svg {
   display: block;
-  height: 65px;
-  right: 0;
-  top: 0;
+  height: 21px;
+  width: auto;
 }
 
 
