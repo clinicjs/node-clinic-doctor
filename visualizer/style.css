@@ -177,20 +177,34 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   align-items: center;
   height: 65px;
   background: var(--banner-bg-color);
-  position: relative;
+  justify-content: space-between;
+  padding: 0px 18px;
 }
 
-#banner svg {
-  fill: var(--banner-logo-color);
-  margin-left: 28px;
+#banner #main-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+#banner #main-logo span{
+  color: var(--banner-logo-color);
+  font-weight: bold;
+  font-size: 23px;
+}
+
+#banner #main-logo svg {
+  display: block;
+  height: 51px;
+  width: auto;
+  margin-right: 12px;
 }
 
 #banner #company-logo svg {
-  position: absolute;
-  height: 65px;
-  right: 0;
-  top: 0;
+  display: block;
+  height: 21px;
+  width: auto;
 }
+
 
 /* Menu layout */
 

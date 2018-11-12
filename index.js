@@ -240,8 +240,8 @@ class ClinicDoctor extends events.EventEmitter {
       <style>${styleFile}</style>
 
       <div id="banner">
-        <a href="https://github.com/nearform/node-clinic-doctor" title="Clinic Doctor on GitHub" target="_blank">
-          ${logoFile}
+        <a id="main-logo" href="https://github.com/nearform/node-clinic-doctor" title="Clinic Doctor on GitHub" target="_blank">
+          ${logoFile} <span>Doctor</span>
         </a>
         <a id="company-logo" href="https://nearform.com" title="nearForm" target="_blank">
           ${nearFormLogoFile}
