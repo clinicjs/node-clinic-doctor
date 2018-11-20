@@ -48,7 +48,7 @@ const doctor = new ClinicDoctor()
   * sampleInterval [`<number>`][] Time between each sample in milliseconds.
     **Default**: 10
   * detectPort [`<boolean>`][] **Default**: false
-  * path [`<string>`][] The folder where the collected data is stored. **Default**: '.'
+  * dest [`<String>`][] The folder where the collected data is stored. **Default**: '.'
   * debug [`<boolean>`][] If set to true, the generated html will not be minified.
     **Default**: false
 
@@ -95,3 +95,4 @@ possible error.
 [`<Object>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object
 [`<boolean>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type
 [`<number>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type
+[`<String>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
