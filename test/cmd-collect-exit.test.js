@@ -6,7 +6,6 @@ const path = require('path')
 const async = require('async')
 const { spawn } = require('child_process')
 const endpoint = require('endpoint')
-const CollectAndRead = require('./collect-and-read.js')
 
 test('cmd - collect - external SIGINT is relayed', function (t) {
   if (os.platform() === 'win32') {
@@ -35,31 +34,6 @@ test('cmd - collect - external SIGINT is relayed', function (t) {
     t.ok(output.stderr.toString().split('\n').length, 1)
     t.strictEqual(output.stdout.toString(),
       'listening for SIGINT\nSIGINT received\n')
-    t.end()
-  })
-})
-
-test('cmd - collect - non-success exit code causes error', function (t) {
-  const cmd = new CollectAndRead({}, '--expose-gc', '-e', 'process.exit(1)')
-
-  cmd.once('error', function (err) {
-    cmd.cleanup()
-
-    t.strictDeepEqual(err, new Error('process exited with exit code 1'))
-    t.end()
-  })
-})
-
-test('cmd - collect - non-success exit code causes error', function (t) {
-  const cmd = new CollectAndRead(
-    {},
-    '--expose-gc', '-e', 'process.kill(process.pid, "SIGKILL")'
-  )
-
-  cmd.once('error', function (err) {
-    cmd.cleanup()
-
-    t.strictDeepEqual(err, new Error('process exited with exit signal SIGKILL'))
     t.end()
   })
 })
