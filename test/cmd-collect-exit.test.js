@@ -52,9 +52,10 @@ test('cmd - collect - non-success exit code causes error', function (t) {
     {},
     '--expose-gc', '-e', 'process.kill(process.pid, "SIGKILL")'
   )
-   cmd.once('error', function (err) {
+
+  cmd.once('error', function (err) {
     cmd.cleanup()
-     t.strictDeepEqual(err, new Error('process exited with exit signal SIGKILL'))
+    t.strictDeepEqual(err, new Error('process exited with exit signal SIGKILL'))
     t.end()
   })
 })
