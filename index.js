@@ -100,7 +100,10 @@ class ClinicDoctor extends events.EventEmitter {
         if (code !== null) {
           console.error(`process exited with exit code ${code}`)
         } else {
-          console.error(`process exited by signal ${signal}`)
+          return callback(
+            new Error(`process exited by signal ${signal}`),
+            paths['/']
+          )
         }
       }
 
