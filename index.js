@@ -95,18 +95,12 @@ class ClinicDoctor extends events.EventEmitter {
       /* istanbul ignore next: windows hack */
       if (code === 3221225786 && os.platform() === 'win32') signal = 'SIGINT'
 
-      // Abort if the process did not exit normally.
+      // report if the process did not exit normally.
       if (code !== 0 && signal !== 'SIGINT') {
         if (code !== null) {
-          return callback(
-            new Error(`process exited with exit code ${code}`),
-            paths['/']
-          )
+          console.error(`process exited with exit code ${code}`)
         } else {
-          return callback(
-            new Error(`process exited by signal ${signal}`),
-            paths['/']
-          )
+          console.error(`process exited by signal ${signal}`)
         }
       }
 

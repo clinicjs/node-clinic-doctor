@@ -39,27 +39,10 @@ test('cmd - collect - external SIGINT is relayed', function (t) {
   })
 })
 
-test('cmd - collect - non-success exit code causes error', function (t) {
+test('cmd - collect - non-success exit code should not throw', function (t) {
   const cmd = new CollectAndRead({}, '--expose-gc', '-e', 'process.exit(1)')
-
-  cmd.once('error', function (err) {
-    cmd.cleanup()
-
-    t.strictDeepEqual(err, new Error('process exited with exit code 1'))
-    t.end()
-  })
-})
-
-test('cmd - collect - non-success exit code causes error', function (t) {
-  const cmd = new CollectAndRead(
-    {},
-    '--expose-gc', '-e', 'process.kill(process.pid, "SIGKILL")'
-  )
-
-  cmd.once('error', function (err) {
-    cmd.cleanup()
-
-    t.strictDeepEqual(err, new Error('process exited with exit signal SIGKILL'))
+  cmd.on('error', t.ifError.bind(t))
+  cmd.on('ready', function () {
     t.end()
   })
 })
