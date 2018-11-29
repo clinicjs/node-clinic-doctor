@@ -15,7 +15,7 @@
   "dependencies": {
     "@nearform/clinic-common": "^1.0.5",
     "@nearform/trace-events-parser": "^1.0.4",
-    "@tensorflow/tfjs-core": "^0.13.11",
+    "@tensorflow/tfjs-core": "^0.14.0",
     "async": "^2.6.0",
     "brfs": "^2.0.0",
     "browserify": "^16.1.1",
