@@ -47,7 +47,7 @@ test('cmd - collect - non-success exit code should not throw', function (t) {
   })
 })
 
-test('cmd - collect - non-success exit code causes error', function (t) {
+test('cmd - collect - SIGKILL causes error', function (t) {
   const cmd = new CollectAndRead(
     {},
     '--expose-gc', '-e', 'process.kill(process.pid, "SIGKILL")'
