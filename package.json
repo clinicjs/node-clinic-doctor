@@ -2,7 +2,7 @@
   "name": "@nearform/doctor",
   "description": "Programmable interface to clinic doctor",
   "repository": "nearform/node-clinic-doctor",
-  "version": "3.7.2",
+  "version": "3.7.3",
   "scripts": {
     "visualize-watch": "node debug/visualize-watch.js",
     "visualize-all": "node debug/visualize-all.js",
