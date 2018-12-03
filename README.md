@@ -96,3 +96,5 @@ possible error.
 [`<boolean>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type
 [`<number>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type
 [`<String>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
+[azure-status]: https://dev.azure.com/node-clinic/node-clinic/_apis/build/status/nearform.node-clinic-doctor
+[azure-url]: https://dev.azure.com/node-clinic/node-clinic/_apis/build/status/nearform.node-clinic-doctor?branchName=master
