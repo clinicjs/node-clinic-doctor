@@ -85,14 +85,14 @@ class ClinicDoctor extends events.EventEmitter {
       // we cannot kill(SIGINT) on windows but it seems
       // to relay the ctrl-c signal per default, so only do this
       // if not windows
-      /* istanbul ignore else: windows hack */
+      /* istanbul ignore next */
       if (os.platform() !== 'win32') proc.kill('SIGINT')
     })
 
     proc.once('exit', function (code, signal) {
       // Windows exit code STATUS_CONTROL_C_EXIT 0xC000013A returns 3221225786
       // if not caught. See https://msdn.microsoft.com/en-us/library/cc704588.aspx
-      /* istanbul ignore next: windows hack */
+      /* istanbul ignore next */
       if (code === 3221225786 && os.platform() === 'win32') signal = 'SIGINT'
 
       // report if the process did not exit normally.
