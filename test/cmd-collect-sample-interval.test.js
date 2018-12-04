@@ -34,13 +34,13 @@ test('cmd - collect - custom sample interval', function (t) {
     }, function (err, output) {
       if (err) return t.ifError(err)
 
-      // expect time seperation to be 30ms, allow 10ms error
+      // expect time seperation to be 30ms, allow 20ms error
       const sampleTimes = output.processStat.map((stat) => stat.timestamp)
       const timeSeparation = summary(diff(sampleTimes)).mean()
       t.ok(sampleTimes.length > 0, 'data is outputted')
       const drift = Math.abs(timeSeparation - 30)
       t.comment(`drift is ${drift}`)
-      t.ok(drift < 25)
+      t.ok(drift < 30)
 
       t.end()
     })
