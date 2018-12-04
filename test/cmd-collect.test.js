@@ -73,7 +73,7 @@ test('cmd - collect - gc events', function (t) {
 })
 
 test('cmd - collect - data files have content', function (t) {
-  const cmd = new CollectAndRead({}, '-e', 'setTimeout(() => {}, 200)')
+  const cmd = new CollectAndRead({}, '-e', 'setTimeout(() => {}, 1000)')
   cmd.on('error', t.ifError.bind(t))
   cmd.on('ready', function () {
     async.parallel({
@@ -87,11 +87,11 @@ test('cmd - collect - data files have content', function (t) {
     }, function (err, output) {
       if (err) return t.ifError(err)
 
-      // expect time seperation to be 10ms, allow 10ms error
+      // expect time seperation to be 10ms, allow 20ms error
       const sampleTimes = output.processStat.map((stat) => stat.timestamp)
       const timeSeperation = summary(diff(sampleTimes)).mean()
       t.ok(sampleTimes.length > 0, 'data is outputted')
-      t.ok(Math.abs(timeSeperation - 10) < 10)
+      t.ok(Math.abs(timeSeperation - 10) < 20)
 
       t.end()
     })
