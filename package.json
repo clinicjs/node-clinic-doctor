@@ -9,7 +9,7 @@
     "test": "standard | snazzy && tap --timeout=50 --no-cov test/*.test.js",
     "ci-lint": "standard | snazzy",
     "ci-test": "tap --timeout=50 test/*.test.js",
-    "ci-cov": "tap --timeout=60 --100 test/*.test.js",
+    "ci-cov": "tap --timeout=60 --statements=98 test/*.test.js",
     "lint": "standard --fix | snazzy"
   },
   "dependencies": {
