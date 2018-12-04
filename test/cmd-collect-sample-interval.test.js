@@ -19,7 +19,7 @@ function diff (data) {
 test('cmd - collect - custom sample interval', function (t) {
   const cmd = new CollectAndRead({
     sampleInterval: 30
-  }, '-e', 'setTimeout(() => {}, 200)')
+  }, '-e', 'setTimeout(() => {}, 1000)')
 
   cmd.on('error', t.ifError.bind(t))
   cmd.on('ready', function () {
