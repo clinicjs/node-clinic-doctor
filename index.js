@@ -97,6 +97,7 @@ class ClinicDoctor extends events.EventEmitter {
 
       // report if the process did not exit normally.
       if (code !== 0 && signal !== 'SIGINT') {
+        /* istanbul ignore next */
         if (code !== null) {
           console.error(`process exited with exit code ${code}`)
         } else {
