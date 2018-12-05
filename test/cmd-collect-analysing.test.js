@@ -1,7 +1,5 @@
 'use strict'
 
-const fs = require('fs')
-const path = require('path')
 const { test } = require('tap')
 const rimraf = require('rimraf')
 const ClinicDoctor = require('../index.js')
