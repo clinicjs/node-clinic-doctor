@@ -228,6 +228,9 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   height: 22px;
   align-items: center;
 }
+#alert.has-issue .summary {
+  cursor: pointer;
+}
 
 #alert .summary svg.alert {
   display: none;
@@ -273,6 +276,12 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
 
   fill: var(--alert-button-color);
 }
+#alert .summary:hover .toggle svg {
+  /* highlight the toggle icon when hoverred, same contrast as text */
+  fill: var(--alert-text-color);
+  transform: scale(1.15);
+}
+
 #alert .summary .toggle svg.arrow-down {
   top: -6px;
 }

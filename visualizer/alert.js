@@ -31,6 +31,9 @@ class Alert extends EventEmitter {
 
     this.summary = this.container.append('div')
       .classed('summary', true)
+      .on('click', () => {
+        if (this.container.classed('has-issue')) this.emit(this.opened ? 'close' : 'open')
+      })
 
     this.alert = this.summary.append('svg')
       .classed('alert', true)
@@ -44,7 +47,6 @@ class Alert extends EventEmitter {
 
     this.toggle = this.summary.append('div')
       .classed('toggle', true)
-      .on('click', () => this.emit(this.opened ? 'close' : 'open'))
     this.toggle.append('svg')
       .classed('arrow-down', true)
       .call(icons.insertIcon('arrow-down'))
