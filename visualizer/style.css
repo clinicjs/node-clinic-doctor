@@ -13,6 +13,7 @@ html {
   --alert-indicator-color: rgb(233, 67, 100);
 
   --menu-button-color: rgb(200, 201, 203);
+  --button-highlight-color: rgb(255, 255, 255);
 
   --graph-text-color: rgb(255, 255, 255);
   --graph-bg-color: rgb(27, 30, 39);
@@ -54,6 +55,7 @@ html.light-theme {
   --alert-button-color: rgb(123, 128, 146);
 
   --menu-button-color: rgb(123, 128, 146);
+  --button-highlight-color: rgb(65, 69, 85);
 
   --graph-text-color: rgb(101, 101, 101);
   --graph-bg-color: rgb(227, 227, 227);
@@ -278,7 +280,7 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
 }
 #alert .summary:hover .toggle svg {
   /* highlight the toggle icon when hoverred, same contrast as text */
-  fill: var(--alert-text-color);
+  fill: var(--button-highlight-color);
   transform: scale(1.15);
 }
 
@@ -326,6 +328,9 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
 
 #menu svg {
   fill: var(--menu-button-color);
+}
+#menu svg:hover {
+  fill: var(--button-highlight-color);
 }
 
 #toggle-grid svg {
