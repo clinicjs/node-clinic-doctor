@@ -89,7 +89,7 @@ class ClinicDoctor extends events.EventEmitter {
       if (os.platform() !== 'win32') proc.kill('SIGINT')
     })
 
-    proc.once('exit', function (code, signal) {
+    proc.once('exit', (code, signal) => {
       // Windows exit code STATUS_CONTROL_C_EXIT 0xC000013A returns 3221225786
       // if not caught. See https://msdn.microsoft.com/en-us/library/cc704588.aspx
       /* istanbul ignore next */
@@ -108,6 +108,8 @@ class ClinicDoctor extends events.EventEmitter {
           )
         }
       }
+
+      this.emit('analysing')
 
       // move trace_event file to logging directory
       joinTrace(
