@@ -300,6 +300,15 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   cursor: pointer;
 }
 
+#alert ul.details li span {
+  border-bottom: 2px solid transparent;
+  height: 16px;
+  display: inline-block;
+}
+#alert ul.details li:hover span {
+  border-bottom-color: var(--graph-alert-color);
+}
+
 #alert ul.details li::before {
   display: inline-block;
   width: 18px;
@@ -663,8 +672,12 @@ svg#toggle-theme {
 
 #graph .sub-graph .header .title {
   float: left;
-  height: 18px;
+  height: 16px;
   margin-right: 20px;
+  border-bottom: 2px solid transparent;
+}
+#graph .sub-graph.highlight .header .title {
+  border-bottom-color: var(--graph-alert-color);
 }
 
 #graph .sub-graph .header .title svg.alert {

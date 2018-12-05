@@ -87,6 +87,9 @@ class Alert extends EventEmitter {
       .enter()
       .append('li')
       .on('click', (d) => this.emit('click', d.graphId))
+      .on('mouseover', (d) => this.emit('hover-in', d.graphId))
+      .on('mouseout', (d) => this.emit('hover-out', d.graphId))
+      .append('span')
       .text((d) => d.title)
 
     // Set title text now, such that the width is calculated correctly
