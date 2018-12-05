@@ -31,6 +31,9 @@ class Alert extends EventEmitter {
 
     this.summary = this.container.append('div')
       .classed('summary', true)
+      .on('click', () => {
+        if (this.container.classed('has-issue')) this.emit(this.opened ? 'close' : 'open')
+      })
 
     this.alert = this.summary.append('svg')
       .classed('alert', true)
@@ -44,7 +47,6 @@ class Alert extends EventEmitter {
 
     this.toggle = this.summary.append('div')
       .classed('toggle', true)
-      .on('click', () => this.emit(this.opened ? 'close' : 'open'))
     this.toggle.append('svg')
       .classed('arrow-down', true)
       .call(icons.insertIcon('arrow-down'))
@@ -85,6 +87,9 @@ class Alert extends EventEmitter {
       .enter()
       .append('li')
       .on('click', (d) => this.emit('click', d.graphId))
+      .on('mouseover', (d) => this.emit('hover-in', d.graphId))
+      .on('mouseout', (d) => this.emit('hover-out', d.graphId))
+      .append('span')
       .text((d) => d.title)
 
     // Set title text now, such that the width is calculated correctly

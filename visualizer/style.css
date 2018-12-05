@@ -13,6 +13,7 @@ html {
   --alert-indicator-color: rgb(233, 67, 100);
 
   --menu-button-color: rgb(200, 201, 203);
+  --button-highlight-color: rgb(255, 255, 255);
 
   --graph-text-color: rgb(255, 255, 255);
   --graph-bg-color: rgb(27, 30, 39);
@@ -54,6 +55,7 @@ html.light-theme {
   --alert-button-color: rgb(123, 128, 146);
 
   --menu-button-color: rgb(123, 128, 146);
+  --button-highlight-color: rgb(65, 69, 85);
 
   --graph-text-color: rgb(101, 101, 101);
   --graph-bg-color: rgb(227, 227, 227);
@@ -228,6 +230,9 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   height: 22px;
   align-items: center;
 }
+#alert.has-issue .summary {
+  cursor: pointer;
+}
 
 #alert .summary svg.alert {
   display: none;
@@ -273,6 +278,12 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
 
   fill: var(--alert-button-color);
 }
+#alert .summary:hover .toggle svg {
+  /* highlight the toggle icon when hoverred, same contrast as text */
+  fill: var(--button-highlight-color);
+  transform: scale(1.15);
+}
+
 #alert .summary .toggle svg.arrow-down {
   top: -6px;
 }
@@ -289,6 +300,15 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
 #alert ul.details li {
   padding: 5px 0px;
   cursor: pointer;
+}
+
+#alert ul.details li span {
+  border-bottom: 2px solid transparent;
+  height: 16px;
+  display: inline-block;
+}
+#alert ul.details li:hover span {
+  border-bottom-color: var(--graph-alert-color);
 }
 
 #alert ul.details li::before {
@@ -308,6 +328,9 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
 
 #menu svg {
   fill: var(--menu-button-color);
+}
+#menu svg:hover {
+  fill: var(--button-highlight-color);
 }
 
 #toggle-grid svg {
@@ -654,8 +677,12 @@ svg#toggle-theme {
 
 #graph .sub-graph .header .title {
   float: left;
-  height: 18px;
+  height: 16px;
   margin-right: 20px;
+  border-bottom: 2px solid transparent;
+}
+#graph .sub-graph.highlight .header .title {
+  border-bottom-color: var(--graph-alert-color);
 }
 
 #graph .sub-graph .header .title svg.alert {

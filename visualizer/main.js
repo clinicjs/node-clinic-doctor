@@ -25,6 +25,12 @@ alert.on('click', function (graphId) {
     behavior: 'smooth'
   })
 })
+alert.on('hover-in', function (graphId) {
+  document.getElementById(graphId).classList.add('highlight')
+})
+alert.on('hover-out', function (graphId) {
+  document.getElementById(graphId).classList.remove('highlight')
+})
 
 graph.on('hover-show', () => graph.hoverShow())
 graph.on('hover-hide', () => graph.hoverHide())
