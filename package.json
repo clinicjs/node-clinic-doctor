@@ -13,9 +13,9 @@
     "lint": "standard --fix | snazzy"
   },
   "dependencies": {
-    "@nearform/clinic-common": "^1.0.5",
+    "@nearform/clinic-common": "^1.1.0",
     "@nearform/trace-events-parser": "^1.0.4",
-    "@tensorflow/tfjs-core": "^0.13.11",
+    "@tensorflow/tfjs-core": "^0.14.1",
     "async": "^2.6.0",
     "brfs": "^2.0.0",
     "browserify": "^16.1.1",
@@ -28,7 +28,7 @@
     "debug": "^4.0.0",
     "distributions": "^2.0.0",
     "endpoint": "^0.4.5",
-    "hidden-markov-model-tf": "^1.2.0",
+    "hidden-markov-model-tf": "^2.0.0",
     "minify-stream": "^1.2.0",
     "mkdirp": "^0.5.1",
     "node-trace-log-join": "^1.0.0",
@@ -37,7 +37,7 @@
     "pump": "^3.0.0",
     "pumpify": "^1.3.6",
     "showdown": "^1.7.6",
-    "stream-template": "0.0.8",
+    "stream-template": "0.0.10",
     "streaming-json-stringify": "^3.1.0",
     "summary": "^1.0.0",
     "ttest": "^2.0.0"
