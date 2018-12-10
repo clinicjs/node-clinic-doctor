@@ -9,7 +9,8 @@ test('analyse memory - delay correlation', function (t) {
   const goodMemoryStat = generateProcessStat({
     delay: [1, 1, 1, 30, 1, 1, 1],
     memory: {
-      heapTotal: [30, 40, 40, 50, 30, 40, 40]
+      heapTotal: [30, 40, 40, 50, 30, 40, 40],
+      heapUsed: [30, 40, 40, 50, 30, 40, 40]
     }
   }, 0)
   const goodMemoryGc = generateTraceEvent([
@@ -26,7 +27,8 @@ test('analyse memory - delay correlation', function (t) {
   const badMemoryStat = generateProcessStat({
     delay: [1, 1, 1, 120, 1, 1, 1],
     memory: {
-      heapTotal: [1, 50, 50, 150, 1, 50, 50]
+      heapTotal: [1, 50, 50, 150, 1, 50, 50],
+      heapUsed: [1, 50, 50, 150, 1, 50, 50]
     }
   }, 0)
   const badMemoryGc = generateTraceEvent([
