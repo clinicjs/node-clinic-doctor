@@ -6,6 +6,7 @@ const MB = 1024 * 1024
 
 function analyseMemory (processStatSubset, traceEventSubset) {
   const heapTotal = processStatSubset.map((d) => d.memory.heapTotal)
+  const heapUsed = processStatSubset.map((d) => d.memory.heapUsed)
 
   // Extract delay from blocking Mark & Sweep & Compact events
   const mscDelay = traceEventSubset
@@ -17,9 +18,16 @@ function analyseMemory (processStatSubset, traceEventSubset) {
   const heapTotalStat = summary(heapTotal)
   const oldSpaceTooLargeIssue = heapTotalStat.max() > 1000 * MB
 
+  const heapUsedStat = summary(heapUsed)
+
   // If MSC caused a big delay
   const mscDelayStat = summary(mscDelay)
-  const mscDelayIssue = mscDelayStat.max() > 100
+
+  // We check if the mean is greater than 100ms.
+  // We use the mean because we want to take into account both
+  // big and small GC events.
+  // mean() could be NaN, and in that case, this check will be false.
+  const mscDelayIssue = mscDelayStat.mean() > 100
 
   return {
     // We are currently not using the external memory processStatSubset
@@ -30,8 +38,9 @@ function analyseMemory (processStatSubset, traceEventSubset) {
     'rss': false,
     // We should never see huge increases in used heap
     'heapTotal': oldSpaceTooLargeIssue,
-    // If Mark & Sweep & Compact caused a delay issue.
-    'heapUsed': mscDelayIssue
+    // If Mark & Sweep & Compact caused a delay issue, and we are using
+    // more than 128MB of heap, then we have a problem.
+    'heapUsed': heapUsedStat.max() > 128 * MB && mscDelayIssue
   }
 }
 
