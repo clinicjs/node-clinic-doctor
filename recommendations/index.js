@@ -67,7 +67,7 @@ const recommendations = [
     menu: 'Unknown issue',
     order: 4,
     summary: path.resolve(__dirname, 'unknown-summary.md'),
-    readMore: null
+    readMore: path.resolve(__dirname, 'unknown-readmore.md')
   }),
   new Recommendation({
     category: 'none',
