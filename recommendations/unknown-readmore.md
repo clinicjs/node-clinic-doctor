@@ -18,7 +18,13 @@ By way of example, instead of running `clinic -- node app.js` in one terminal an
 
 ```sh
 clinic doctor --on-port="autocannon localhost:3000" -- node app.js
-``` 
+```
+
+An even simpler form of this is to use the `--autocannon` flag, 
+
+```sh
+clinic doctor --autocannon / -- node app.js
+```
 
 If after taking these steps an unknown categorization continues to occur then we can instead attempt to infer the nature of the performance issue using specialist diagnostic tooling, such 
 as `clinic flame`, `clinic bubble` or Node Inspector. 
