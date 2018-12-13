@@ -17,7 +17,7 @@ We can make eliminate the possibility of ambient noise and make it easier for Cl
 By way of example, instead of running `clinic -- node app.js` in one terminal and `autocannon localhost:3000` in another, it is preferable and recommended to trigger both in one command using the following command: 
 
 ```sh
-clinic --on-port="autocannon localhost:3000" -- node app.js
+clinic doctor --on-port="autocannon localhost:3000" -- node app.js
 ``` 
 
 If after taking these steps an unknown categorization continues to occur then we can instead attempt to infer the nature of the performance issue using specialist diagnostic tooling, such 
