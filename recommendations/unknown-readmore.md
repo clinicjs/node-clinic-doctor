@@ -5,7 +5,7 @@ An unknown issue occurs when Clinic's analysis algorithms are unable to categori
 This outcome can be attributed to one of two scenarios:
  
 1. Ambient noise – for instance, other applications using the CPU or memory – during the sampling period has polluted the results.
-2. There is a genuine performance issue but Clinic doesn't recognize it.
+2. There is a genuine performance issue but `clinic doctor` doesn't recognize it.
 
 In the case of ambient noise, there may still be a specific, categorizable performance issue. 
 
