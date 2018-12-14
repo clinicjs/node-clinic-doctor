@@ -18,7 +18,7 @@ function diff (data) {
 
 test('cmd - collect - custom sample interval', function (t) {
   const cmd = new CollectAndRead({
-    sampleInterval: 30
+    sampleInterval: 100
   }, '-e', 'setTimeout(() => {}, 1000)')
 
   cmd.on('error', t.ifError.bind(t))
@@ -34,13 +34,13 @@ test('cmd - collect - custom sample interval', function (t) {
     }, function (err, output) {
       if (err) return t.ifError(err)
 
-      // expect time seperation to be 30ms, allow 20ms error
+      // expect time seperation to be 100ms, allow 100ms error
       const sampleTimes = output.processStat.map((stat) => stat.timestamp)
       const timeSeparation = summary(diff(sampleTimes)).mean()
       t.ok(sampleTimes.length > 0, 'data is outputted')
-      const drift = Math.abs(timeSeparation - 30)
+      const drift = Math.abs(timeSeparation - 100)
       t.comment(`drift is ${drift}`)
-      t.ok(drift < 30)
+      t.ok(drift < 100)
 
       t.end()
     })
