@@ -1,7 +1,10 @@
 'use strict'
-const fs = require('fs')
-const path = require('path')
 /* global Node */
+
+const sanitizeIcon = icon =>
+  icon
+    .replace(/class="(.*?)"/, '')
+    .replace(/fill="(.*?)"/g, '')
 
 class Icon {
   constructor (name, content) {
@@ -29,6 +32,7 @@ class Icon {
     const attributes = this.svgTemplateNode.attributes
     const iterableAttributes = typeof attributes[Symbol.iterator] === 'function' ? attributes : Array.from(attributes)
     for (const attr of iterableAttributes) {
+      console.log(attr.name)
       svgNode.setAttribute(attr.name, attr.value)
     }
     svgNode.appendChild(this.svgTemplateContent.cloneNode(true))
@@ -38,34 +42,13 @@ class Icon {
 class Icons {
   constructor () {
     const icons = {
-      'arrow-down': fs.readFileSync(
-        path.resolve(__dirname, 'icons/arrow-down.svg'),
-        'utf8'
-      ),
-      'arrow-up': fs.readFileSync(
-        path.resolve(__dirname, 'icons/arrow-up.svg'),
-        'utf8'
-      ),
-      'close': fs.readFileSync(
-        path.resolve(__dirname, 'icons/close.svg'),
-        'utf8'
-      ),
-      'grid-1x4': fs.readFileSync(
-        path.resolve(__dirname, 'icons/grid-1x4.svg'),
-        'utf8'
-      ),
-      'grid-2x2': fs.readFileSync(
-        path.resolve(__dirname, 'icons/grid-2x2.svg'),
-        'utf8'
-      ),
-      'theme': fs.readFileSync(
-        path.resolve(__dirname, 'icons/theme.svg'),
-        'utf8'
-      ),
-      'warning': fs.readFileSync(
-        path.resolve(__dirname, 'icons/warning.svg'),
-        'utf8'
-      )
+      'arrow-down': sanitizeIcon(require('@nearform/clinic-common/icons/chevron-down')),
+      'arrow-up': sanitizeIcon(require('@nearform/clinic-common/icons/chevron-up')),
+      'close': sanitizeIcon(require('@nearform/clinic-common/icons/close')),
+      'grid-1x4': sanitizeIcon(require('@nearform/clinic-common/icons/list-view')),
+      'grid-2x2': sanitizeIcon(require('@nearform/clinic-common/icons/grid-view')),
+      'theme': sanitizeIcon(require('@nearform/clinic-common/icons/eye-show')),
+      'warning': sanitizeIcon(require('@nearform/clinic-common/icons/warning-triangle'))
     }
 
     this._icons = new Map()

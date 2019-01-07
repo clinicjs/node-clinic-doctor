@@ -271,21 +271,17 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
 #alert .summary .toggle svg {
   /* crop empty space in the svg icon */
   position: absolute;
-  top: -8px;
-  left: -8px;
-  width: 38px;
-  height: 38px;
-
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   fill: var(--alert-button-color);
 }
+
 #alert .summary:hover .toggle svg {
   /* highlight the toggle icon when hoverred, same contrast as text */
   fill: var(--button-highlight-color);
   transform: scale(1.15);
-}
-
-#alert .summary .toggle svg.arrow-down {
-  top: -6px;
 }
 
 #alert:not(.open) .summary .toggle svg.arrow-up { display: none; }
@@ -337,8 +333,14 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   height: 16px;
   width: 16px;
 }
-html:not(.grid-layout) #toggle-grid svg.grid-1x4 { display: none; }
-html.grid-layout #toggle-grid svg.grid-2x2 { display: none; }
+
+html:not(.grid-layout) #toggle-grid svg.grid-1x4 {
+  display: none;
+}
+
+html.grid-layout #toggle-grid svg.grid-2x2 {
+  display: none;
+}
 
 svg#toggle-theme {
   height: 16px;
