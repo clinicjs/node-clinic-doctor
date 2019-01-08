@@ -258,8 +258,8 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   flex: 0 0 auto;
   /* crop empty space in the svg icon */
   position: relative;
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   overflow: hidden;
 
   cursor: pointer;
@@ -317,8 +317,8 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
 #menu .toggle {
   float: right;
   cursor: pointer;
-  height: 16px;
-  padding: 4px;
+  height: 18px;
+  padding: 2px;
   margin-left: 10px;
 }
 
@@ -330,8 +330,14 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
 }
 
 #toggle-grid svg {
-  height: 16px;
-  width: 16px;
+  height: 18px;
+  width: 18px;
+}
+
+#menu svg#toggle-theme {
+  height: 22px;
+  width: 22px;
+  padding: 1px;
 }
 
 html:not(.grid-layout) #toggle-grid svg.grid-1x4 {
@@ -340,11 +346,6 @@ html:not(.grid-layout) #toggle-grid svg.grid-1x4 {
 
 html.grid-layout #toggle-grid svg.grid-2x2 {
   display: none;
-}
-
-svg#toggle-theme {
-  height: 16px;
-  width: 20px;
 }
 
 /* recommendation layout */
