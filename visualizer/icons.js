@@ -32,7 +32,6 @@ class Icon {
     const attributes = this.svgTemplateNode.attributes
     const iterableAttributes = typeof attributes[Symbol.iterator] === 'function' ? attributes : Array.from(attributes)
     for (const attr of iterableAttributes) {
-      console.log(attr.name)
       svgNode.setAttribute(attr.name, attr.value)
     }
     svgNode.appendChild(this.svgTemplateContent.cloneNode(true))
