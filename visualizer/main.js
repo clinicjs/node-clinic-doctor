@@ -6,6 +6,11 @@ const menu = require('./menu.js')
 const alert = require('./alert.js')
 const graph = require('./graph.js')
 const recommendation = require('./recommendation.js')
+const createAskWidget = require('@nearform/clinic-common/lib/ask-widget')
+
+createAskWidget({
+  buttonContainer: document.getElementById('banner-inner')
+})
 
 menu.on('toggle-theme', function () {
   document.documentElement.classList.toggle('light-theme')

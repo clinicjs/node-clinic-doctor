@@ -206,6 +206,14 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   width: auto;
 }
 
+#banner #company-logo {
+  padding-right: 1em;
+}
+
+#banner-inner {
+  display: flex;
+  align-items: center;
+}
 
 /* Menu layout */
 
