@@ -21,6 +21,11 @@ const RenderRecommendations = require('./recommendations/index.js')
 const minifyStream = require('minify-stream')
 const v8 = require('v8')
 const HEAP_MAX = v8.getHeapStatistics().heap_size_limit
+const { promisify } = require('util')
+const readFile = promisify(require('fs').readFile)
+const postcss = require('postcss')
+const postcssImport = require('postcss-import')
+const mainTemplate = require('@nearform/clinic-common/templates/main')
 
 class ClinicDoctor extends events.EventEmitter {
   constructor (settings = {}) {
@@ -223,33 +228,24 @@ class ClinicDoctor extends events.EventEmitter {
     }
 
     // create style-file stream
-    const styleFile = fs.createReadStream(stylePath)
+    const processor = postcss([
+      postcssImport()
+    ])
+    const styleFile = readFile(stylePath, 'utf8')
+      .then((css) => processor.process(css, {
+        from: stylePath,
+        map: this.debug ? { inline: true } : false
+      }))
+      .then((result) => {
+        return result.css
+      })
 
     // forward dataFile errors to the scriptFile explicitly
     // we cannot use destroy until nodejs/node#18172 and nodejs/node#18171 are fixed
     dataFile.on('error', (err) => scriptFile.emit('error', err))
 
-    // build output file
-    const outputFile = streamTemplate`
-      <!DOCTYPE html>
-      <html lang="en" class="grid-layout">
-      <meta charset="utf8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="shortcut icon" type="image/png" href="${clinicFaviconBase64}">
-      <title>Clinic Doctor</title>
-
-      <style>${styleFile}</style>
-
-      <div id="banner">
-        <a id="main-logo" href="https://github.com/nearform/node-clinic-doctor" title="Clinic Doctor on GitHub" target="_blank">
-          ${logoFile} <span>Doctor</span>
-        </a>
-        <div id="banner-inner">
-          <a id="company-logo" href="https://nearform.com" title="nearForm" target="_blank">
-            ${nearFormLogoFile}
-          </a>
-        </div>
-      </div>
+    // Create body contents with recommendations
+    const body = streamTemplate`
       <div id="front-matter">
         <div id="alert"></div>
         <div id="menu"></div>
@@ -257,12 +253,23 @@ class ClinicDoctor extends events.EventEmitter {
       <div id="graph"></div>
       <div id="recommendation-space"></div>
       <div id="recommendation"></div>
-
       ${recommendations}
-
-      <script>${scriptFile}</script>
-      </html>
     `
+
+    // build output file
+    const outputFile = mainTemplate({
+      favicon: clinicFaviconBase64,
+      title: 'Clinic Doctor',
+      styles: styleFile,
+      script: scriptFile,
+      headerLogoUrl: 'https://github.com/nearform/node-clinic-doctor',
+      headerLogoTitle: 'Clinic Doctor on GitHub',
+      headerLogo: logoFile,
+      headerText: 'Doctor',
+      nearFormLogo: nearFormLogoFile,
+      uploadId: outputFilename.split('/').pop().split('.html').shift(),
+      body
+    })
 
     pump(
       outputFile,

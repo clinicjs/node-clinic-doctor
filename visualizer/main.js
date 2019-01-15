@@ -6,11 +6,10 @@ const menu = require('./menu.js')
 const alert = require('./alert.js')
 const graph = require('./graph.js')
 const recommendation = require('./recommendation.js')
-const createAskWidget = require('@nearform/clinic-common/lib/ask-widget')
+const askBehaviours = require('@nearform/clinic-common/behaviours/ask')
 
-createAskWidget({
-  buttonContainer: document.getElementById('banner-inner')
-})
+// Bind ask behaviours
+askBehaviours()
 
 menu.on('toggle-theme', function () {
   document.documentElement.classList.toggle('light-theme')
