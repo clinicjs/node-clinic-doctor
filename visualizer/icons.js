@@ -43,6 +43,8 @@ class Icons {
     const icons = {
       'arrow-down': sanitizeIcon(require('@nearform/clinic-common/icons/chevron-down')),
       'arrow-up': sanitizeIcon(require('@nearform/clinic-common/icons/chevron-up')),
+      'arrow-right': sanitizeIcon(require('@nearform/clinic-common/icons/chevron-right')),
+      'arrow-left': sanitizeIcon(require('@nearform/clinic-common/icons/chevron-left')),
       'close': sanitizeIcon(require('@nearform/clinic-common/icons/close')),
       'grid-1x4': sanitizeIcon(require('@nearform/clinic-common/icons/list-view')),
       'grid-2x2': sanitizeIcon(require('@nearform/clinic-common/icons/grid-view')),
