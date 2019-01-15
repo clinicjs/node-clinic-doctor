@@ -20,10 +20,8 @@ const RenderRecommendations = require('./recommendations/index.js')
 const minifyStream = require('minify-stream')
 const v8 = require('v8')
 const HEAP_MAX = v8.getHeapStatistics().heap_size_limit
-const { promisify } = require('util')
-const readFile = promisify(require('fs').readFile)
-const postcss = require('postcss')
-const postcssImport = require('postcss-import')
+const buildJs = require('@nearform/clinic-common/scripts/build-js')
+const buildCss = require('@nearform/clinic-common/scripts/build-css')
 const mainTemplate = require('@nearform/clinic-common/templates/main')
 
 class ClinicDoctor extends events.EventEmitter {
