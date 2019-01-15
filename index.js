@@ -258,6 +258,7 @@ class ClinicDoctor extends events.EventEmitter {
 
     // build output file
     const outputFile = mainTemplate({
+      htmlClass: 'grid-layout',
       favicon: clinicFaviconBase64,
       title: 'Clinic Doctor',
       styles: styleFile,

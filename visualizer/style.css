@@ -7,8 +7,7 @@
 html {
   --main-bg-color: rgb(27, 30, 39);
 
-  --banner-logo-color: rgba(255, 255, 255, 0.94);
-  --banner-bg-color: rgb(41, 45, 57);
+  --nc-colour-header-background: rgb(41, 45, 57);
 
   --alert-border-color: rgb(68, 75, 96);
   --alert-bg-color: rgb(55, 61, 79);
@@ -51,7 +50,7 @@ html {
 html.light-theme {
   --main-bg-color: rgb(239, 239, 239);
 
-  --banner-bg-color: rgb(65, 69, 85);
+  --nc-colour-header-background: rgb(65, 69, 85);
 
   --alert-bg-color: rgb(227, 227, 227);
   --alert-border-color: rgb(189, 189, 189);
@@ -160,7 +159,7 @@ html {
   font-family: sans-serif;
 }
 
-html #banner, html #front-matter, html #graph, html #graph .hover text, html #recommendation .details {
+html .nc-header, html #front-matter, html #graph, html #graph .hover text, html #recommendation .details {
   /* light text on dark background doesn't look so good in the browser compared
      to graphical design tools. This is because graphical design tools uses
      antialiasing, where browsers uses subpixel rendering. To make it look
@@ -175,49 +174,6 @@ html #banner, html #front-matter, html #graph, html #graph .hover text, html #re
 html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recommendation .details {
   -webkit-font-smoothing: unset;
   -moz-osx-font-smoothing: unset;
-}
-
-/* Banner layout */
-#banner {
-  display: flex;
-  align-items: center;
-  height: 65px;
-  background: var(--banner-bg-color);
-  justify-content: space-between;
-  padding: 0px 18px;
-}
-
-#banner #main-logo {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-}
-#banner #main-logo span{
-  color: var(--banner-logo-color);
-  font-weight: bold;
-  font-size: 23px;
-}
-
-#banner #main-logo svg {
-  display: block;
-  height: 51px;
-  width: auto;
-  margin-right: 12px;
-}
-
-#banner #company-logo svg {
-  display: block;
-  height: 21px;
-  width: auto;
-}
-
-#banner #company-logo {
-  padding-right: 1em;
-}
-
-#banner-inner {
-  display: flex;
-  align-items: center;
 }
 
 /* Menu layout */
