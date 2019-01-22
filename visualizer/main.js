@@ -6,10 +6,19 @@ const menu = require('./menu.js')
 const alert = require('./alert.js')
 const graph = require('./graph.js')
 const recommendation = require('./recommendation.js')
+const spinner = require('@nearform/clinic-common/spinner')
 const askBehaviours = require('@nearform/clinic-common/behaviours/ask')
+const loadFonts = require('@nearform/clinic-common/behaviours/font-loader')
 
-// Bind ask behaviours
+const fontSpinner = spinner.attachTo()
+
+fontSpinner.show()
+
 askBehaviours()
+
+loadFonts({
+  // onLoad: fontSpinner.hide
+})
 
 menu.on('toggle-theme', function () {
   document.documentElement.classList.toggle('light-theme')
