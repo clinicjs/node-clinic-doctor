@@ -234,6 +234,7 @@ class ClinicDoctor extends events.EventEmitter {
 
     // Create body contents with recommendations
     const body = streamTemplate`
+      <div class="ncd-font-spinner-container"></div>
       <div id="front-matter">
         <div id="alert"></div>
         <div id="menu"></div>
@@ -257,6 +258,7 @@ class ClinicDoctor extends events.EventEmitter {
       headerText: 'Doctor',
       nearFormLogo: nearFormLogoFile,
       uploadId: outputFilename.split('/').pop().split('.html').shift(),
+      bodyClass: 'has-no-spinner is-loading-font',
       body
     })
 

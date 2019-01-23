@@ -10,103 +10,113 @@ const spinner = require('@nearform/clinic-common/spinner')
 const askBehaviours = require('@nearform/clinic-common/behaviours/ask')
 const loadFonts = require('@nearform/clinic-common/behaviours/font-loader')
 
-const fontSpinner = spinner.attachTo()
+// Create spinner
+const fontSpinner = spinner.attachTo(document.querySelector('.ncd-font-spinner-container'))
 
-fontSpinner.show()
+// Called on font load or timeout
+const drawUi = () => {
+  fontSpinner.hide()
+  document.body.classList.remove('is-loading-font')
 
-askBehaviours()
-
-loadFonts({
-  // onLoad: fontSpinner.hide
-})
-
-menu.on('toggle-theme', function () {
-  document.documentElement.classList.toggle('light-theme')
-})
-
-menu.on('toggle-grid', function () {
-  document.documentElement.classList.toggle('grid-layout')
-  graph.draw()
-})
-
-alert.on('open', () => alert.open())
-alert.on('close', () => alert.close())
-alert.on('click', function (graphId) {
-  document.getElementById(graphId).scrollIntoView({
-    block: 'start',
-    inline: 'nearest',
-    behavior: 'smooth'
+  menu.on('toggle-theme', function () {
+    document.documentElement.classList.toggle('light-theme')
   })
-})
-alert.on('hover-in', function (graphId) {
-  document.getElementById(graphId).classList.add('highlight')
-})
-alert.on('hover-out', function (graphId) {
-  document.getElementById(graphId).classList.remove('highlight')
-})
 
-graph.on('hover-show', () => graph.hoverShow())
-graph.on('hover-hide', () => graph.hoverHide())
-graph.on('hover-update', (unitX) => graph.hoverUpdate(unitX))
-
-graph.on('alert-click', function () {
-  document.documentElement.classList.add('recommendation-open')
-  recommendation.openPanel()
-  recommendation.draw()
-})
-
-recommendation.on('open-panel', function () {
-  document.documentElement.classList.add('recommendation-open')
-  recommendation.openPanel()
-  recommendation.draw()
-})
-recommendation.on('close-panel', function () {
-  document.documentElement.classList.remove('recommendation-open')
-  recommendation.closePanel()
-  recommendation.draw()
-})
-
-recommendation.on('menu-click', function (category) {
-  recommendation.setPage(category)
-  recommendation.draw()
-})
-
-recommendation.on('open-read-more', function () {
-  document.documentElement.classList.add('recommendation-read-more-open')
-  recommendation.openReadMore()
-  recommendation.draw()
-  recommendation.setPage(recommendation.selectedCategory)
-})
-recommendation.on('close-read-more', function () {
-  document.documentElement.classList.remove('recommendation-read-more-open')
-  recommendation.closeReadMore()
-  recommendation.draw()
-})
-
-recommendation.on('open-undetected', function () {
-  recommendation.openUndetected()
-  recommendation.draw()
-})
-recommendation.on('close-undetected', function () {
-  recommendation.closeUndetected()
-  recommendation.setPage(recommendation.defaultCategory)
-  recommendation.draw()
-})
-
-loaddata(function maybeDone (err, data) {
-  if (err) throw err
-
-  alert.setData(data)
-  alert.draw()
-
-  graph.setData(data)
-  graph.draw()
-
-  recommendation.setData(data)
-  recommendation.draw()
-
-  window.addEventListener('resize', function () {
-    alert.draw()
+  menu.on('toggle-grid', function () {
+    document.documentElement.classList.toggle('grid-layout')
     graph.draw()
   })
+
+  alert.on('open', () => alert.open())
+  alert.on('close', () => alert.close())
+  alert.on('click', function (graphId) {
+    document.getElementById(graphId).scrollIntoView({
+      block: 'start',
+      inline: 'nearest',
+      behavior: 'smooth'
+    })
+  })
+  alert.on('hover-in', function (graphId) {
+    document.getElementById(graphId).classList.add('highlight')
+  })
+  alert.on('hover-out', function (graphId) {
+    document.getElementById(graphId).classList.remove('highlight')
+  })
+
+  graph.on('hover-show', () => graph.hoverShow())
+  graph.on('hover-hide', () => graph.hoverHide())
+  graph.on('hover-update', (unitX) => graph.hoverUpdate(unitX))
+
+  graph.on('alert-click', function () {
+    document.documentElement.classList.add('recommendation-open')
+    recommendation.openPanel()
+    recommendation.draw()
+  })
+
+  recommendation.on('open-panel', function () {
+    document.documentElement.classList.add('recommendation-open')
+    recommendation.openPanel()
+    recommendation.draw()
+  })
+  recommendation.on('close-panel', function () {
+    document.documentElement.classList.remove('recommendation-open')
+    recommendation.closePanel()
+    recommendation.draw()
+  })
+
+  recommendation.on('menu-click', function (category) {
+    recommendation.setPage(category)
+    recommendation.draw()
+  })
+
+  recommendation.on('open-read-more', function () {
+    document.documentElement.classList.add('recommendation-read-more-open')
+    recommendation.openReadMore()
+    recommendation.draw()
+    recommendation.setPage(recommendation.selectedCategory)
+  })
+  recommendation.on('close-read-more', function () {
+    document.documentElement.classList.remove('recommendation-read-more-open')
+    recommendation.closeReadMore()
+    recommendation.draw()
+  })
+
+  recommendation.on('open-undetected', function () {
+    recommendation.openUndetected()
+    recommendation.draw()
+  })
+  recommendation.on('close-undetected', function () {
+    recommendation.closeUndetected()
+    recommendation.setPage(recommendation.defaultCategory)
+    recommendation.draw()
+  })
+
+  loaddata(function maybeDone (err, data) {
+    if (err) throw err
+
+    alert.setData(data)
+    alert.draw()
+
+    graph.setData(data)
+    graph.draw()
+
+    recommendation.setData(data)
+    recommendation.draw()
+
+    window.addEventListener('resize', function () {
+      alert.draw()
+      graph.draw()
+    })
+  })
+}
+
+// Show spinner
+fontSpinner.show()
+// Attach ask tray behaviours
+askBehaviours()
+
+// Orchestrate font loading
+loadFonts({
+  onLoad: drawUi,
+  onTimeout: drawUi
 })

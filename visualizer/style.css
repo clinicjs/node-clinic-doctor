@@ -1,4 +1,5 @@
 @import '@nearform/clinic-common/styles/styles.css';
+@import '@nearform/clinic-common/spinner/style.css';
 
 /* Define colors */
 html {
@@ -91,6 +92,28 @@ body {
   support. Currently only supported by Chrome and the next version of Firefox. */
 html.recommendation-open.recommendation-read-more-open {
   overflow-y: hidden;
+}
+
+/* Header */
+.is-loading-font .nc-header,
+.is-loading-font #front-matter,
+.is-loading-font #graph,
+.is-loading-font #recommendation-space,
+.is-loading-font #recommendation {
+  opacity: 0;
+}
+
+.ncd-font-spinner-container {
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+._loading_spinner_ {
+  color: var(--graph-text-color);
 }
 
 #front-matter {
