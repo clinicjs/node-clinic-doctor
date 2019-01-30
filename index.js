@@ -10,7 +10,6 @@ const stream = require('./lib/destroyable-stream')
 const { spawn } = require('child_process')
 const Analysis = require('./analysis/index.js')
 const Stringify = require('streaming-json-stringify')
-const browserify = require('browserify')
 const streamTemplate = require('stream-template')
 const joinTrace = require('node-trace-log-join')
 const getLoggingPaths = require('@nearform/clinic-common').getLoggingPaths('doctor')
@@ -21,6 +20,9 @@ const RenderRecommendations = require('./recommendations/index.js')
 const minifyStream = require('minify-stream')
 const v8 = require('v8')
 const HEAP_MAX = v8.getHeapStatistics().heap_size_limit
+const buildJs = require('@nearform/clinic-common/scripts/build-js')
+const buildCss = require('@nearform/clinic-common/scripts/build-css')
+const mainTemplate = require('@nearform/clinic-common/templates/main')
 
 class ClinicDoctor extends events.EventEmitter {
   constructor (settings = {}) {
@@ -205,49 +207,33 @@ class ClinicDoctor extends events.EventEmitter {
     const nearFormLogoFile = fs.createReadStream(nearFormLogoPath)
     const clinicFaviconBase64 = fs.createReadStream(clinicFaviconPath)
 
-    // create script-file stream
-    const b = browserify({
-      'basedir': __dirname,
-      // 'debug': true,
-      'noParse': [fakeDataPath]
+    // build JS
+    let scriptFile = buildJs({
+      basedir: __dirname,
+      debug: this.debug,
+      fakeDataPath,
+      scriptPath,
+      beforeBundle: b => b.require(dataFile, {
+        file: fakeDataPath
+      })
     })
-    b.require(dataFile, {
-      'file': fakeDataPath
-    })
-    b.add(scriptPath)
-    b.transform('brfs')
-    let scriptFile = b.bundle()
 
     if (!this.debug) {
       scriptFile = scriptFile.pipe(minifyStream({ sourceMap: false, mangle: false }))
     }
 
-    // create style-file stream
-    const styleFile = fs.createReadStream(stylePath)
+    // build CSS
+    const styleFile = buildCss({
+      stylePath,
+      debug: this.debug
+    })
 
     // forward dataFile errors to the scriptFile explicitly
     // we cannot use destroy until nodejs/node#18172 and nodejs/node#18171 are fixed
     dataFile.on('error', (err) => scriptFile.emit('error', err))
 
-    // build output file
-    const outputFile = streamTemplate`
-      <!DOCTYPE html>
-      <html lang="en" class="grid-layout">
-      <meta charset="utf8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="shortcut icon" type="image/png" href="${clinicFaviconBase64}">
-      <title>Clinic Doctor</title>
-
-      <style>${styleFile}</style>
-
-      <div id="banner">
-        <a id="main-logo" href="https://github.com/nearform/node-clinic-doctor" title="Clinic Doctor on GitHub" target="_blank">
-          ${logoFile} <span>Doctor</span>
-        </a>
-        <a id="company-logo" href="https://nearform.com" title="nearForm" target="_blank">
-          ${nearFormLogoFile}
-        </a>
-      </div>
+    // Create body contents with recommendations
+    const body = streamTemplate`
       <div id="front-matter">
         <div id="alert"></div>
         <div id="menu"></div>
@@ -255,12 +241,24 @@ class ClinicDoctor extends events.EventEmitter {
       <div id="graph"></div>
       <div id="recommendation-space"></div>
       <div id="recommendation"></div>
-
       ${recommendations}
-
-      <script>${scriptFile}</script>
-      </html>
     `
+
+    // build output file
+    const outputFile = mainTemplate({
+      htmlClass: 'grid-layout',
+      favicon: clinicFaviconBase64,
+      title: 'Clinic Doctor',
+      styles: styleFile,
+      script: scriptFile,
+      headerLogoUrl: 'https://github.com/nearform/node-clinic-doctor',
+      headerLogoTitle: 'Clinic Doctor on GitHub',
+      headerLogo: logoFile,
+      headerText: 'Doctor',
+      nearFormLogo: nearFormLogoFile,
+      uploadId: outputFilename.split('/').pop().split('.html').shift(),
+      body
+    })
 
     pump(
       outputFile,
