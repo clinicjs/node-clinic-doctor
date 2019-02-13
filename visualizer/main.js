@@ -6,6 +6,10 @@ const menu = require('./menu.js')
 const alert = require('./alert.js')
 const graph = require('./graph.js')
 const recommendation = require('./recommendation.js')
+const askBehaviours = require('@nearform/clinic-common/behaviours/ask')
+
+// Bind ask behaviours
+askBehaviours()
 
 menu.on('toggle-theme', function () {
   document.documentElement.classList.toggle('light-theme')
