@@ -17,6 +17,7 @@ const fontSpinner = spinner.attachTo(document.querySelector('.ncd-font-spinner-c
 const drawUi = () => {
   fontSpinner.hide()
   document.body.classList.remove('is-loading-font')
+  document.body.classList.add('is-font-loaded')
 
   menu.on('toggle-theme', function () {
     document.documentElement.classList.toggle('light-theme')
