@@ -6,16 +6,11 @@ const menu = require('./menu.js')
 const alert = require('./alert.js')
 const graph = require('./graph.js')
 const recommendation = require('./recommendation.js')
-const spinner = require('@nearform/clinic-common/spinner')
 const askBehaviours = require('@nearform/clinic-common/behaviours/ask')
 const loadFonts = require('@nearform/clinic-common/behaviours/font-loader')
 
-// Create spinner
-const fontSpinner = spinner.attachTo(document.querySelector('.ncd-font-spinner-container'))
-
 // Called on font load or timeout
 const drawUi = () => {
-  fontSpinner.hide()
   document.body.classList.remove('is-loading-font')
   document.body.classList.add('is-font-loaded')
 
@@ -111,13 +106,10 @@ const drawUi = () => {
   })
 }
 
-// Show spinner
-fontSpinner.show()
 // Attach ask tray behaviours
 askBehaviours()
 
 // Orchestrate font loading
-loadFonts({
-  onLoad: drawUi,
-  onTimeout: drawUi
-})
+loadFonts()
+
+drawUi()
