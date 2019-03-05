@@ -1,12 +1,12 @@
-# node-clinic-doctor
+# Clinic.js Doctor
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/nearform/node-clinic-doctor.svg)](https://greenkeeper.io/)
 [![npm version][npm-version]][npm-url] [![Stability Stable][stability-stable]][stability-docs] [![Azure Pipelines build status][azure-status]][azure-url]
 [![Downloads][npm-downloads]][npm-url] [![Code style][lint-standard]][lint-standard-url]
 
-Programmable interface to [clinic][clinic-url] doctor. Learn more about clinic: https://clinicjs.org/
+Programmable interface to [Clinic.js][clinic-url] Doctor. Learn more about Clinic.js: https://clinicjs.org/
 
-![banner](logo.png)
+![Screenshot](screenshot.png)
 
 ## Supported node versions
 
