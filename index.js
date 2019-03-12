@@ -258,7 +258,6 @@ class ClinicDoctor extends events.EventEmitter {
       headerText: 'Doctor',
       nearFormLogo: nearFormLogoFile,
       uploadId: outputFilename.split('/').pop().split('.html').shift(),
-      bodyClass: 'has-no-spinner is-loading-font',
       body
     })
 
