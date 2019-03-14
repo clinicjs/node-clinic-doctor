@@ -1,33 +1,33 @@
 ## Understanding the analysis
 
-An unknown issue occurs when Clinic's analysis algorithms are unable to categorize the sampling results but nevertheless an issue *of some kind* has been detected.
+An unknown issue occurs when Clinic.js' analysis algorithms are unable to categorize the sampling results but nevertheless an issue *of some kind* has been detected.
 
 This outcome can be attributed to one of two scenarios:
- 
+
 1. Ambient noise – for instance, other applications using the CPU or memory – during the sampling period has polluted the results.
 2. There is a genuine performance issue but `clinic doctor` doesn't recognize it.
 
-In the case of ambient noise, there may still be a specific, categorizable performance issue. 
+In the case of ambient noise, there may still be a specific, categorizable performance issue.
 
-We can make eliminate the possibility of ambient noise and make it easier for Clinic to definitively recognize the issue by:
+We can make eliminate the possibility of ambient noise and make it easier for Clinic.js to definitively recognize the issue by:
 
-- Closing down as many applications as possible, especially applications that are CPU- or Memory- intensive. 
+- Closing down as many applications as possible, especially applications that are CPU- or Memory- intensive.
 - Using the `--on-port` flag. This can reduce the chances of unknown issues because there is no time gap nor additional system activity between the server starting and the load test beginning.
 
-By way of example, instead of running `clinic -- node app.js` in one terminal and `autocannon localhost:3000` in another, it is preferable and recommended to trigger both in one command using the following command: 
+By way of example, instead of running `clinic -- node app.js` in one terminal and `autocannon localhost:3000` in another, it is preferable and recommended to trigger both in one command using the following command:
 
 ```sh
 clinic doctor --on-port="autocannon localhost:3000" -- node app.js
 ```
 
-An even simpler form of this is to use the `--autocannon` flag, 
+An even simpler form of this is to use the `--autocannon` flag,
 
 ```sh
 clinic doctor --autocannon / -- node app.js
 ```
 
-If after taking these steps an unknown categorization continues to occur then we can instead attempt to infer the nature of the performance issue using specialist diagnostic tooling, such 
-as `clinic flame`, `clinic bubble` or Node Inspector. 
+If after taking these steps an unknown categorization continues to occur then we can instead attempt to infer the nature of the performance issue using specialist diagnostic tooling, such
+as `clinic flame`, `clinic bubble` or Node Inspector.
 
 ## Next Steps
 
@@ -47,7 +47,7 @@ as `clinic flame`, `clinic bubble` or Node Inspector.
     - Click the `inspect` link for that target – this will connect Chrome Devtools to the Node processes remote debug interface
     - In Devtools, select the *Memory* tab
     - Select the *Take heap snapshot* radio box, and then click *Take snapshot*
-    - Put the process under load (in the same way that the process was load tested for Node Clinic)
+    - Put the process under load (in the same way that the process was load tested for Clinic.js)
     - Click *Profiles* in the left panel, then click *Take snapshot* again
     - Under the *HEAP SNAPSHOTS* left panel, select the second Snapshot (it will be called *Snapshot 2*)
     - Locate the dropdown box just above the "Constructor" column (most likely the dropdown box says *Summary*)
@@ -58,13 +58,13 @@ as `clinic flame`, `clinic bubble` or Node Inspector.
     - Use the *Retainers* panel to understand the chain of object references
 
 ## Reference
-- [Clinic Flame](https://clinicjs.org/flame)
+- [Clinic.js Flame](https://clinicjs.org/flame)
 - [Overview of blocking vs non-blocking](https://nodejs.org/en/docs/guides/blocking-vs-non-blocking/)
 - [Concurrency model and Event Loop
 ](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop)
 - [Don't Block the Event Loop (or the Worker Pool)](https://nodejs.org/en/docs/guides/dont-block-the-event-loop/)
 - Understanding Flamegraphs and how to use 0x: [Tuning Node.js app performance with autocannon and 0x](https://www.nearform.com/blog/tuning-node-js-app-performance-with-autocannon-and-0x/)
-- [Clinic Bubbleprof](https://clinicjs.org/bubbleprof)
+- [Clinic.js Bubbleprof](https://clinicjs.org/bubbleprof)
 - [Chrome Devtools Docs: Fix Memory Problems](https://developers.google.com/web/tools/chrome-devtools/memory-problems/)
 - [Chrome Devtools Docs: Memory Terminology](https://developers.google.com/web/tools/chrome-devtools/memory-problems/memory-101)
 - [Chrome Devtools Docs: How to record heap snapshots](https://developers.google.com/web/tools/chrome-devtools/memory-problems/heap-snapshots)
