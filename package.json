@@ -1,6 +1,6 @@
 {
   "name": "@nearform/doctor",
-  "description": "Programmable interface to clinic doctor",
+  "description": "Programmable interface to Clinic.js Doctor",
   "repository": "nearform/node-clinic-doctor",
   "version": "4.0.1",
   "scripts": {

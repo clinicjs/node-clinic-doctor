@@ -15,7 +15,7 @@ it's waiting for external I/O because there's nothing else to do until the I/O c
 To solve I/O issues we have to track down the asynchronous call(s) which are taking an
 abnormally long time to complete.
 
-I/O root cause analysis is mostly a reasoning exercise. [Clinic Bubbleprof](https://clinicjs.org/bubbleprof) is a tool developed specifically to inform and ease this kind of reasoning.
+I/O root cause analysis is mostly a reasoning exercise. [Clinic.js Bubbleprof](https://clinicjs.org/bubbleprof) is a tool developed specifically to inform and ease this kind of reasoning.
 
 ## Next Steps
 - Use `clinic bubbleprof` to create a diagram of the application's asynchronous flow.
