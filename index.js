@@ -25,8 +25,8 @@ const buildCss = require('@nearform/clinic-common/scripts/build-css')
 const mainTemplate = require('@nearform/clinic-common/templates/main')
 
 const makeInjectPath = (fileName) => {
-  return path.join(__dirname, 'injects', fileName);
-};
+  return path.join(__dirname, 'injects', fileName)
+}
 
 class ClinicDoctor extends events.EventEmitter {
   constructor (settings = {}) {
@@ -50,7 +50,7 @@ class ClinicDoctor extends events.EventEmitter {
     // run program, but inject the sampler
     const logArgs = [
       '-r', makeInjectPath('no-cluster.js'),
-      '-r', makeInjectPath('logger.js'),
+      '-r', makeInjectPath('sampler.js'),
       '--trace-events-enabled', '--trace-event-categories', 'v8'
     ]
 
