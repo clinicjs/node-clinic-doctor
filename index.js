@@ -24,8 +24,6 @@ const buildJs = require('@nearform/clinic-common/scripts/build-js')
 const buildCss = require('@nearform/clinic-common/scripts/build-css')
 const mainTemplate = require('@nearform/clinic-common/templates/main')
 
-const makeInjectPath = fileName => path.join(__dirname, 'injects', fileName)
-
 class ClinicDoctor extends events.EventEmitter {
   constructor (settings = {}) {
     super()
@@ -47,15 +45,15 @@ class ClinicDoctor extends events.EventEmitter {
   collect (args, callback) {
     // run program, but inject the sampler
     const logArgs = [
-      '-r', makeInjectPath('no-cluster.js'),
-      '-r', makeInjectPath('sampler.js'),
+      '-r', 'no-cluster.js',
+      '-r', 'sampler.js',
       '--trace-events-enabled', '--trace-event-categories', 'v8'
     ]
 
     const stdio = ['inherit', 'inherit', 'inherit']
 
     if (this.detectPort) {
-      logArgs.push('-r', makeInjectPath('detect-port.js'))
+      logArgs.push('-r', 'detect-port.js')
       stdio.push('pipe')
     }
 
@@ -66,6 +64,7 @@ class ClinicDoctor extends events.EventEmitter {
     }
 
     const customEnv = {
+      // use NODE_PATH to work around issues with spaces in inject path
       NODE_PATH,
       NODE_OPTIONS: logArgs.join(' ') + (
         process.env.NODE_OPTIONS ? ' ' + process.env.NODE_OPTIONS : ''
