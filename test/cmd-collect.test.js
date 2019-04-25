@@ -88,14 +88,10 @@ test('cmd - collect - data files have content', function (t) {
       if (err) return t.ifError(err)
 
       // expect time seperation to be 10ms, allow 20ms error
-      const allow = 20
       const sampleTimes = output.processStat.map((stat) => stat.timestamp)
       const timeSeperation = summary(diff(sampleTimes)).mean()
       t.ok(sampleTimes.length > 0, 'data is outputted')
-      const abs = Math.abs(timeSeperation - 10)
-      const difference = abs - allow
-      process._rawDebug(abs, difference)
-      t.ok(difference < 0)
+      t.ok(Math.abs(timeSeperation - 10) < 20)
 
       t.end()
     })
