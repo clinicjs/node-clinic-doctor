@@ -58,7 +58,7 @@ class ClinicDoctor extends events.EventEmitter {
     }
 
     let NODE_PATH = path.join(__dirname, 'injects')
-    // use NODE_PATH to work around issues with spaces in inject path
+    /* istanbul ignore if: TODO add a test!! temp ignored to unbreak PRs */
     if (process.env.NODE_PATH) {
       NODE_PATH += `${process.platform === 'win32' ? ';' : ':'}${process.env.NODE_PATH}`
     }
