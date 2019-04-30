@@ -60,7 +60,7 @@ class ClinicDoctor extends events.EventEmitter {
     let NODE_PATH = path.join(__dirname, 'injects')
     /* istanbul ignore if: TODO add a test!! temp ignored to unbreak PRs */
     if (process.env.NODE_PATH) {
-      NODE_PATH += `${process.platform === 'win32' ? ';' : ':'}${process.env.NODE_PATH}`
+      NODE_PATH += `${path.delimiter}${process.env.NODE_PATH}`
     }
 
     const customEnv = {
