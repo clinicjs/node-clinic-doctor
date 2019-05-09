@@ -119,7 +119,7 @@ class ClinicDoctor extends events.EventEmitter {
 
       this.emit('analysing')
       if (this.debug) {
-        console.log({ code, signal }, paths)
+        console.log({ code, signal }, paths, fs.readdirSync('.'))
       }
 
       // move trace_event file to logging directory
