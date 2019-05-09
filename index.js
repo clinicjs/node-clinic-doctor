@@ -116,7 +116,6 @@ class ClinicDoctor extends events.EventEmitter {
           )
         }
       }
-      console.log({ code, signal })
 
       this.emit('analysing')
 
@@ -124,6 +123,7 @@ class ClinicDoctor extends events.EventEmitter {
       joinTrace(
         'node_trace.*.log', paths['/traceevent'],
         function (err) {
+          console.log({ code, signal })
           /* istanbul ignore if: the node_trace file should always exists */
           if (err) return callback(err, paths['/'])
           callback(null, paths['/'])
