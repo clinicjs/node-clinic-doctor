@@ -20,6 +20,7 @@ test('collect command stops when cluster is used', function (t) {
   ], { stdio: 'pipe' })
 
   proc.stderr.pipe(endpoint((err, buf) => {
+    if (err) t.comment(buf + '')
     t.ifError(err)
     t.ok(buf.toString('utf8').includes('does not support clustering'), 'should crash once cluster is used')
   }))
