@@ -9,7 +9,7 @@ const ClinicDoctor = require('../index.js')
 test('collect command stops when cluster is used', function (t) {
   t.plan(3)
 
-  const doctor = new ClinicDoctor({})
+  const doctor = new ClinicDoctor({ debug: true })
   doctor.collect([process.execPath, '-e', 'require("cluster")'], (err, result) => {
     t.ifError(err, 'should not crash when cluster is required but not used')
     rimraf.sync(result)
