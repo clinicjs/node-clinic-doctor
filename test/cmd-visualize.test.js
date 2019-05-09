@@ -7,7 +7,7 @@ const async = require('async')
 const rimraf = require('rimraf')
 const ClinicDoctor = require('../index.js')
 
-test('cmd - test visualization - data exists', function (t) {
+test('cmd - test visualization - data exists', { skip: true }, function (t) {
   const tool = new ClinicDoctor({ dest: './foo' })
 
   function cleanup (err, dirname) {
@@ -103,7 +103,7 @@ test('cmd - test visualization - memory exhausted', function (t) {
   )
 })
 
-test('cmd - test visualization - missing data', function (t) {
+test('cmd - test visualization - missing data', { skip: true }, function (t) {
   const tool = new ClinicDoctor({ debug: true })
 
   tool.visualize(
