@@ -88,7 +88,7 @@ function sort (a, b) {
 function stringify () {
   var sep = false
 
-  const s = through({writableObjectMode: true, readableObjectMode: false}, write, flush)
+  const s = through({ writableObjectMode: true, readableObjectMode: false }, write, flush)
   s.push('{"traceEvents":[')
   return s
 
