@@ -86,6 +86,7 @@ test('cmd - test visualization - memory exhausted', function (t) {
   tool.collect(
     [process.execPath, '-e', 'setTimeout(() => {}, 200)'],
     function (err, dirname) {
+      console.log('collect:', err, dirname)
       if (err) return cleanup(err, dirname)
 
       tool.visualize(dirname, dirname + '.html', function (err) {
