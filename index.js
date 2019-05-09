@@ -272,7 +272,8 @@ class ClinicDoctor extends events.EventEmitter {
     pump(
       outputFile,
       fs.createWriteStream(outputFilename),
-      function (err) {
+      (err) => {
+        if (this.debug) console.log({ outputFilename })
         clearInterval(checkHeapInterval)
         callback(err)
       }

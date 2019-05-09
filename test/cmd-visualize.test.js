@@ -59,7 +59,7 @@ test('cmd - test visualization - memory exhausted', function (t) {
     }
   }
 
-  const tool = new ClinicDoctor()
+  const tool = new ClinicDoctor({ debug: true })
 
   function cleanup (err, dirname) {
     process.memoryUsage = tmp
