@@ -116,6 +116,7 @@ class ClinicDoctor extends events.EventEmitter {
           )
         }
       }
+      console.log({ code, signal })
 
       this.emit('analysing')
 
