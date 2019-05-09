@@ -44,6 +44,8 @@ test('cmd - test visualization - data exists', function (t) {
 })
 
 test('cmd - test visualization - memory exhausted', function (t) {
+  t.plan(6)
+
   const tmp = process.memoryUsage
   const HEAP_MAX = v8.getHeapStatistics().heap_size_limit
 
@@ -74,10 +76,10 @@ test('cmd - test visualization - memory exhausted', function (t) {
     })
   }
 
-  tool.on('warning', function (warning) {
+  tool.once('warning', function (warning) {
     t.equal(warning, 'Truncating input data due to memory constrains')
   })
-  tool.on('truncate', function (undef) {
+  tool.once('truncate', function (undef) {
     t.equal(undef, undefined)
   })
 

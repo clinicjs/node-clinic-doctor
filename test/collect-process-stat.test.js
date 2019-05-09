@@ -47,11 +47,11 @@ function sleep (time) {
 }
 
 test('Collect - process stat - delay usage', function (t) {
-  const stat = new ProcessStat(10)
+  const stat = new ProcessStat(100)
   stat.refresh()
-  sleep(20)
+  sleep(200)
   const sample = stat.sample()
-  t.ok(sample.delay > 8 && sample.delay < 15)
+  t.ok(sample.delay > 80 && sample.delay < 150)
 
   t.end()
 })
