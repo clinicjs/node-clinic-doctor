@@ -7,12 +7,20 @@ const rimraf = require('rimraf')
 const ClinicDoctor = require('../index.js')
 
 test('collect command stops when cluster is used', function (t) {
-  t.plan(3)
+  t.plan(5)
+
+  function cleanup (dirname) {
+    t.match(dirname, /^[0-9]+\.clinic-doctor$/)
+
+    rimraf(dirname, function (err) {
+      t.ifError(err)
+    })
+  }
 
   const doctor = new ClinicDoctor()
   doctor.collect([process.execPath, '-e', 'require("cluster")'], (err, result) => {
     t.ifError(err, 'should not crash when cluster is required but not used')
-    rimraf.sync(result)
+    cleanup(result)
   })
 
   const proc = spawn(process.execPath, [
@@ -20,7 +28,6 @@ test('collect command stops when cluster is used', function (t) {
   ], { stdio: 'pipe' })
 
   proc.stderr.pipe(endpoint((err, buf) => {
-    console.log('out:', buf + '')
     t.ifError(err)
     t.ok(buf.toString('utf8').includes('does not support clustering'), 'should crash once cluster is used')
   }))

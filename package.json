@@ -6,10 +6,10 @@
   "scripts": {
     "visualize-watch": "node debug/visualize-watch.js",
     "visualize-all": "node debug/visualize-all.js",
-    "test": "standard | snazzy && tap --timeout=50 --no-cov test/*.test.js",
+    "test": "standard | snazzy && cross-env TAP_NO_ESM=1 tap --timeout=50 --no-cov test/*.test.js",
     "ci-lint": "standard | snazzy",
-    "ci-test": "tap --timeout=50 test/*.test.js",
-    "ci-cov": "tap --timeout=60 --statements=98 test/*.test.js",
+    "ci-test": "cross-env TAP_NO_ESM=1 tap --timeout=50 test/*.test.js",
+    "ci-cov": "cross-env TAP_NO_ESM=1 tap --timeout=60 --statements=98 test/*.test.js",
     "lint": "standard --fix | snazzy"
   },
   "dependencies": {
@@ -43,6 +43,7 @@
   "devDependencies": {
     "cheerio": "^1.0.0-rc.2",
     "chokidar": "^2.0.4",
+    "cross-env": "^5.2.0",
     "lodash.debounce": "^4.0.8",
     "rimraf": "^2.6.2",
     "snazzy": "^8.0.0",
