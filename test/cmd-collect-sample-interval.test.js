@@ -36,6 +36,11 @@ test('cmd - collect - custom sample interval', function (t) {
 
       // expect time seperation to be 100ms, allow 100ms error
       const sampleTimes = output.processStat.map((stat) => stat.timestamp)
+      const debugStuff = []
+      for (let i = 1; i < sampleTimes.length; i++) {
+        debugStuff.push(sampleTimes[i] - sampleTimes[i - 1])
+      }
+      t.comment(`sampling time diffs are ${debugStuff.join(',')}`)
       const timeSeparation = summary(diff(sampleTimes)).mean()
       t.ok(sampleTimes.length > 0, 'data is outputted')
       const drift = Math.abs(timeSeparation - 100)
