@@ -102,8 +102,8 @@ test('cmd - collect - data files have content', function (t) {
 
 test('cmd - collect - startup delay is not included', function (t) {
   const cmd = new CollectAndRead({}, '-e', `
-    for (const t = Date.now() + 100; t > Date.now();) {}
-    setTimeout(() => {}, 100)
+    for (const t = Date.now() + 200; t > Date.now();) {}
+    setTimeout(() => {}, 200)
   `)
   cmd.on('error', t.ifError.bind(t))
   cmd.on('ready', function () {
@@ -119,7 +119,7 @@ test('cmd - collect - startup delay is not included', function (t) {
       if (err) return t.ifError(err)
 
       const delay = output.processStat.map((stat) => stat.delay)
-      t.ok(delay[0] < 50)
+      t.ok(delay[0] < 100, `delay ${delay[0]} is less than startup time`)
       t.end()
     })
   })
