@@ -12,12 +12,17 @@ library(ggplot2)
 library(scales)
 library(plyr)
 
+print.table = function (df) {
+  #kable(head(df))
+  print(df)
+}
+
 print.data.table = function (dat) {
   dat = data.frame(dat)
   dat$name = NULL
   dat$time = NULL
   dat$has.issue = NULL
-  kable(head(dat)) 
+  print.table(dat)
 }
 ```
 
@@ -32,19 +37,19 @@ However, if by pressureing the server sufficiently hard with a lot of requests, 
 Matteo provided some sample files. To work on these in R, they should be converted to `.csv` files.
 
 ```
-cat small-load.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > small-load.csv
+node node-clinic-doctor/debug/sample-to-csv.js small-load.clinic-doctor > small-load.csv
 
-cat heavy-load-1.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > heavy-load-1.csv
-cat heavy-load-2.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > heavy-load-2.csv
+node node-clinic-doctor/debug/sample-to-csv.js heavy-load-1.clinic-doctor > heavy-load-1.csv
+node node-clinic-doctor/debug/sample-to-csv.js heavy-load-2.clinic-doctor > heavy-load-2.csv
 
-cat mystery-1.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > mystery-1.csv
-cat mystery-2.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > mystery-2.csv
-cat mystery-3.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > mystery-3.csv
-cat mystery-4.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > mystery-4.csv
+node node-clinic-doctor/debug/sample-to-csv.js mystery-1.clinic-doctor > mystery-1.csv
+node node-clinic-doctor/debug/sample-to-csv.js mystery-2.clinic-doctor > mystery-2.csv
+node node-clinic-doctor/debug/sample-to-csv.js mystery-3.clinic-doctor > mystery-3.csv
+node node-clinic-doctor/debug/sample-to-csv.js mystery-4.clinic-doctor > mystery-4.csv
 
-cat issue-1.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > issue-1.csv
-cat issue-2.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > issue-2.csv
-cat issue-3.clinic-doctor-sample | node node-clinic-doctor/debug/sample-to-csv.js > issue-3.csv
+node node-clinic-doctor/debug/sample-to-csv.js flat-1.clinic-doctor > flat-1.csv
+node node-clinic-doctor/debug/sample-to-csv.js flat-2.clinic-doctor > flat-2.csv
+node node-clinic-doctor/debug/sample-to-csv.js flat-3.clinic-doctor > flat-3.csv
 ```
 
 Unfortunately we currently don't have any real data, and the not `slow-io` servers have unrealistic constant handle trends. This makes it difficult to test our model against data without a handle issue. To work around this, the `small-load` data set is used as an example without an I/O issue. Even though it was specifically created to have an I/O issue, the I/O issue primarly shows up in the CPU data.
@@ -67,9 +72,10 @@ dat.mystery.1 = load.data('mystery-1.csv', F)
 dat.mystery.2 = load.data('mystery-2.csv', F)
 dat.mystery.3 = load.data('mystery-3.csv', T)
 dat.mystery.4 = load.data('mystery-4.csv', T)
-dat.issue.1 = load.data('issue-1.csv', F)
-dat.issue.2 = load.data('issue-2.csv', F)
-dat.issue.3 = load.data('issue-3.csv', F)
+dat.flat.1 = load.data('flat-1.csv', F)
+dat.flat.2 = load.data('flat-2.csv', F)
+dat.flat.3 = load.data('flat-3.csv', F)
+dat.increasing.1 = load.data('increasing-1.csv', T)
 ```
 
 The data is structured as:
@@ -94,9 +100,10 @@ dat.mystery.1 = subset.interval(dat.mystery.1)
 dat.mystery.2 = subset.interval(dat.mystery.2)
 dat.mystery.3 = subset.interval(dat.mystery.3)
 dat.mystery.4 = subset.interval(dat.mystery.4)
-dat.issue.1 = subset.interval(dat.issue.1)
-dat.issue.2 = subset.interval(dat.issue.2)
-dat.issue.3 = subset.interval(dat.issue.3)
+dat.flat.1 = subset.interval(dat.flat.1)
+dat.flat.2 = subset.interval(dat.flat.2)
+dat.flat.3 = subset.interval(dat.flat.3)
+dat.increasing.1 = subset.interval(dat.increasing.1)
 ```
 
 Reprinting the data, shows the `interval = 0` have now been stripped.
@@ -109,7 +116,8 @@ Finally, the data is combined for convience:
 ```{r}
 dat.main = rbind(dat.small.load, dat.heavy.load.1, dat.heavy.load.2)
 dat.mystery = rbind(dat.mystery.1, dat.mystery.2, dat.mystery.3, dat.mystery.4)
-dat.issue = rbind(dat.issue.1, dat.issue.2, dat.issue.3)
+dat.flat = rbind(dat.flat.1, dat.flat.2, dat.flat.3)
+dat.increasing = rbind(dat.increasing.1)
 ```
 
 ## The model hypothesis
@@ -150,7 +158,7 @@ analysis.cv = function (dat) {
   )))
 }
 
-kable(ddply(dat.main, "name", analysis.cv))
+print.table(ddply(dat.main, "name", analysis.cv))
 ```
 
 The results quickly show that this is not the case. `heavy-load-1` does actally have a smaller coefficient of variation than `small-load`. 
@@ -211,13 +219,13 @@ analysis.heavy.tail = function (dat, risk = 0.05) {
   )))
 }
 
-kable(ddply(dat.main, "name", analysis.heavy.tail))
+print.table(ddply(dat.main, "name", analysis.heavy.tail))
 ```
 
 At this point life is good. Matteo then later showed data where this strategy doesn't work.
 
 ```{r}
-kable(ddply(dat.mystery, "name", analysis.heavy.tail))
+print.table(ddply(dat.mystery, "name", analysis.heavy.tail))
 ```
 
 As seen from this result, the issue detection (`detect.issue`) doesn't match the target (`has.issue`). Looking at the data, nothing appears to be unusual.
@@ -228,6 +236,13 @@ p = p + geom_line()
 p = p + facet_grid(name ~ ., scales='free_y')
 p = p + scale_x_datetime(labels = date_format("%S sec"))
 p = p + scale_y_continuous(limits = c(0, NA))
+print(p)
+```
+
+```{r, fig.height=4}
+p = ggplot(dat.mystery, aes(handles, colour=has.issue))
+p = p + geom_density(fill = 1, alpha = 0.1)
+p = p + facet_wrap(~ name, scales='free')
 print(p)
 ```
 
@@ -343,13 +358,13 @@ analysis.sign.change.v1 = function (dat, risk = 0.001) {
   )))
 }
 
-kable(ddply(rbind(dat.main, dat.mystery), "name", analysis.sign.change.v1))
+print.table(ddply(rbind(dat.main, dat.mystery), "name", analysis.sign.change.v1))
 ```
 
 Once again life is good. Matteo then later showed data where this doesn't work.
 
 ```{r}
-kable(ddply(dat.issue, "name", analysis.sign.change.v1))
+print.table(ddply(dat.flat, "name", analysis.sign.change.v1))
 ```
 
 ### Improved sign change test
@@ -357,7 +372,7 @@ kable(ddply(dat.issue, "name", analysis.sign.change.v1))
 Luckily, the fix here is simple. The issue exists when the number of handles is almost constant: 
 
 ```{r}
-p = ggplot(dat.issue, aes(x = time, y = handles, colour=has.issue))
+p = ggplot(dat.flat, aes(x = time, y = handles, colour=has.issue))
 p = p + geom_line()
 p = p + facet_grid(name ~ ., scales='free_y')
 p = p + scale_x_datetime(labels = date_format("%S sec"))
@@ -387,13 +402,260 @@ analysis.sign.change.v1 = function (dat, risk = 0.001) {
     name = name,
     p.value = p.value,
     detect.issue = p.value < risk,
+    has.issue = has.issue,
+    sign.changes = sign.changes,
+    num.observations = num.none.constant.obs
+  )))
+}
+
+print.table(ddply(rbind(dat.main, dat.mystery, dat.flat), "name", analysis.sign.change.v1))
+```
+
+## Increasing handles - A year after
+
+After a year, a new type of issues, where the application is actually leaking handles, have shown up. Although intuitively the detection mecanism should be the same.
+
+```{r}
+p = ggplot(rbind(dat.flat, dat.increasing), aes(x = time, y = handles, colour=has.issue))
+p = p + geom_line()
+p = p + facet_grid(name ~ ., scales='free_y')
+p = p + scale_x_datetime(labels = date_format("%S sec"))
+p = p + scale_y_continuous(limits = c(0, NA))
+print(p)
+```
+
+```{r}
+print.table(ddply(rbind(dat.increasing), "name", analysis.sign.change.v1))
+```
+
+
+```{r}
+dat.flat.delta = ddply(dat.flat, "name", diff.data)
+dat.flat.delta$handles.delta.sign = sign(dat.flat.delta$handles.delta)
+
+dat.increasing.delta = ddply(dat.increasing, "name", diff.data)
+dat.increasing.delta$handles.delta.sign = sign(dat.increasing.delta$handles.delta)
+
+p = ggplot(rbind(dat.flat.delta, dat.increasing.delta), aes(x = time, y = handles.delta.sign, colour=has.issue))
+p = p + geom_point(alpha=0.1)
+p = p + facet_grid(name ~ .)
+p = p + scale_x_datetime(labels = date_format("%S sec"))
+print(p)
+```
+
+The issue we see here, is that the `dat.increasing` dataset is not much different from the `dat.issue` issue dataset. The main difference is the initial increase, which signals that this is not a warmup but leaky file descriptors. While the `dat.issue` don't have an initial increase, but is more like a step function.
+
+Finally, one should observe that the `dat.increasing` do have a heavy bias for an increasing sign (not surpring), thus it should be detected as an issue. This highlights a flaw in the `v1` appraoch, where observations that remains the same are not counted in `num.observations` but the sign change from $\pm 1$ to $0$ is counted. Which is contradicting, and problematic when there are losts of straight horisontal parts. A better appraoch is to simply filter out observations where nothing changed. This also makes sense from the sampling perspective, as no-change is also an artifict of the sampling procedure.
+
+```{r}
+sign.change.test.v2 = function (dat, change.p = 0.5) {
+  vec = dat$handles
+  
+  differential.data = diff(vec)
+  differential.data = differential.data[differential.data != 0]
+  differential.data.sign = sign(differential.data)
+  
+  # count changes
+  sign.changes = sum(diff(differential.data.sign) != 0)
+
+  # lower tail p.value
+  p.value = pbinom(sign.changes, length(differential.data.sign), change.p)
+  
+  return(data.frame(
+    name = dat[1, 'name'],
+    has.issue = dat[1, 'has.issue'],
+    sign.changes=sign.changes,
+    observations=length(differential.data.sign),
+    p.value=p.value
+  ))
+}
+
+analysis.sign.change.v2 = function (dat, risk = 1e-8) {
+  name = dat[1, 'name']
+  has.issue = dat[1, 'has.issue']
+  
+  p.value = sign.change.test.v2(dat)$p.value
+  
+  return(data.frame(list(
+    name = name,
+    p.value = p.value,
+    detect.issue = p.value < risk,
     has.issue = has.issue
   )))
 }
 
-kable(ddply(rbind(dat.main, dat.mystery, dat.issue), "name", analysis.sign.change.v1))
+print.table(ddply(rbind(dat.main, dat.mystery, dat.flat, dat.increasing), "name", analysis.sign.change.v2))
 ```
+
+The disadvantage here is that the `dat.issue` and `small-load`, have quite low `p.values`. The threshold thus have to be set, such that only very certain. While `dat.issue` might be acceptable as those are mostly theoretical edge-cases, the `small-load` is not great.
+
+### skewness test
+
+The random-walk assumtion in the sign-test only holds for non-increasing time series. Consider a linear curve, with added noise. It `diff` will then be a function of the random noise, without the linear signal.
+
+```{r}
+dat.increasing.synthetic = data.frame(
+  timestamp=as.POSIXct(seq(0, 181), origin="1970-01-01", tz="GMT"),
+  interval=1,
+  delay=NA,
+  cpu=NA,
+  memory.rss=NA,
+  memory.heapTotal=NA,
+  memory.heapUsed=NA,
+  memory.external=NA,
+  handles=(c(seq(100, 1000, 10), rep(1000, 91)) + rnorm(182, 0, 10)),
+  name='increasing-synthetic',
+  has.issue=T,
+  time=as.POSIXct(seq(0, 181), origin="1970-01-01", tz="GMT")
+)
+dat.increasing.synthetic.delta = ddply(dat.increasing.synthetic, "name", diff.data)
+
+p = ggplot(dat.increasing.synthetic, aes(x = time, y = handles, colour=has.issue))
+p = p + geom_line()
+p = p + facet_grid(name ~ ., scales='free_y')
+p = p + scale_x_datetime(labels = date_format("%S sec"))
+p = p + scale_y_continuous(limits = c(0, NA))
+print(p)
+p = ggplot(dat.increasing.synthetic.delta, aes(x = time, y = handles.delta, colour=has.issue))
+p = p + geom_line()
+p = p + facet_grid(name ~ ., scales='free_y')
+p = p + scale_x_datetime(labels = date_format("%S sec"))
+print(p)
+```
+
+The result is that we can't detect an issue on such data.
+
+```{r}
+print.table(ddply(dat.increasing.synthetic, "name", analysis.sign.change.v2))
+```
+
+A likely solution is to apply a skewness test on the raw signal.
+
+### Mira-skewness test
+
+Chapter 5 in Advances in Directional and Linear Statistics, discusses various of non-parametic skewness tests. While they have their own suggestion, we will use the Mira-skewness test, which is a [Distribution-free test for symmetry based on Bonferroni's Measure](https://www.researchgate.net/publication/2783935_Distribution-free_test_for_symmetry_based_on_Bonferroni's_Measure).
+
+Chapter 5 in Advances in Directional and Linear Statistics, shows that this is the best in terms of "type 1 error", while their own is best in terms of statistical power. In this case, "type 1 error" is the biggest concern. Thus we will use the Mira-skewness test.
+
+```{r}
+mira.skewness.test = function (dat) {
+  vec = dat$handles
+  
+  sigma.2 = var(vec)
+  mu = mean(vec)
+  M = median(vec, type=3)
+  n = length(vec)
+  c = 0.5
+
+  # compute skewness measurement
+  bonferroni = 2 * (mu - M)
+  
+  # compute variance
+  #S.median = mu - 2 * mean(vec * (vec <= M))
+  S.median = mean(abs(vec - M))
+  
+  D.n.c = (n**(1/5)/(2*c)) * (
+    quantile(vec, 1/2 + 0.5*n**(-1/5)      , type=3, names=F) -
+    quantile(vec, 1/2 - 0.5*n**(-1/5) + 1/n, type=3, names=F)
+  )
+  S.c.2 = 4 * sigma.2 + D.n.c**2 - 4 * D.n.c * S.median
+
+  # Compute Z statistics
+  Z = sqrt(n) * bonferroni / sqrt(S.c.2)
+  
+  return(data.frame(
+    name=dat[1, 'name'],
+    has.issue = dat[1, 'has.issue'],
+    p.value = 2 * (1 - pnorm(abs(Z))),
+    bonferroni=bonferroni,
+    Z=Z,
+    S.c=sqrt(S.c.2)
+  ))
+}
+print.table(ddply(rbind(dat.main, dat.mystery, dat.flat, dat.increasing, dat.increasing.synthetic), "name", mira.skewness.test))
+```
+
+Out of curiosity, here is the "Chapter 5 in Advances in Directional and Linear Statistics" approach.
+
+```{r}
+epanechnikov = function (vec) {
+  return(ifelse(
+    abs(vec) < sqrt(5),
+    (3 / (4 * sqrt(5))) * (1 - (1/5) * vec**2),
+    0
+  ))
+}
+
+ghosh.skewness.test = function (dat) {
+  vec = dat$handles
+  vec.sorted = sort(vec)
+  
+  sigma.2 = var(vec)
+  mu = mean(vec)
+  M = median(vec, type=3)
+  n = length(vec)
+  
+  # compute skewness measurement
+  if (n %% 2 == 0) {
+    indices.lower = seq(1, n/2)
+    indices.upper = seq(n, n/2 + 1)
+  } else {
+    indices.lower = seq(1, (n+1)/2)
+    indices.upper = seq(n, (n+1)/2)
+  }
+  upper.bounds = (vec.sorted[indices.lower] + vec.sorted[indices.upper]) / 2
+  tau = (1/n) * sum(sapply(upper.bounds, function (upper.bound) mean(vec <= upper.bound)))
+  
+  # compute variance
+  h.n = 1.06 * min(sqrt(sigma.2), IQR(vec, type=3) / 1.34) * n**(-1/5)
+  f.mu = (1 / h.n) * mean(epanechnikov((mu - vec) / h.n))
+  omega.2 = (1/16) - (1/4) * f.mu * mean(abs(vec - mu)) + (1/4)*(f.mu**2)*sigma.2
+  
+  # Compute Z statistics
+  Z = sqrt(n) * ((tau - 0.25)/sqrt(omega.2))
+
+  return(data.frame(list(
+    name=dat[1, 'name'],
+    has.issue = dat[1, 'has.issue'],
+    p.value = 2 * (1 - pnorm(abs(Z))),
+    tau=tau,
+    Z=Z,
+    omega=sqrt(omega.2)
+  )))
+}
+
+print.table(ddply(rbind(dat.main, dat.mystery, dat.flat, dat.increasing, dat.increasing.synthetic), "name", ghosh.skewness.test))
+```
+
+For detecting an issue, either the sign-test or the mira-skewness-test should have a very low p-value.
+
+```{r}
+analysis.sign.change.v3 = function (dat, sign.risk = 1e-8, mira.risk = 1e-10) {
+  name = dat[1, 'name']
+  has.issue = dat[1, 'has.issue']
+
+  sign.p.value = sign.change.test.v2(dat)$p.value
+  mira.p.value = mira.skewness.test(dat)$p.value
+  ghosh.p.value = ghosh.skewness.test(dat)$p.value
+  
+  return(data.frame(list(
+    name = name,
+    sign.p.value = sign.p.value,
+    mira.p.value = mira.p.value,
+    ghosh.p.value = ghosh.p.value,
+    #detect.issue.v2 = sign.p.value < sign.risk,
+    detect.issue.v3 = sign.p.value < sign.risk || sign.p.value < mira.risk,
+    has.issue = has.issue
+  )))
+}
+
+print.table(ddply(rbind(dat.main, dat.mystery, dat.flat, dat.increasing, dat.increasing.synthetic), "name", analysis.sign.change.v3))
+```
+
+The important result for mira, is that it should be high sensitive to increasing data, while not be sensitive to the almost flat data. This is a challenge as the `dat.flat` data also have an initial increase and from that perspective looks a lot like the `dat.increase` data. However, for this purpose `mira.skewness.test` appears to do a good job. 
 
 ## Conclusion
 
-The final model appears to be quite good. The p-values are extreamly good, so there is a lot of room for errors. Without any real data it stil remains unclear whether or not the model hypothesis and the sign change test holds in practice. But for now, this is the best we can do.
+Using a non-paramatic `sign.test` on the difference data together with a non-paramatic skewness test on the raw data, seams to provide a reasonable classifier. The statistical tests do however demand high-certainty thresholds. This sugests that the tests do not measure the desired statistics, but rather an approximation or side-effect.
+
+A more advanced model could be one based on baysian inference, which might provide more accuate classification properbilities.
