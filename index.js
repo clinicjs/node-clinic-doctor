@@ -60,7 +60,7 @@ class ClinicDoctor extends events.EventEmitter {
     let NODE_PATH = path.join(__dirname, 'injects')
     // use NODE_PATH to work around issues with spaces in inject path
     if (process.env.NODE_PATH) {
-      NODE_PATH += `${process.platform === 'win32' ? ';' : ':'}${process.env.NODE_PATH}`
+      NODE_PATH += `${path.delimiter}${process.env.NODE_PATH}`
     }
 
     const customEnv = {
