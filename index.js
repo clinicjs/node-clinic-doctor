@@ -82,7 +82,11 @@ class ClinicDoctor extends events.EventEmitter {
     })
 
     if (this.detectPort) {
-      proc.stdio[3].once('data', data => this.emit('port', Number(data), proc, () => proc.stdio[3].destroy()))
+      proc.stdio[3].once('data', (data) => {
+        this.emit('port', Number(data), proc, () => {
+          proc.stdio[3].destroy()
+        })
+      })
     }
 
     // get logging directory structure
