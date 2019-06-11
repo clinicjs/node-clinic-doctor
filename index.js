@@ -60,7 +60,7 @@ class ClinicDoctor extends events.EventEmitter {
     let NODE_PATH = path.join(__dirname, 'injects')
     // use NODE_PATH to work around issues with spaces in inject path
     if (process.env.NODE_PATH) {
-      NODE_PATH += `${process.platform === 'win32' ? ';' : ':'}${process.env.NODE_PATH}`
+      NODE_PATH += `${path.delimiter}${process.env.NODE_PATH}`
     }
 
     const customEnv = {
@@ -82,7 +82,11 @@ class ClinicDoctor extends events.EventEmitter {
     })
 
     if (this.detectPort) {
-      proc.stdio[3].once('data', data => this.emit('port', Number(data), proc, () => proc.stdio[3].destroy()))
+      proc.stdio[3].once('data', (data) => {
+        this.emit('port', Number(data), proc, () => {
+          proc.stdio[3].destroy()
+        })
+      })
     }
 
     // get logging directory structure
