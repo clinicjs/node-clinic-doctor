@@ -1,6 +1,9 @@
 # clinic-doctor specific
 *.clinic-doctor
 *.clinic-doctor.html
+*.clinic-doctor-processstat
+*.clinic-doctor-systeminfo
+*.clinic-doctor-traceevent
 
 # Logs
 logs
