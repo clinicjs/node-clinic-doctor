@@ -11,7 +11,7 @@ class TraceEventToCSV extends stream.Transform {
 
     this._interval = interval
 
-    this.push('interval, startTimestamp, endTimestamp, type\n')
+    this.push('interval, startTimestamp, endTimestamp, duration, type\n')
   }
 
   _transform (data, encoding, done) {
@@ -20,6 +20,7 @@ class TraceEventToCSV extends stream.Transform {
 
     this.push(`${inInterval ? 1 : 0}, ` +
               `${data.args.startTimestamp}, ${data.args.endTimestamp}, ` +
+              `${data.args.endTimestamp - data.args.startTimestamp}, ` +
               `${data.name}\n`)
     done(null)
   }

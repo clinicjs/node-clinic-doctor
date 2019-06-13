@@ -1,0 +1,269 @@
+---
+title: "Developing the GC model"
+output: html_document
+---
+
+```{r, echo=FALSE}
+rm(list=ls())
+cat('\f')
+
+library(knitr)
+library(ggplot2)
+library(scales)
+library(plyr)
+library(dplyr)
+library(tidyr)
+library(jsonlite)
+
+print.table = function (df) {
+  #kable(head(df))
+  print(df)
+}
+
+print.data.table = function (dat) {
+  dat = data.frame(dat)
+  dat$name = NULL
+  dat$time = NULL
+  dat$has.issue = NULL
+  print.table(dat)
+}
+```
+
+## Introduction to harmful GC
+
+The different parts of garbage collection and their effect on the user application can be described with the following table.
+
+| Task                 | parallel | Incremental | Cocurrent | heap space | Appropiate time | Description          | Trace event                     |
+|---------------------:|:--------:|:-----------:|:---------:|:-----------|:----------------|:---------------------|:--------------------------------|
+| Scavenge             | √ (v10+) |             |           | new        | ~ 5 ms          | Cleanup nursery      | V8.GCScavenger                  |
+| Marking              | √ (v10+) | √ (v4+)     | √ (v8+)   | old        |                 | Finding live objects | V8.GCIncrementalMarking         |
+| Finalize Marking     |          |             |           | old        |                 |                      | V8.GCIncrementalMarkingFinalize |
+| Sweeping             |          |             | √ (v4+)   | old        |                 | Reclaming dead space |                                 |
+| Compaction + Update  | √ (v6+)  |             |           | old        | ~ 10 ms         | Defragmenting memory | V8.GCFinalizeMC                 |
+| Array buffer freeing |          |             | √ (v10+)  | unknown    |                 |                      |                                 |
+
+The only parts that directly affects the users application are those that are not cocurrent, as they will need to stop the user application in order to be executed. A direct measurement of how much the users application is affected by garbage collection, is therefore to measure just the time spent on "Scavenge", "Finalize Marking" and "Compaction + Update".
+
+Note that these events are symptoms of two different issues.
+
+1) "Scavenge" happens when the user application generates short-term garbage. This will happen in a well-behaving application. The problem is if the user application generates so much short-term garbage that the garbage collector have to run "Scavenge" constantly.
+2) "Finalize Marking" happens on old space and is generally not a concern, as it should always be a small task. "Compaction + Update" happens when a page becomes too defragmented and a V8 heuristic decides to clean it up. Fragmentation is not always an issue, as V8 maintains a freelist which allows it to fill up fragmented space appropiately. However sometimes it becomes to fragmented (defined by V8 heuristic), and then "Compaction + Update" happens. Although this is a parallel it does block the application and can take quite a while.
+
+## Getting the data
+
+```{r}
+load.data = function (name, has.issue) {
+  gc=read.csv(paste0('data/', name, '/', name, '.clinic-doctor-traceevent.csv'), strip.white=T)
+  gc$type=factor(gc$type, levels=c(
+    "V8.GCFinalizeMC", "V8.GCIncrementalMarking", "V8.GCIncrementalMarkingFinalize",
+    "V8.GCIncrementalMarkingLayoutChange", "V8.GCIncrementalMarkingStart", "V8.GCScavenger"
+  ))
+  
+  stat=read.csv(paste0('data/', name, '/', name, '.clinic-doctor-processstat.csv'), strip.white=T)
+
+  system = read_json(paste0('data/', name, '/', name, '.clinic-doctor-systeminfo'))
+  
+  return(list(
+    name=name,
+    gc=gc,
+    stat=stat,
+    has.issue=factor(has.issue, c(T, F, NA), exclude=c()),
+    node.version=as.numeric(unlist(strsplit(system$nodeVersions$node, ".", fixed=T)))
+  ))
+}
+
+subset.interval = function (dat) {
+  dat.gc = dat$gc[dat$gc$interval == 1, ]
+  dat.stat = dat$stat[dat$stat$interval == 1, ]
+
+  offset = dat.stat[1, 'timestamp']
+
+  dat.stat$time = as.POSIXct((dat.stat$timestamp - offset) / 1000, origin="1970-01-01", tz="GMT")
+  dat.gc$startTime = as.POSIXct((dat.gc$startTimestamp - offset) / 1000, origin="1970-01-01", tz="GMT")
+  dat.gc$endTime = as.POSIXct((dat.gc$endTimestamp - offset + 50) / 1000, origin="1970-01-01", tz="GMT")
+
+  return(list(
+    name=dat$name,
+    gc=dat.gc,
+    stat=dat.stat,
+    has.issue=dat$has.issue,
+    node.version=dat$node.version
+ ))
+}
+
+dat.slow.gc.2core.1000ms = subset.interval(load.data('slow-gc-2core-1000ms', T))
+dat.slow.gc.8core.1000ms = subset.interval(load.data('slow-gc-8core-1000ms', T))
+dat.slow.gc.8core.250ms = subset.interval(load.data('slow-gc-8core-250ms', T))
+dat.slow.gc.8core.125ms = subset.interval(load.data('slow-gc-8core-125ms', T))
+dat.slow.gc = list(dat.slow.gc.2core.1000ms, dat.slow.gc.8core.1000ms, dat.slow.gc.8core.250ms, dat.slow.gc.8core.125ms)
+
+dat.mystery.1 = subset.interval(load.data('mystery-1', NA))
+dat.mystery.2 = subset.interval(load.data('mystery-2', NA))
+dat.mystery.3 = subset.interval(load.data('mystery-3', NA))
+dat.mystery.4 = subset.interval(load.data('mystery-4', NA))
+dat.mystery.5 = subset.interval(load.data('mystery-5', NA))
+dat.mystery.6 = subset.interval(load.data('mystery-6', NA))
+dat.mystery.7 = subset.interval(load.data('mystery-7', NA))
+dat.mystery.8 = subset.interval(load.data('mystery-8', NA))
+dat.mystery.9 = subset.interval(load.data('mystery-9', NA))
+dat.mystery = list(dat.mystery.1, dat.mystery.2, dat.mystery.3, dat.mystery.4, dat.mystery.5, dat.mystery.6, dat.mystery.7, dat.mystery.8, dat.mystery.9)
+```
+
+```{r}
+collect.stat = function (dat.all) {
+  return(do.call("rbind", lapply(dat.all, function (dat) {
+    gc = data.frame(dat$stat)
+    gc$name = dat$name
+    gc$has.issue = dat$has.issue
+    gc$node.major = dat$node.version[1]
+    return (gc)
+  })))
+}
+
+collect.gc = function (dat.all) {
+  return(do.call("rbind", lapply(dat.all, function (dat) {
+    gc = data.frame(dat$gc)
+    gc$name = dat$name
+    gc$has.issue = dat$has.issue
+    gc$node.major = dat$node.version[1]
+    return (gc)
+  })))
+}
+```
+
+## Data
+
+```{r}
+plot.data = function (dat) {
+  dat.metrics = collect.stat(list(dat)) %>%
+    gather(
+      key="memory.type", value="memory",
+      memory.rss, memory.heapTotal, memory.heapUsed, memory.external
+    ) %>%
+    gather(
+      key="metric.name", value="metric.value",
+      "delay", "cpu", "memory"
+    ) %>%
+    mutate(
+      memory.type = ifelse(metric.name == "memory", memory.type, NA)
+    )
+  
+  dat.gc = dat$gc %>%
+    filter(
+      type != "V8.GCIncrementalMarking"
+    )
+  
+  p = ggplot(dat.metrics)
+  p = p + geom_rect(data = dat.gc, aes(xmin=startTime, xmax=endTime, ymin=-Inf, ymax=Inf, fill=type), alpha=0.3)
+  p = p + geom_line(aes(x = time, y = ifelse(metric.name == "delay", metric.value, NA)), na.rm=T)
+  p = p + geom_line(aes(x = time, y = ifelse(metric.name == "cpu", metric.value, NA)), na.rm=T)
+  p = p + geom_line(aes(x = time, y = ifelse(metric.name == "memory", metric.value, NA), colour=memory.type), na.rm=T)
+  p = p + facet_grid(metric.name ~ name + has.issue, scales='free_y')
+  p = p + scale_x_datetime(labels = date_format("%S sec"))
+  p = p + scale_y_continuous(name=element_blank(), limits = c(0, NA))
+  p = p + scale_fill_discrete(drop=FALSE)
+  print(p) 
+}
+```
+
+```{r, fig.width=14}
+plot.data(dat.slow.gc.2core.1000ms)
+plot.data(dat.slow.gc.8core.1000ms)
+plot.data(dat.slow.gc.8core.250ms)
+plot.data(dat.slow.gc.8core.125ms)
+```
+
+```{r, fig.width=14}
+plot.data(dat.mystery.1)
+plot.data(dat.mystery.2)
+plot.data(dat.mystery.3)
+plot.data(dat.mystery.4)
+plot.data(dat.mystery.5)
+plot.data(dat.mystery.6)
+plot.data(dat.mystery.7)
+plot.data(dat.mystery.8)
+plot.data(dat.mystery.9)
+```
+
+## Exploritory analysis
+
+Let's inspect the emperical distributions of GC events that blocks the main process.
+
+```{r, fig.width=14}
+dat.plot = collect.gc(c(dat.slow.gc, dat.mystery)) %>%
+   filter(type %in% c("V8.GCFinalizeMC", "V8.GCScavenger"))
+
+p = ggplot(dat.plot)
+p = p + geom_density(aes(x = duration, fill = type, colour = type), alpha = 0.6)
+p = p + facet_wrap(. ~ node.major + has.issue + name)
+print(p)
+```
+
+From the distributions it should no particular pattern emerges, this should make it quite clear that a summarizing statistics
+are unlikely to provide good classification. This makes sense, as for example, a short but very frequent GCScavenge events
+are problematic but not that distinguishable from short infrequent GCScavenge events, although the density will differ.
+
+Another problematic effect, is that the GC heuristics needs time to warmup. During the cold start, the scavenger or
+Finalize-MC will thus run too often. Because the allocated memory is too small, but there are also gc related optimizations
+such as pre-tenuring that will allocate objects directly in old-space, thus avoiding frequent scavenge issues.
+
+To normalize frequency and duration, we will consider a moving 1 second window on the data instead.
+
+```{r, fig.width=14}
+dat.window = collect.gc(c(dat.slow.gc, dat.mystery)) %>%
+  mutate(time.index = as.integer(floor(as.numeric(startTime) + as.numeric(endTime)) / 2)) %>%
+  group_by(name, type, time.index) %>%
+    summarize(
+      window.duration = sum(duration),
+      has.issue = last(has.issue)
+    )
+
+p = ggplot(dat.window %>% filter(type %in% c("V8.GCFinalizeMC", "V8.GCIncrementalMarking", "V8.GCScavenger")))
+p = p + geom_density(aes(y=..density.., x = window.duration, fill = type, colour = type), alpha = 0.6)
+p = p + facet_wrap(. ~ has.issue + name)
+print(p)
+```
+
+Using 1 second windows appars to normalize the data quite well. Although it is possible an complete analysis should consider the individual gc-events as well. For example if a single gc-event blocks for 50ms, then that might be a problem. Although the parallelization in later v8 versions makes this pretty rare.
+
+```{r}
+dat.summary = dat.window %>%
+  filter(type %in% c("V8.GCFinalizeMC", "V8.GCIncrementalMarking", "V8.GCIncrementalMarkingFinalize", "V8.GCScavenger")) %>%
+  group_by(name, type) %>%
+    summarize(
+      mean.duration = mean(window.duration),
+      median.duration = median(window.duration),
+      max.duration = max(window.duration),
+    )
+print.table(dat.summary)
+```
+
+## Issue classification
+
+```{r}
+analysis.v1 = function (dat.all) {
+  collect.gc(dat.all) %>%
+    filter(type %in% c("V8.GCFinalizeMC", "V8.GCIncrementalMarkingFinalize", "V8.GCScavenger") | (node.major < 8 & type == "V8.GCIncrementalMarking")) %>%
+    mutate(time.index = as.integer(floor(as.numeric(startTime) + as.numeric(endTime)) / 2)) %>%
+    group_by(name, time.index) %>%
+    summarize(
+      node.major = last(node.major),
+      duration.max = max(duration),
+      duration.1s = sum(duration),
+      has.issue = last(has.issue)
+    ) %>%
+    group_by(name) %>%
+    summarize(
+      node.major = last(node.major),
+      duration.max = max(duration.max),
+      duration.1s.mean = mean(duration.1s),
+      duration.1s.median = median(duration.1s),
+      duration.1s.max = max(duration.1s),
+      detect.issue = duration.1s.max >= 100,
+      has.issue = last(has.issue)
+    )
+}
+
+print.table(analysis.v1(c(dat.slow.gc, dat.mystery)))
+```
+
