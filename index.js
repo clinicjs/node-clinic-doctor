@@ -93,11 +93,12 @@ class ClinicDoctor extends events.EventEmitter {
     const options = { identifier: proc.pid, path: this.path }
     const paths = getLoggingPaths(options)
     // relay SIGINT to process
+    /* istanbul ignore next: SIGINT is only emitted at Ctrl+C on windows */
     process.once('SIGINT', function () {
       // we cannot kill(SIGINT) on windows but it seems
       // to relay the ctrl-c signal per default, so only do this
       // if not windows
-      /* istanbul ignore next */
+      /* istanbul ignore next: platform specific */
       if (os.platform() !== 'win32') proc.kill('SIGINT')
     })
 
