@@ -2,46 +2,88 @@
 
 const summary = require('summary')
 
-const MB = 1024 * 1024
-
 function analyseMemory (systemInfo, processStatSubset, traceEventSubset) {
-  const heapTotal = processStatSubset.map((d) => d.memory.heapTotal)
-  const heapUsed = processStatSubset.map((d) => d.memory.heapUsed)
+  // Create a set of all GC events that blocks the eventloop
+  const blockingEventsNewSpace = new Set(['V8.GCScavenger'])
+  const blockingEventsOldSpace = new Set([
+    'V8.GCFinalizeMC', 'V8.GCIncrementalMarkingFinalize'
+  ])
+  // In node.js 8 and higher, V8.GCIncrementalMarking runs cocurrently
+  if (systemInfo.nodeVersion.major < 8) {
+    blockingEventsOldSpace.add('V8.GCIncrementalMarking')
+  }
 
-  // Extract delay from blocking Mark & Sweep & Compact events
-  const mscDelay = traceEventSubset
-    .filter((d) => d.name === 'V8.GCMarkSweepCompact')
-    .map((d) => d.args.endTimestamp - d.args.startTimestamp)
+  // Create an data structure with all blocking gc events
+  // * compute a time-window-index, this is used to aggregate many small gc-events.
+  //   each window is 1 second long. Note that rooling time windows are not used,
+  //   as it is likely unnecessary and computationally costly.
+  // * pre-compute the duration
+  const gcevents = traceEventSubset
+    .filter((d) => blockingEventsNewSpace.has(d.name) || blockingEventsOldSpace.has(d.name))
+    .map((d) => ({
+      name: d.name,
+      timeWindow: Math.round((0.5 / 1000) * (d.args.endTimestamp + d.args.startTimestamp)),
+      duration: d.args.endTimestamp - d.args.startTimestamp
+    }))
 
-  // The max "old space" size is 1400 MB, if the memory usage is close to
-  // that it can cause an "stop-the-world-gc" issue.
-  const heapTotalStat = summary(heapTotal)
-  const oldSpaceTooLargeIssue = heapTotalStat.max() > 1000 * MB
+  // Setup a 2d array structure, to hold data for each time window
+  const timeWindows = gcevents.map((d) => d.timeWindow)
+  const timeWindowMax = Math.max(...timeWindows)
+  const timeWindowMin = Math.min(...timeWindows)
+  const timeWindowData = []
+  for (let i = 0; i <= (timeWindowMax - timeWindowMin); i++) {
+    timeWindowData.push([])
+  }
+  // Move gcevents to timeWindowData
+  for (const gcevent of gcevents) {
+    timeWindowData[gcevent.timeWindow - timeWindowMin].push(gcevent)
+  }
 
-  const heapUsedStat = summary(heapUsed)
-
-  // If MSC caused a big delay
-  const mscDelayStat = summary(mscDelay)
-
-  // We check if the mean is greater than 100ms.
-  // We use the mean because we want to take into account both
-  // big and small GC events.
-  // mean() could be NaN, and in that case, this check will be false.
-  const mscDelayIssue = mscDelayStat.mean() > 100
+  // Compute the max blocked time
+  // The maxBlockedTimeOver1SecNewSpace and maxBlockedTimeOver1SecOldSpace are
+  // just for indicating in the graph coloring what the time was mostly spent on
+  const maxBlockedTimeOver1Sec = maxBlockedTime(timeWindowData)
+  const maxBlockedTimeOver1SecNewSpace = maxBlockedTime(
+    timeWindowData.map(
+      (data) => data.filter((d) => blockingEventsNewSpace.has(d.name))
+    )
+  )
+  const maxBlockedTimeOver1SecOldSpace = maxBlockedTime(
+    timeWindowData.map(
+      (data) => data.filter((d) => blockingEventsOldSpace.has(d.name))
+    )
+  )
 
   return {
-    // We are currently not using the external memory processStatSubset
+    // We are currently not checking anything related to the external memory
     'external': false,
     // If the user has a lot of code or a huge stack, the RSS could be huge.
     // This does not necessary indicate an issue, thus RSS is never used
-    // as a measurement feature.
+    // as a measurement.
     'rss': false,
-    // We should never see huge increases in used heap
-    'heapTotal': oldSpaceTooLargeIssue,
-    // If Mark & Sweep & Compact caused a delay issue, and we are using
-    // more than 128MB of heap, then we have a problem.
-    'heapUsed': heapUsedStat.max() > 128 * MB && mscDelayIssue
+    // Detect an issue if more than 100ms per 1sec, was spent doing
+    // blocking garbage collection.
+    // Mark the issue in heapTotal, if time was primarily spent cleaning
+    // up the old space.
+    // Mark the issue in heapUsed: if time was primarily spent cleaning
+    // up the new space.
+    'heapTotal': (
+      (maxBlockedTimeOver1Sec >= 100) &&
+      (maxBlockedTimeOver1SecOldSpace >= maxBlockedTimeOver1SecNewSpace)
+    ),
+    'heapUsed': (
+      (maxBlockedTimeOver1Sec >= 100) &&
+      (maxBlockedTimeOver1SecOldSpace < maxBlockedTimeOver1SecNewSpace)
+    )
   }
 }
 
 module.exports = analyseMemory
+
+function maxBlockedTime (timeWindowData) {
+  return summary(
+    timeWindowData.map((data) => summary(
+      data.map((d) => d.duration)
+    ).sum())
+  ).max()
+}

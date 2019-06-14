@@ -3,17 +3,13 @@
 const xorshift = require('xorshift')
 const MB = Math.pow(1024, 2)
 
-function generateProcessStat (data, noiseLevel, timeSpaceing) {
+function generateProcessStat (data, noiseLevel, timeStretching) {
   const rng = new xorshift.constructor([
     294915, 70470, 145110, 287911 // from random.org :)
   ])
 
-  if (noiseLevel === undefined) {
-    noiseLevel = 0
-  }
-  if (timeSpaceing === undefined) {
-    timeSpaceing = 10
-  }
+  noiseLevel = noiseLevel || 0
+  timeStretching = timeStretching || 1
 
   function noise () {
     return rng.random() * noiseLevel
@@ -47,7 +43,7 @@ function generateProcessStat (data, noiseLevel, timeSpaceing) {
   const output = []
   for (let i = 0; i < maxLength; i++) {
     output.push({
-      timestamp: i * timeSpaceing,
+      timestamp: i * 10 * timeStretching,
       delay: !flat.delay ? 0 : flat.delay[i] + noise(),
       cpu: !flat.cpu ? 0 : (flat.cpu[i] + noise()) * 0.01,
       memory: {
