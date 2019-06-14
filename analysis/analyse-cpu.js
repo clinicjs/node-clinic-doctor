@@ -15,7 +15,7 @@ tf.ENV.set('IS_NODE', false)
 const SEPARATION_THRESHOLD = 1
 const HHM_SEED = 0xa74b9cbd4047b4bbe79f365a9f247886ac0a8a9c23ef8c5c45d98badb8
 
-async function analyseCPU (processStatSubset, traceEventSubset) {
+async function analyseCPU (systemInfo, processStatSubset, traceEventSubset) {
   const cpu = processStatSubset.map((d) => d.cpu)
   const summaryAll = summary(cpu)
 

@@ -1,9 +1,12 @@
 'use strict'
 
+const semver = require('semver')
 const stream = require('../lib/destroyable-stream')
 
 class SystemInfo {
   constructor (systemInfo) {
+    this.nodeVersion = semver.parse(systemInfo.nodeVersions.node)
+
     this.clock = systemInfo.clock
 
     const hrtime = this.clock.hrtime

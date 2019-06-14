@@ -31,7 +31,9 @@ test('Format - trace event - combine', function (t) {
     clock: {
       hrtime: [0, 400000],
       unixtime: timeOffset
-    }
+    },
+    nodeVersions: process.versions,
+    toolVersion: require('../package').version
   }))
   const decoder = new TraceEventDecoder(systemInfoReader)
 

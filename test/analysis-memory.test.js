@@ -17,7 +17,7 @@ test('analyse memory - delay correlation', function (t) {
     'NONE', 'SCA', 'NONE', 'MSC', 'MSC', 'MSC', 'NONE', 'SCA', 'NONE'
   ])
 
-  t.strictDeepEquals(analyseMemory(goodMemoryStat, goodMemoryGc), {
+  t.strictDeepEquals(analyseMemory({}, goodMemoryStat, goodMemoryGc), {
     external: false,
     heapTotal: false,
     heapUsed: false,
@@ -38,7 +38,7 @@ test('analyse memory - delay correlation', function (t) {
     'MSC', 'MSC', 'MSC',
     'NONE', 'SCA', 'NONE'
   ])
-  t.strictDeepEquals(analyseMemory(badMemoryStat, badMemoryGc), {
+  t.strictDeepEquals(analyseMemory({}, badMemoryStat, badMemoryGc), {
     external: false,
     heapTotal: false,
     heapUsed: true,
@@ -55,7 +55,7 @@ test('analyse memory - old space too large', function (t) {
         heapTotal: [30, 100, 200, 300, 300, 300, 300, 300, 300, 300, 300, 300]
       }
     }, noise)
-    t.strictDeepEquals(analyseMemory(goodMemory, []), {
+    t.strictDeepEquals(analyseMemory({}, goodMemory, []), {
       external: false,
       heapTotal: false,
       heapUsed: false,
@@ -67,7 +67,7 @@ test('analyse memory - old space too large', function (t) {
         heapTotal: [30, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100]
       }
     }, noise)
-    t.strictDeepEquals(analyseMemory(badMemory, []), {
+    t.strictDeepEquals(analyseMemory({}, badMemory, []), {
       external: false,
       heapTotal: true,
       heapUsed: false,

@@ -10,12 +10,12 @@ test('analyse cpu - one mode', async function (t) {
     const goodCPU = generateProcessStat({
       cpu: [100, 100, 120, 100, 110, 100, 100, 110, 90, 110]
     }, noise)
-    t.strictEqual(await analyseCPU(goodCPU, []), false)
+    t.strictEqual(await analyseCPU({}, goodCPU, []), false)
 
     const badCPU = generateProcessStat({
       cpu: [50, 40, 10, 10, 80, 50, 40, 1, 10, 30, 10]
     }, noise)
-    t.strictEqual(await analyseCPU(badCPU, []), true)
+    t.strictEqual(await analyseCPU({}, badCPU, []), true)
   }
 
   t.end()
@@ -26,12 +26,12 @@ test('analyse cpu - two mode', async function (t) {
     const goodCPU = generateProcessStat({
       cpu: [200, 200, 100, 90, 190, 200, 80, 110, 190, 200]
     }, noise)
-    t.strictEqual(await analyseCPU(goodCPU, []), false)
+    t.strictEqual(await analyseCPU({}, goodCPU, []), false)
 
     const badCPU = generateProcessStat({
       cpu: [200, 200, 15, 10, 190, 200, 5, 15, 190, 200]
     }, noise)
-    t.strictEqual(await analyseCPU(badCPU, []), true)
+    t.strictEqual(await analyseCPU({}, badCPU, []), true)
   }
 
   t.end()
@@ -47,7 +47,7 @@ test('analyse cpu - two mode - opposite clusters', async function (t) {
         200, 200, 100, 90, 190, 200, 80, 110, 190, 200
       ]
     }, noise)
-    t.strictEqual(await analyseCPU(goodCPU, []), false)
+    t.strictEqual(await analyseCPU({}, goodCPU, []), false)
 
     const badCPU = generateProcessStat({
       cpu: [
@@ -55,7 +55,7 @@ test('analyse cpu - two mode - opposite clusters', async function (t) {
         200, 200, 15, 10, 190, 200, 5, 15, 190, 200
       ]
     }, noise)
-    t.strictEqual(await analyseCPU(badCPU, []), true)
+    t.strictEqual(await analyseCPU({}, badCPU, []), true)
   }
 
   t.end()
@@ -66,12 +66,12 @@ test('analyse cpu - little data', async function (t) {
     const goodCPU = generateProcessStat({
       cpu: [100, 100, 120]
     }, noise)
-    t.strictEqual(await analyseCPU(goodCPU, []), false)
+    t.strictEqual(await analyseCPU({}, goodCPU, []), false)
 
     const badCPU = generateProcessStat({
       cpu: [50, 40, 10]
     }, noise)
-    t.strictEqual(await analyseCPU(badCPU, []), true)
+    t.strictEqual(await analyseCPU({}, badCPU, []), true)
   }
 
   t.end()
@@ -82,12 +82,12 @@ test('analyse cpu - small cluster data', async function (t) {
     const goodCPU = generateProcessStat({
       cpu: [200, 200, 100, 90, 190, 200, 80, 110, 190, 0]
     }, noise)
-    t.strictEqual(await analyseCPU(goodCPU, []), false)
+    t.strictEqual(await analyseCPU({}, goodCPU, []), false)
 
     const badCPU = generateProcessStat({
       cpu: [50, 40, 10, 10, 200, 50, 40, 10, 10, 30, 10]
     }, noise)
-    t.strictEqual(await analyseCPU(badCPU, []), true)
+    t.strictEqual(await analyseCPU({}, badCPU, []), true)
   }
 
   t.end()
