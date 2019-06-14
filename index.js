@@ -162,7 +162,7 @@ class ClinicDoctor extends events.EventEmitter {
 
     // create analysis
     const analysisStringified = pumpify(
-      new Analysis(traceEventReader, processStatReader),
+      new Analysis(systemInfoReader, traceEventReader, processStatReader),
       new stream.Transform({
         readableObjectMode: false,
         writableObjectMode: true,

@@ -4,7 +4,7 @@ const summary = require('summary')
 
 const MB = 1024 * 1024
 
-function analyseMemory (processStatSubset, traceEventSubset) {
+function analyseMemory (systemInfo, processStatSubset, traceEventSubset) {
   const heapTotal = processStatSubset.map((d) => d.memory.heapTotal)
   const heapUsed = processStatSubset.map((d) => d.memory.heapUsed)
 

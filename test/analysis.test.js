@@ -1,16 +1,24 @@
 'use strict'
 
 const test = require('tap').test
+const semver = require('semver')
 const startpoint = require('startpoint')
 const Analysis = require('../analysis/index.js')
 const generateProcessStat = require('./generate-process-stat.js')
 const generateTraceEvent = require('./generate-trace-event.js')
 
 function getAnalysis (processStatData, traceEventData) {
+  const systenInfoReader = startpoint([{
+    clock: {
+      hrtime: process.hrtime(),
+      unixtime: Date.now()
+    },
+    nodeVersion: semver(process.versions.node)
+  }], { objectMode: true })
   const processStatReader = startpoint(processStatData, { objectMode: true })
   const traceEventReader = startpoint(traceEventData, { objectMode: true })
 
-  const analysisResult = new Analysis(traceEventReader, processStatReader)
+  const analysisResult = new Analysis(systenInfoReader, traceEventReader, processStatReader)
 
   // read data
   return new Promise(function (resolve, reject) {

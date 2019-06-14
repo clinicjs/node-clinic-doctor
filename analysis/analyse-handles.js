@@ -54,7 +54,7 @@ function miraSkewnessTest (handleStat, handles) {
   return pvalue
 }
 
-function analyseHandles (processStatSubset, traceEventSubset) {
+function analyseHandles (systemInfo, processStatSubset, traceEventSubset) {
   // Healthy handle graphs tends to grow or shrink in small steps.
   //
   // handles
