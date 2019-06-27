@@ -6,7 +6,11 @@ const typeMap = new Map([
   ['NONE', null]
 ])
 
-function generateTraceEvent (data) {
+function generateTraceEvent (data, timeSpaceing) {
+  if (timeSpaceing === undefined) {
+    timeSpaceing = 10
+  }
+
   const output = []
 
   let lastType = null
@@ -18,8 +22,8 @@ function generateTraceEvent (data) {
       lastType = type
       startIndex = i
     } else if (type !== lastType) {
-      const startTimestamp = startIndex * 10
-      const endTimestamp = i * 10
+      const startTimestamp = startIndex * timeSpaceing
+      const endTimestamp = i * timeSpaceing
 
       output.push({
         pid: 0,

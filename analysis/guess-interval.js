@@ -9,6 +9,8 @@ const atol = 1e-9
 // is considered lower than the left and right parts.
 const varianceBias = 0.25 // (1/2)**2
 
+const trimTime = 100 // ms
+
 function guessInterval (data) {
   // This function seperates handle sequence up into three partitions.
   // This is to guess the benchmarking interval, in a typical benchmark the
@@ -33,6 +35,7 @@ function guessInterval (data) {
   const right = new OnlineMeanVariance()
 
   // For performance, restructure the data into a dense array
+  const timestamps = data.map((d) => d.timestamp)
   const handles = data.map((d) => d.handles)
 
   // Start by assigning all observations to the middle partition, it will
@@ -87,6 +90,24 @@ function guessInterval (data) {
     middle.load(oldMiddleState)
   }
 
+  // Trim the left and right index by `trimTime` milliseconds, but not more
+  const leftTime = timestamps[bestLeftIndex]
+  for (let i = bestLeftIndex; i <= bestRightIndex - 1; i++) {
+    if (timestamps[i] - leftTime >= trimTime) {
+      break
+    }
+    bestLeftIndex = i
+  }
+
+  const rightTime = timestamps[bestRightIndex - 1]
+  for (let i = bestRightIndex; i >= bestLeftIndex; i--) {
+    if (rightTime - timestamps[i - 1] >= trimTime) {
+      break
+    }
+    bestRightIndex = i
+  }
+
+  // Return the .slice value
   return [bestLeftIndex, bestRightIndex]
 }
 

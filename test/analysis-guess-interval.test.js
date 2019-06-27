@@ -8,10 +8,42 @@ test('guess interval - expected data', function (t) {
   for (const noise of [0, 1, 5]) {
     const data = generateProcessStat({
       handles: [3, 3, 3, 3, 3, 13, 13, 13, 13, 13, 13, 13, 3, 3, 3]
-    }, noise)
+    }, noise, 100)
 
     const interval = guessInterval(data)
     t.strictDeepEqual(interval, [5, 12])
+  }
+
+  t.end()
+})
+
+test('guess interval - trims 100 ms from left and right side', function (t) {
+  for (const noise of [0, 1, 5]) {
+    const data = generateProcessStat({
+      handles: [
+        3, 3, 3, 3, 3,
+        13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
+        13, 13, 13, 13, 13, 13, 13,
+        13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
+        3, 3, 3
+      ]
+    }, noise, 10)
+
+    const interval = guessInterval(data)
+    t.strictDeepEqual(interval, [14, 23])
+  }
+
+  t.end()
+})
+
+test('guess interval - overtrim is not possible', function (t) {
+  for (const noise of [0, 1, 5]) {
+    const data = generateProcessStat({
+      handles: [3, 3, 3, 3, 3, 13, 13, 13, 3, 3, 3]
+    }, noise, 10)
+
+    const interval = guessInterval(data)
+    t.strictDeepEqual(interval, [7, 7])
   }
 
   t.end()
@@ -21,7 +53,7 @@ test('guess interval - missing left tail', function (t) {
   for (const noise of [0, 1, 5]) {
     const data = generateProcessStat({
       handles: [3, 3, 3, 3, 3, 13, 13, 13, 13, 13, 13, 13]
-    }, noise)
+    }, noise, 100)
 
     const interval = guessInterval(data)
     t.strictDeepEqual(interval, [5, 12])
@@ -34,7 +66,7 @@ test('guess interval - missing right tail', function (t) {
   for (const noise of [0, 1, 5]) {
     const data = generateProcessStat({
       handles: [13, 13, 13, 13, 13, 3, 3, 3, 3, 3, 3, 3]
-    }, noise)
+    }, noise, 100)
 
     const interval = guessInterval(data)
     t.strictDeepEqual(interval, [0, 5])
@@ -46,7 +78,7 @@ test('guess interval - missing right tail', function (t) {
 test('guess interval - flat data', function (t) {
   const data = generateProcessStat({
     handles: [3, 3, 3, 3, 3, 3, 3, 3]
-  }, 0)
+  }, 0, 100)
 
   const interval = guessInterval(data)
   t.strictDeepEqual(interval, [0, 8])

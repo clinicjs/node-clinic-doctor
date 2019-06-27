@@ -25,7 +25,7 @@ test('cmd - test visualization - data exists', function (t) {
   }
 
   tool.collect(
-    [process.execPath, '-e', 'setTimeout(() => {}, 200)'],
+    [process.execPath, '-e', 'setTimeout(() => {}, 400)'],
     function (err, dirname) {
       if (err) return cleanup(err, dirname)
 
@@ -82,7 +82,7 @@ test('cmd - test visualization - memory exhausted', function (t) {
   })
 
   tool.collect(
-    [process.execPath, '-e', 'setTimeout(() => {}, 200)'],
+    [process.execPath, '-e', 'setTimeout(() => {}, 400)'],
     function (err, dirname) {
       if (err) return cleanup(err, dirname)
 

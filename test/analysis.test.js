@@ -52,13 +52,13 @@ test('Analysis - pipeline - normal interval', async function (t) {
     const goodCPU = generateProcessStat({
       handles: [3, 3, 3, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 3, 3, 3],
       cpu: [1, 1, 1, 100, 100, 120, 90, 110, 100, 80, 110, 90, 110, 1, 1, 1]
-    }, noise)
+    }, noise, 100)
     const goodMemoryGC = generateTraceEvent([
       'NONE', 'SCA', 'NONE', 'SCA', 'NONE', 'SCA', 'NONE', 'SCA', 'NONE',
       'SCA', 'NONE', 'SCA', 'NONE', 'NONE', 'NONE', 'NONE'
-    ])
+    ], 100)
     t.strictDeepEqual(await getAnalysis(goodCPU, goodMemoryGC), {
-      interval: [ 30, 120 ],
+      interval: [ 300, 1200 ],
       issues: {
         delay: false,
         cpu: false,
@@ -76,9 +76,9 @@ test('Analysis - pipeline - normal interval', async function (t) {
     const badCPU = generateProcessStat({
       handles: [3, 3, 3, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 3, 3, 3],
       cpu: [1, 1, 1, 50, 40, 10, 10, 100, 50, 40, 10, 10, 10, 1, 1, 1]
-    }, noise)
+    }, noise, 100)
     t.strictDeepEqual(await getAnalysis(badCPU, []), {
-      interval: [ 30, 120 ],
+      interval: [ 300, 1200 ],
       issues: {
         delay: false,
         cpu: true,
@@ -101,9 +101,9 @@ test('Analysis - pipeline - full interval', async function (t) {
   const goodCPU = generateProcessStat({
     handles: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
     cpu: [100, 100, 120, 90, 110, 100, 80, 110, 90, 110]
-  }, 0)
+  }, 0, 100)
   t.strictDeepEqual(await getAnalysis(goodCPU, []), {
-    interval: [ 0, 90 ],
+    interval: [ 0, 900 ],
     issues: {
       delay: false,
       cpu: false,
@@ -121,10 +121,10 @@ test('Analysis - pipeline - full interval', async function (t) {
   const badCPU = generateProcessStat({
     handles: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
     cpu: [50, 40, 10, 10, 100, 50, 40, 10, 10, 10]
-  }, 0)
+  }, 0, 100)
 
   t.strictDeepEqual(await getAnalysis(badCPU, []), {
-    interval: [ 0, 90 ],
+    interval: [ 0, 900 ],
     issues: {
       delay: false,
       cpu: true,
