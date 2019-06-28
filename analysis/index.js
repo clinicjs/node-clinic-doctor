@@ -53,8 +53,21 @@ function analyseData ({ systemInfo, traceEvent, processStat }, callback) {
   const intervalIndex = guessInterval(processStat)
 
   if (processStat.length < 2) {
-    const msg = 'Not enough data, try running a longer benchmark'
-    return callback(new Error(msg))
+    return callback(null, {
+      interval: [-Infinity, Infinity],
+      issues: {
+        delay: 'data',
+        cpu: 'data',
+        memory: {
+          external: 'data',
+          rss: 'data',
+          heapTotal: 'data',
+          heapUsed: 'data'
+        },
+        handles: 'data'
+      },
+      issueCategory: 'data'
+    })
   }
 
   const intervalTime = [

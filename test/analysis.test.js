@@ -36,13 +36,22 @@ function getAnalysis (processStatData, traceEventData) {
   })
 }
 
-test('Analysis - pipeline - too little data error', async function (t) {
-  try {
-    await getAnalysis([], [])
-  } catch (e) {
-    t.ok(/not enough data/i.test(e.message))
-    t.end()
-  }
+test('Analysis - pipeline - no data', async function (t) {
+  t.strictDeepEqual(await getAnalysis([], []), {
+    interval: [-Infinity, Infinity],
+    issues: {
+      delay: 'data',
+      cpu: 'data',
+      memory: {
+        external: 'data',
+        rss: 'data',
+        heapTotal: 'data',
+        heapUsed: 'data'
+      },
+      handles: 'data'
+    },
+    issueCategory: 'data'
+  })
 })
 
 test('Analysis - pipeline - error', async function (t) {
@@ -67,15 +76,15 @@ test('Analysis - pipeline - normal interval', async function (t) {
     t.strictDeepEqual(await getAnalysis(goodCPU, goodMemoryGC), {
       interval: [ 300, 1200 ],
       issues: {
-        delay: false,
-        cpu: false,
+        delay: 'none',
+        cpu: 'none',
         memory: {
-          external: false,
-          rss: false,
-          heapTotal: false,
-          heapUsed: false
+          external: 'none',
+          rss: 'none',
+          heapTotal: 'none',
+          heapUsed: 'none'
         },
-        handles: false
+        handles: 'none'
       },
       issueCategory: 'none'
     })
@@ -84,18 +93,18 @@ test('Analysis - pipeline - normal interval', async function (t) {
       handles: [3, 3, 3, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 3, 3, 3],
       cpu: [1, 1, 1, 50, 40, 10, 10, 100, 50, 40, 10, 10, 10, 1, 1, 1]
     }, noise, 10)
-    t.strictDeepEqual(await getAnalysis(badCPU, []), {
+    t.strictDeepEqual(await getAnalysis(badCPU, goodMemoryGC), {
       interval: [ 300, 1200 ],
       issues: {
-        delay: false,
-        cpu: true,
+        delay: 'none',
+        cpu: 'performance',
         memory: {
-          external: false,
-          rss: false,
-          heapTotal: false,
-          heapUsed: false
+          external: 'none',
+          rss: 'none',
+          heapTotal: 'none',
+          heapUsed: 'none'
         },
-        handles: false
+        handles: 'none'
       },
       issueCategory: 'io'
     })
@@ -109,18 +118,21 @@ test('Analysis - pipeline - full interval', async function (t) {
     handles: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
     cpu: [100, 100, 120, 90, 110, 100, 80, 110, 90, 110]
   }, 0, 10)
-  t.strictDeepEqual(await getAnalysis(goodCPU, []), {
+  const goodMemoryGC = generateTraceEvent(
+    '.........S.........',
+    5)
+  t.strictDeepEqual(await getAnalysis(goodCPU, goodMemoryGC), {
     interval: [ 0, 900 ],
     issues: {
-      delay: false,
-      cpu: false,
+      delay: 'none',
+      cpu: 'none',
       memory: {
-        external: false,
-        rss: false,
-        heapTotal: false,
-        heapUsed: false
+        external: 'none',
+        rss: 'none',
+        heapTotal: 'none',
+        heapUsed: 'none'
       },
-      handles: false
+      handles: 'none'
     },
     issueCategory: 'none'
   })
@@ -130,18 +142,18 @@ test('Analysis - pipeline - full interval', async function (t) {
     cpu: [50, 40, 10, 10, 100, 50, 40, 10, 10, 10]
   }, 0, 10)
 
-  t.strictDeepEqual(await getAnalysis(badCPU, []), {
+  t.strictDeepEqual(await getAnalysis(badCPU, goodMemoryGC), {
     interval: [ 0, 900 ],
     issues: {
-      delay: false,
-      cpu: true,
+      delay: 'none',
+      cpu: 'performance',
       memory: {
-        external: false,
-        rss: false,
-        heapTotal: false,
-        heapUsed: false
+        external: 'none',
+        rss: 'none',
+        heapTotal: 'none',
+        heapUsed: 'none'
       },
-      handles: false
+      handles: 'none'
     },
     issueCategory: 'io'
   })

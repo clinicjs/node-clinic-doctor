@@ -2,6 +2,10 @@
 
 const summary = require('summary')
 
+function performanceIssue (issue) {
+  return issue ? 'performance' : 'none'
+}
+
 function analyseDelay (systemInfo, processStatSubset, traceEventSubset) {
   const stats = summary(processStatSubset.map((d) => d.delay))
 
@@ -10,7 +14,7 @@ function analyseDelay (systemInfo, processStatSubset, traceEventSubset) {
   // stops the world for a long time. This doesn't happen often, but just
   // once can be an issue. Check for that, by looking at the max value.
   // Note: units are in milliseconds
-  return stats.median() >= 10 || stats.max() >= 100
+  return performanceIssue(stats.median() >= 10 || stats.max() >= 100)
 }
 
 module.exports = analyseDelay
