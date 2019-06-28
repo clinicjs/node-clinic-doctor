@@ -3,6 +3,10 @@
 const summary = require('summary')
 const distributions = require('distributions')
 
+function performanceIssue (issue) {
+  return issue ? 'performance' : 'none'
+}
+
 function whiteNoiseSignTest (noise) {
   // Count the number of sign changes
   const numSignChanges = nonzero(diff(sign(noise))).length
@@ -77,16 +81,20 @@ function analyseHandles (systemInfo, processStatSubset, traceEventSubset) {
   // To test this, perform a sign change test on the differential.
   const handles = processStatSubset.map((d) => d.handles)
   const handleStat = summary(handles)
+  if (handles.length < 2) {
+    return 'data'
+  }
 
   // Check for stochasticity, otherwise the following is mathematical nonsense.
   if (handleStat.sd() === 0) {
-    return false
+    return 'none'
   }
 
   // 1. Assuming handles is a random-walk process, then calculate the first
   // order auto-diffrential to get the white-noise.
   // 2. Reduce the dataset to those values where the value did change, this
   // is to avoid over-sampling and ignore constant-periods.
+  // NOTE: since sd() !== 0, noise is guaranteed to have some data
   const noise = nonzero(diff(handles))
 
   // Perform a sign test on the assumed-noise.
@@ -101,7 +109,7 @@ function analyseHandles (systemInfo, processStatSubset, traceEventSubset) {
   const miraPvalue = miraSkewnessTest(handleStat, handles)
   const miraIssueDetected = miraPvalue < miraAlpha
 
-  return signIssueDetected || miraIssueDetected
+  return performanceIssue(signIssueDetected || miraIssueDetected)
 }
 
 module.exports = analyseHandles

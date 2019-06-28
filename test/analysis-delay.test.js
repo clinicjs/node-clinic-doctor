@@ -9,12 +9,12 @@ test('analyse delay - to high', function (t) {
     const goodDelay = generateProcessStat({
       delay: [1, 2, 1, 1, 2, 2, 3, 1]
     }, noise)
-    t.strictEqual(analyseDelay({}, goodDelay, []), false)
+    t.strictEqual(analyseDelay({}, goodDelay, []), 'none')
 
     const badDelay = generateProcessStat({
       delay: [10, 8, 6, 10, 15, 10, 4]
     }, noise)
-    t.strictEqual(analyseDelay({}, badDelay, []), true)
+    t.strictEqual(analyseDelay({}, badDelay, []), 'performance')
   }
 
   t.end()
@@ -24,12 +24,12 @@ test('analyse delay - spikes', function (t) {
   const goodDelay = generateProcessStat({
     delay: [1, 2, 1, 20, 2, 2, 3, 1]
   }, 1)
-  t.strictEqual(analyseDelay({}, goodDelay, []), false)
+  t.strictEqual(analyseDelay({}, goodDelay, []), 'none')
 
   const badDelay = generateProcessStat({
     delay: [1, 2, 1, 110, 2, 2, 3, 1]
   }, 1)
-  t.strictEqual(analyseDelay({}, badDelay, []), true)
+  t.strictEqual(analyseDelay({}, badDelay, []), 'performance')
 
   t.end()
 })

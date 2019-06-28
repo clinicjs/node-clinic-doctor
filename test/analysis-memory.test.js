@@ -65,10 +65,26 @@ test('analyse memory - no issues', function (t) {
 
   for (const nodeVersion of [oldNodeVersion, newNodeVersion]) {
     t.strictDeepEquals(analyseMemory({ nodeVersion }, [], gcevents), {
-      external: false,
-      heapTotal: false,
-      heapUsed: false,
-      rss: false
+      external: 'none',
+      heapTotal: 'none',
+      heapUsed: 'none',
+      rss: 'none'
+    })
+  }
+  t.end()
+})
+
+test('analyse memory - no data', function (t) {
+  const gcevents = generateTraceEvent(
+    '.....'
+  )
+
+  for (const nodeVersion of [oldNodeVersion, newNodeVersion]) {
+    t.strictDeepEquals(analyseMemory({ nodeVersion }, [], gcevents), {
+      external: 'none',
+      heapTotal: 'data',
+      heapUsed: 'data',
+      rss: 'none'
     })
   }
   t.end()
@@ -81,17 +97,17 @@ test('analyse memory - only old node version has issue', function (t) {
   )
 
   t.strictDeepEquals(analyseMemory({ nodeVersion: newNodeVersion }, [], gcevents), {
-    external: false,
-    heapTotal: false,
-    heapUsed: false,
-    rss: false
+    external: 'none',
+    heapTotal: 'none',
+    heapUsed: 'none',
+    rss: 'none'
   })
 
   t.strictDeepEquals(analyseMemory({ nodeVersion: oldNodeVersion }, [], gcevents), {
-    external: false,
-    heapTotal: true,
-    heapUsed: false,
-    rss: false
+    external: 'none',
+    heapTotal: 'performance',
+    heapUsed: 'none',
+    rss: 'none'
   })
   t.end()
 })
@@ -104,10 +120,10 @@ test('analyse memory - issue old space', function (t) {
 
   for (const nodeVersion of [oldNodeVersion, newNodeVersion]) {
     t.strictDeepEquals(analyseMemory({ nodeVersion }, [], gcevents), {
-      external: false,
-      heapTotal: true,
-      heapUsed: false,
-      rss: false
+      external: 'none',
+      heapTotal: 'performance',
+      heapUsed: 'none',
+      rss: 'none'
     })
   }
   t.end()
@@ -121,10 +137,10 @@ test('analyse memory - issue with new space', function (t) {
 
   for (const nodeVersion of [oldNodeVersion, newNodeVersion]) {
     t.strictDeepEquals(analyseMemory({ nodeVersion }, [], gcevents), {
-      external: false,
-      heapTotal: false,
-      heapUsed: true,
-      rss: false
+      external: 'none',
+      heapTotal: 'none',
+      heapUsed: 'performance',
+      rss: 'none'
     })
   }
   t.end()

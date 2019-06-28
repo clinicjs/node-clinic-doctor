@@ -2,6 +2,10 @@
 
 const summary = require('summary')
 
+function performanceIssue (issue) {
+  return issue ? 'performance' : 'none'
+}
+
 function analyseMemory (systemInfo, processStatSubset, traceEventSubset) {
   // Create a set of all GC events that blocks the eventloop
   const blockingEventsNewSpace = new Set(['V8.GCScavenger'])
@@ -25,6 +29,16 @@ function analyseMemory (systemInfo, processStatSubset, traceEventSubset) {
       timeWindow: Math.round((0.5 / 1000) * (d.args.endTimestamp + d.args.startTimestamp)),
       duration: d.args.endTimestamp - d.args.startTimestamp
     }))
+
+  // Check that there is at least one GC event.
+  if (gcevents.length === 0) {
+    return {
+      'external': 'none',
+      'rss': 'none',
+      'heapTotal': 'data',
+      'heapUsed': 'data'
+    }
+  }
 
   // Setup a 2d array structure, to hold data for each time window
   const timeWindows = gcevents.map((d) => d.timeWindow)
@@ -56,22 +70,22 @@ function analyseMemory (systemInfo, processStatSubset, traceEventSubset) {
 
   return {
     // We are currently not checking anything related to the external memory
-    'external': false,
+    'external': 'none',
     // If the user has a lot of code or a huge stack, the RSS could be huge.
     // This does not necessary indicate an issue, thus RSS is never used
     // as a measurement.
-    'rss': false,
+    'rss': 'none',
     // Detect an issue if more than 100ms per 1sec, was spent doing
     // blocking garbage collection.
     // Mark the issue in heapTotal, if time was primarily spent cleaning
     // up the old space.
     // Mark the issue in heapUsed: if time was primarily spent cleaning
     // up the new space.
-    'heapTotal': (
+    'heapTotal': performanceIssue(
       (maxBlockedTimeOver1Sec >= 100) &&
       (maxBlockedTimeOver1SecOldSpace >= maxBlockedTimeOver1SecNewSpace)
     ),
-    'heapUsed': (
+    'heapUsed': performanceIssue(
       (maxBlockedTimeOver1Sec >= 100) &&
       (maxBlockedTimeOver1SecOldSpace < maxBlockedTimeOver1SecNewSpace)
     )

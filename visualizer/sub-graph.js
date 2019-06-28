@@ -172,12 +172,16 @@ class SubGraph extends EventEmitter {
       this.lineElements[i].data([data])
 
       // Modify css classes for lines, title icon
-      this.lineElements[i].classed('bad', issues[i])
+      this.lineElements[i]
+        .classed('performance-issue', issues[i] === 'performance')
+        .classed('data-issue', issues[i] === 'data')
       if (this.setup.showLegend) {
-        this.legendItems[i].classed('bad', issues[i])
+        this.legendItems[i]
+          .classed('performance-issue', issues[i] === 'performance')
+          .classed('data-issue', issues[i] === 'data')
       }
 
-      if (issues[i]) foundIssue = true
+      if (issues[i] !== 'none') foundIssue = true
     }
     this.alert.classed('visible', foundIssue)
   }
