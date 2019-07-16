@@ -686,11 +686,10 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
   height: 20px;
   color: var(--graph-text-color);
   font-size: 12pt;
-  overflow: hidden;
+  display: flex;
 }
 
 #graph .sub-graph .header .title {
-  float: left;
   height: 16px;
   margin-right: 20px;
   border-bottom: 2px solid transparent;
@@ -718,16 +717,17 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
 }
 
 #graph .sub-graph .header .legend {
-  float: left;
   height: 18px;
+  display: flex;
   overflow: hidden;
 }
 
 #graph .sub-graph .header .legend .legend-item {
-  float: left;
   height: 18px;
   margin-left: 20px;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 #graph .sub-graph .header .legend .legend-item svg {
@@ -745,7 +745,6 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
 }
 
 #graph .sub-graph .header .legend .legend-item span {
-  float: left;
   font-size: 10pt;
   line-height: 18px;
 }

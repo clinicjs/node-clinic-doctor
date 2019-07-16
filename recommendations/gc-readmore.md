@@ -33,7 +33,7 @@ out serialized objects, then the output could be written to the response as stri
 instead of creating the intermediate objects (or a combined strategy where part of the object is written out
 from available state). It may just be a case that a functional approach (which is usually recommended) is
 leading to the repeated creation of very similar objects, in which case the logical flow between functions
-in a hot path could be adapted to reuse objects instead of create new objects.  
+in a hot path could be adapted to reuse objects instead of create new objects.
 
 Another possibility is that a very high amount of short lived objects are created, filling up the
 "young" space and triggering frequent GC sweeps – if this case *isn't* an unintended memory leak,
@@ -52,7 +52,7 @@ root cause behind the high memory consumption.
 - Click the `inspect` link for that target – this will connect Chrome Devtools to the Node processes remote debug interface
 - In Devtools, select the *Memory* tab
 - Select the *Take heap snapshot* radio box, and then click *Take snapshot*
-- Put the process under load (in the same way that the process was load tested for Node Clinic)
+- Put the process under load (in the same way that the process was load tested for Clinic.js)
 - Click *Profiles* in the left panel, then click *Take snapshot* again
 - Under the *HEAP SNAPSHOTS* left panel, select the second Snapshot (it will be called *Snapshot 2*)
 - Locate the dropdown box just above the "Constructor" column (most likely the dropdown box says *Summary*)

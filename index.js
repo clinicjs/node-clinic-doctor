@@ -57,9 +57,15 @@ class ClinicDoctor extends events.EventEmitter {
       stdio.push('pipe')
     }
 
+    let NODE_PATH = path.join(__dirname, 'injects')
+    // use NODE_PATH to work around issues with spaces in inject path
+    if (process.env.NODE_PATH) {
+      NODE_PATH += `${path.delimiter}${process.env.NODE_PATH}`
+    }
+
     const customEnv = {
       // use NODE_PATH to work around issues with spaces in inject path
-      NODE_PATH: path.join(__dirname, 'injects'),
+      NODE_PATH,
       NODE_OPTIONS: logArgs.join(' ') + (
         process.env.NODE_OPTIONS ? ' ' + process.env.NODE_OPTIONS : ''
       ),
@@ -76,18 +82,23 @@ class ClinicDoctor extends events.EventEmitter {
     })
 
     if (this.detectPort) {
-      proc.stdio[3].once('data', data => this.emit('port', Number(data), proc, () => proc.stdio[3].destroy()))
+      proc.stdio[3].once('data', (data) => {
+        this.emit('port', Number(data), proc, () => {
+          proc.stdio[3].destroy()
+        })
+      })
     }
 
     // get logging directory structure
     const options = { identifier: proc.pid, path: this.path }
     const paths = getLoggingPaths(options)
     // relay SIGINT to process
+    /* istanbul ignore next: SIGINT is only emitted at Ctrl+C on windows */
     process.once('SIGINT', function () {
       // we cannot kill(SIGINT) on windows but it seems
       // to relay the ctrl-c signal per default, so only do this
       // if not windows
-      /* istanbul ignore next */
+      /* istanbul ignore next: platform specific */
       if (os.platform() !== 'win32') proc.kill('SIGINT')
     })
 

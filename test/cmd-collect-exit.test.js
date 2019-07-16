@@ -56,7 +56,7 @@ test('cmd - collect - SIGKILL causes error', { skip }, function (t) {
 
   cmd.once('error', function (err) {
     cmd.cleanup()
-    t.strictDeepEqual(err, new Error('process exited with exit signal SIGKILL'))
+    t.strictDeepEqual(err, new Error('process exited by signal SIGKILL'))
     t.end()
   })
 })

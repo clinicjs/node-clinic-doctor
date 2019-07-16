@@ -3,6 +3,12 @@
 const ttest = require('ttest')
 const atol = 1e-9
 
+// The main source of handle variance should come from the middle part that
+// contains the benchmark data. To bias the interval guessing, such that
+// the middle part contains the most variance, its sum-squared-error (sse)
+// is considered lower than the left and right parts.
+const varianceBias = 0.25 // (1/2)**2
+
 function guessInterval (data) {
   // This function seperates handle sequence up into three partitions.
   // This is to guess the benchmarking interval, in a typical benchmark the
@@ -67,10 +73,10 @@ function guessInterval (data) {
 
       // check for improvement, improvement must exceede the absolute tolerance
       if (middle.size >= 2 &&
-          bestTotalError > left.sse + middle.sse + right.sse + atol &&
+          bestTotalError > left.sse + varianceBias * middle.sse + right.sse + atol &&
           statisticallyLessThan(left, middle) &&
           statisticallyLessThan(right, middle)) {
-        bestTotalError = left.sse + middle.sse + right.sse
+        bestTotalError = left.sse + varianceBias * middle.sse + right.sse
         bestLeftIndex = leftIndex + 1
         bestRightIndex = rightIndex
       }
