@@ -1,6 +1,10 @@
 #
-# IMPORTANT! Remember to also change .npmignore
+# IMPORTANT! Remember to also change .gitignore
 #
+
+# .npmignore specific
+/docs
+/debug
 
 # clinic-doctor specific
 *.clinic-doctor
