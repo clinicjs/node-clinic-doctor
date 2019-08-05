@@ -191,10 +191,8 @@ class ClinicDoctor extends events.EventEmitter {
     const hasFreeMemory = () => {
       const used = process.memoryUsage().heapTotal / HEAP_MAX
       if (used > 0.5) {
-        systemInfoReader.destroy()
         traceEventReader.destroy()
         processStatReader.destroy()
-        analysisStringified.destroy()
         this.emit('truncate')
         this.emit('warning', 'Truncating input data due to memory constrains')
       }
