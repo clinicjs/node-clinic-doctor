@@ -139,3 +139,4 @@ class RenderRecommendations extends stream.Readable {
 }
 
 module.exports = RenderRecommendations
+module.exports.recommendations = recommendations
