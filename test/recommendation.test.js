@@ -41,7 +41,7 @@ test('Recommendation - contains all categories', function (t) {
     }
 
     t.strictDeepEqual(Array.from(categories).sort(), [
-      'event-loop', 'gc', 'io', 'none', 'unknown'
+      'data', 'event-loop', 'gc', 'io', 'none', 'unknown'
     ])
     t.end()
   }))

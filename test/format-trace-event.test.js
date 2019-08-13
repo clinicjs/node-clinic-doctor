@@ -18,11 +18,10 @@ test('Format - trace event - combine', function (t) {
     traceEvent({ name: 'V8.GCIncrementalMarking', ts: 3400, dur: 1000 }),
     traceEvent({ name: 'V8.GCIncrementalMarking', ts: 4400, dur: 1000 }),
     traceEvent({ name: 'V8.GCIncrementalMarkingFinalize', ts: 5400, dur: 50 }),
-    traceEvent({ name: 'V8.GCIncrementalMarking', ts: 6400, dur: 1000 }),
+    traceEvent({ name: 'V8.Execute', ts: 5400, dur: 500 }),
+    traceEvent({ name: 'V8.Execute', ts: 6400, dur: 500 }),
     traceEvent({ name: 'V8.GCFinalizeMC', ts: 7400, dur: 1000 }),
-    traceEvent({ name: 'V8.GCScavenger', ts: 8400, dur: 500 }),
-    traceEvent({ name: 'V8.GCIncrementalMarking', ts: 9400, dur: 500 }),
-    traceEvent({ name: 'V8.GCCompactor', ts: 10400, dur: 500 })
+    traceEvent({ name: 'V8.GCScavenger', ts: 8400, dur: 500 })
   ]
 
   const timeOffset = 33000000
@@ -31,7 +30,9 @@ test('Format - trace event - combine', function (t) {
     clock: {
       hrtime: [0, 400000],
       unixtime: timeOffset
-    }
+    },
+    nodeVersions: process.versions,
+    toolVersion: require('../package').version
   }))
   const decoder = new TraceEventDecoder(systemInfoReader)
 
@@ -51,19 +52,73 @@ test('Format - trace event - combine', function (t) {
           startTimestamp: 1 + timeOffset,
           endTimestamp: 1.5 + timeOffset
         }
-      }, {
+      },
+      {
         pid: 10,
         tid: 1,
         ph: 'X',
         cat: 'v8',
-        name: 'V8.GCMarkSweepCompact',
+        name: 'V8.GCIncrementalMarkingStart',
         ts: 2400,
-        dur: 6000,
+        dur: 50,
         args: {
           startTimestamp: 2 + timeOffset,
+          endTimestamp: 2.05 + timeOffset
+        }
+      },
+      {
+        pid: 10,
+        tid: 1,
+        ph: 'X',
+        cat: 'v8',
+        name: 'V8.GCIncrementalMarking',
+        ts: 3400,
+        dur: 1000,
+        args: {
+          startTimestamp: 3 + timeOffset,
+          endTimestamp: 4 + timeOffset
+        }
+      },
+      {
+        pid: 10,
+        tid: 1,
+        ph: 'X',
+        cat: 'v8',
+        name: 'V8.GCIncrementalMarking',
+        ts: 4400,
+        dur: 1000,
+        args: {
+          startTimestamp: 4 + timeOffset,
+          endTimestamp: 5 + timeOffset
+        }
+      },
+      {
+        pid: 10,
+        tid: 1,
+        ph: 'X',
+        cat: 'v8',
+        name: 'V8.GCIncrementalMarkingFinalize',
+        ts: 5400,
+        dur: 50,
+        args: {
+          startTimestamp: 5 + timeOffset,
+          endTimestamp: 5.05 + timeOffset
+        }
+      },
+      {
+        pid: 10,
+        tid: 1,
+        ph: 'X',
+        cat: 'v8',
+        name: 'V8.GCFinalizeMC',
+        ts: 7400,
+        dur: 1000,
+        args: {
+          startTimestamp: 7 + timeOffset,
           endTimestamp: 8 + timeOffset
         }
-      }, {
+      },
+      {
         pid: 10,
         tid: 1,
         ph: 'X',
@@ -74,30 +129,6 @@ test('Format - trace event - combine', function (t) {
         args: {
           startTimestamp: 8 + timeOffset,
           endTimestamp: 8.5 + timeOffset
-        }
-      }, {
-        pid: 10,
-        tid: 1,
-        ph: 'X',
-        cat: 'v8',
-        name: 'V8.GCIncrementalMarking',
-        ts: 9400,
-        dur: 500,
-        args: {
-          startTimestamp: 9 + timeOffset,
-          endTimestamp: 9.5 + timeOffset
-        }
-      }, {
-        pid: 10,
-        tid: 1,
-        ph: 'X',
-        cat: 'v8',
-        name: 'V8.GCCompactor',
-        ts: 10400,
-        dur: 500,
-        args: {
-          startTimestamp: 10 + timeOffset,
-          endTimestamp: 10.5 + timeOffset
         }
       }
     ])

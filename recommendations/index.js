@@ -61,11 +61,20 @@ const recommendations = [
     readMore: path.resolve(__dirname, 'io-readmore.md')
   }),
   new Recommendation({
+    category: 'data',
+    issue: true,
+    title: 'data analysis issue',
+    menu: 'Bad data',
+    order: 4,
+    summary: path.resolve(__dirname, 'data-summary.md'),
+    readMore: null
+  }),
+  new Recommendation({
     category: 'unknown',
     issue: true,
     title: 'an unknown issue',
     menu: 'Unknown issue',
-    order: 4,
+    order: 5,
     summary: path.resolve(__dirname, 'unknown-summary.md'),
     readMore: path.resolve(__dirname, 'unknown-readmore.md')
   }),
@@ -74,7 +83,7 @@ const recommendations = [
     issue: false,
     title: 'no issue',
     menu: 'No issue',
-    order: 5,
+    order: 6,
     summary: path.resolve(__dirname, 'none-summary.md'),
     readMore: null
   })
