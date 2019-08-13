@@ -25,6 +25,10 @@ const buildJs = require('@nearform/clinic-common/scripts/build-js')
 const buildCss = require('@nearform/clinic-common/scripts/build-css')
 const mainTemplate = require('@nearform/clinic-common/templates/main')
 
+function getRecommendation (issueCategory) {
+  return recommendations.find(rec => rec.category === issueCategory)
+}
+
 class ClinicDoctor extends events.EventEmitter {
   constructor (settings = {}) {
     super()
@@ -168,7 +172,7 @@ class ClinicDoctor extends events.EventEmitter {
     analysis
       .on('error', callback)
       .once('data', (result) => {
-        result.recommendation = recommendations.find(rec => rec.category === result.issueCategory)
+        result.recommendation = getRecommendation(result.issueCategory)
         callback(null, result)
       })
   }
@@ -188,6 +192,8 @@ class ClinicDoctor extends events.EventEmitter {
       analysis
     } = this.createAnalysis(dataDirname)
 
+    let result = null
+
     // create analysis
     const analysisStringified = pumpify(
       analysis,
@@ -195,6 +201,7 @@ class ClinicDoctor extends events.EventEmitter {
         readableObjectMode: false,
         writableObjectMode: true,
         transform (data, encoding, callback) {
+          result = data
           callback(null, JSON.stringify(data))
         }
       })
@@ -302,7 +309,12 @@ class ClinicDoctor extends events.EventEmitter {
       fs.createWriteStream(outputFilename),
       function (err) {
         clearInterval(checkHeapInterval)
-        callback(err)
+        if (err) {
+          callback(err)
+        } else {
+          result.recommendation = getRecommendation(result.issueCategory)
+          callback(null, result)
+        }
       }
     )
   }
