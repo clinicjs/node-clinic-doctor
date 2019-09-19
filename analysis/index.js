@@ -11,11 +11,11 @@ const analyseHandles = require('./analyse-handles.js')
 const issueCategory = require('./issue-category.js')
 
 class Analysis extends stream.Readable {
-  constructor (traceEventReader, processStatReader) {
+  constructor (systemInfoReader, traceEventReader, processStatReader) {
     super({ objectMode: true })
 
     async.waterfall([
-      collectData.bind(null, traceEventReader, processStatReader),
+      collectData.bind(null, systemInfoReader, traceEventReader, processStatReader),
       analyseData
     ], this._done.bind(this))
   }
@@ -31,8 +31,14 @@ class Analysis extends stream.Readable {
   }
 }
 
-function collectData (traceEventReader, processStatReader, callback) {
+function collectData (systemInfoReader, traceEventReader, processStatReader, callback) {
   async.parallel({
+    systemInfo (done) {
+      systemInfoReader.pipe(endpoint({ objectMode: true }, function (err, data) {
+        if (err) return done(err)
+        done(null, data[0])
+      }))
+    },
     traceEvent (done) {
       traceEventReader.pipe(endpoint({ objectMode: true }, done))
     },
@@ -42,13 +48,26 @@ function collectData (traceEventReader, processStatReader, callback) {
   }, callback)
 }
 
-function analyseData ({ traceEvent, processStat }, callback) {
+function analyseData ({ systemInfo, traceEvent, processStat }, callback) {
   // guess the interval for where the benchmarker ran
   const intervalIndex = guessInterval(processStat)
 
   if (processStat.length < 2) {
-    const msg = 'Not enough data, try running a longer benchmark'
-    return callback(new Error(msg))
+    return callback(null, {
+      interval: [-Infinity, Infinity],
+      issues: {
+        delay: 'data',
+        cpu: 'data',
+        memory: {
+          external: 'data',
+          rss: 'data',
+          heapTotal: 'data',
+          heapUsed: 'data'
+        },
+        handles: 'data'
+      },
+      issueCategory: 'data'
+    })
   }
 
   const intervalTime = [
@@ -61,23 +80,23 @@ function analyseData ({ traceEvent, processStat }, callback) {
   )
 
   // Check for issues, the CPU analysis is async
-  analyseCPU(processStatSubset, traceEventSubset, function (err, cpuIssue) {
+  analyseCPU(systemInfo, processStatSubset, traceEventSubset, function (err, cpuIssue) {
     /* istanbul ignore if: it is very rare that HMM doesn't converge */
     if (err) return callback(err)
 
     const issues = {
-      delay: analyseDelay(processStatSubset, traceEventSubset),
+      delay: analyseDelay(systemInfo, processStatSubset, traceEventSubset),
       cpu: cpuIssue,
-      memory: analyseMemory(processStatSubset, traceEventSubset),
-      handles: analyseHandles(processStatSubset, traceEventSubset)
+      memory: analyseMemory(systemInfo, processStatSubset, traceEventSubset),
+      handles: analyseHandles(systemInfo, processStatSubset, traceEventSubset)
     }
 
     const category = issueCategory(issues)
 
     callback(null, {
-      'interval': intervalTime,
-      'issues': issues,
-      'issueCategory': category
+      interval: intervalTime,
+      issues: issues,
+      issueCategory: category
     })
   })
 }

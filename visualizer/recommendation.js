@@ -246,6 +246,7 @@ class Recomendation extends EventEmitter {
   openPanel () {
     this.panelOpened = true
   }
+
   closePanel () {
     this.panelOpened = false
   }
@@ -253,6 +254,7 @@ class Recomendation extends EventEmitter {
   openReadMore () {
     this.readMoreOpened = true
   }
+
   closeReadMore () {
     this.readMoreOpened = false
   }
@@ -260,6 +262,7 @@ class Recomendation extends EventEmitter {
   openUndetected () {
     this.undetectedOpened = true
   }
+
   closeUndetected () {
     this.undetectedOpened = false
   }

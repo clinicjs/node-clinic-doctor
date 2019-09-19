@@ -71,14 +71,16 @@ class Alert extends EventEmitter {
 
     // Set items
     const issues = this.analysis.issues
-    const memory = issues.memory.external || issues.memory.heapTotal ||
-                   issues.memory.heapUsage || issues.memory.rss
+    const memory = issues.memory.external !== 'none' ||
+                   issues.memory.heapTotal !== 'none' ||
+                   issues.memory.heapUsage !== 'none' ||
+                   issues.memory.rss !== 'none'
 
     const issuesAsData = [
-      new Issue('cpu', issues.cpu, 'CPU Usage'),
+      new Issue('cpu', issues.cpu !== 'none', 'CPU Usage'),
       new Issue('memory', memory, 'Memory Usage'),
-      new Issue('delay', issues.delay, 'Event Loop Delay'),
-      new Issue('handles', issues.handles, 'Active Handles')
+      new Issue('delay', issues.delay !== 'none', 'Event Loop Delay'),
+      new Issue('handles', issues.handles !== 'none', 'Active Handles')
     ].filter((issue) => issue.detected)
 
     this.details

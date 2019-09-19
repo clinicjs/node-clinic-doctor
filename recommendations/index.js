@@ -61,11 +61,20 @@ const recommendations = [
     readMore: path.resolve(__dirname, 'io-readmore.md')
   }),
   new Recommendation({
+    category: 'data',
+    issue: true,
+    title: 'data analysis issue',
+    menu: 'Bad data',
+    order: 4,
+    summary: path.resolve(__dirname, 'data-summary.md'),
+    readMore: null
+  }),
+  new Recommendation({
     category: 'unknown',
     issue: true,
     title: 'an unknown issue',
     menu: 'Unknown issue',
-    order: 4,
+    order: 5,
     summary: path.resolve(__dirname, 'unknown-summary.md'),
     readMore: path.resolve(__dirname, 'unknown-readmore.md')
   }),
@@ -74,7 +83,7 @@ const recommendations = [
     issue: false,
     title: 'no issue',
     menu: 'No issue',
-    order: 5,
+    order: 6,
     summary: path.resolve(__dirname, 'none-summary.md'),
     readMore: null
   })
@@ -111,16 +120,16 @@ class RenderRecommendations extends stream.Readable {
         fs.readFile(file.filepath, 'utf-8', function (err, content) {
           if (err) return done(err)
           const template =
-            `<template class="recommendation-text"` +
+            '<template class="recommendation-text"' +
             ` data-issue="${recommendation.issue ? 'yes' : 'no'}"` +
             ` data-type="${file.type}"` +
             ` data-category="${recommendation.category}"` +
             ` data-menu="${recommendation.menu}"` +
             ` data-title="${recommendation.title}"` +
             ` data-order="${recommendation.order}"` +
-            `>\n` +
+            '>\n' +
             `${md.makeHtml(content)}\n` +
-            `</template>`
+            '</template>'
 
           done(null, template)
         })

@@ -93,8 +93,7 @@ class ClinicDoctor extends events.EventEmitter {
     const options = { identifier: proc.pid, path: this.path }
     const paths = getLoggingPaths(options)
     // relay SIGINT to process
-    /* istanbul ignore next: SIGINT is only emitted at Ctrl+C on windows */
-    process.once('SIGINT', function () {
+    process.once('SIGINT', /* istanbul ignore next: SIGINT is only emitted at Ctrl+C on windows */ () => {
       // we cannot kill(SIGINT) on windows but it seems
       // to relay the ctrl-c signal per default, so only do this
       // if not windows
@@ -162,7 +161,7 @@ class ClinicDoctor extends events.EventEmitter {
 
     // create analysis
     const analysisStringified = pumpify(
-      new Analysis(traceEventReader, processStatReader),
+      new Analysis(systemInfoReader, traceEventReader, processStatReader),
       new stream.Transform({
         readableObjectMode: false,
         writableObjectMode: true,
@@ -191,10 +190,8 @@ class ClinicDoctor extends events.EventEmitter {
     const hasFreeMemory = () => {
       const used = process.memoryUsage().heapTotal / HEAP_MAX
       if (used > 0.5) {
-        systemInfoReader.destroy()
         traceEventReader.destroy()
         processStatReader.destroy()
-        analysisStringified.destroy()
         this.emit('truncate')
         this.emit('warning', 'Truncating input data due to memory constrains')
       }

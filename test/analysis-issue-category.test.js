@@ -5,29 +5,45 @@ const issueCategory = require('../analysis/issue-category.js')
 
 test('Analysis - issue category', function (t) {
   const testQueries = [
-    'cpu memory delay handles -> unknown',
-    'cpu memory delay ....... -> unknown',
-    'cpu memory ..... handles -> unknown',
-    'cpu memory ..... ....... -> unknown',
-    'cpu ...... delay handles -> unknown',
-    'cpu ...... delay ....... -> unknown',
-    'cpu ...... ..... handles -> io',
-    'cpu ...... ..... ....... -> io',
-    '... memory delay handles -> unknown',
-    '... memory delay ....... -> gc',
-    '... memory ..... handles -> unknown',
-    '... memory ..... ....... -> gc',
-    '... ...... delay handles -> unknown',
-    '... ...... delay ....... -> event-loop',
-    '... ...... ..... handles -> io',
-    '... ...... ..... ....... -> none'
+    // cpu    memory delay  handles    category
+    '  perf   perf   perf   perf    -> unknown',
+    '  perf   perf   perf   ....    -> unknown',
+    '  perf   perf   ....   perf    -> unknown',
+    '  perf   perf   ....   ....    -> unknown',
+    '  perf   ....   perf   perf    -> unknown',
+    '  perf   ....   perf   ....    -> unknown',
+    '  perf   ....   ....   perf    -> io',
+    '  perf   ....   ....   ....    -> io',
+    // cpu    memory delay  handles    category
+    '  ....   perf   perf   perf    -> unknown',
+    '  ....   perf   perf   ....    -> gc',
+    '  ....   perf   ....   perf    -> unknown',
+    '  ....   perf   ....   ....    -> gc',
+    '  ....   ....   perf   perf    -> unknown',
+    '  ....   ....   perf   ....    -> event-loop',
+    '  ....   ....   ....   perf    -> io',
+    '  ....   ....   ....   ....    -> none',
+    // cpu    memory delay  handles    category
+    '  data   ....   ....   ....    -> data',
+    '  ....   data   ....   ....    -> data',
+    '  ....   ....   data   ....    -> data',
+    '  ....   ....   ....   data    -> data'
   ]
 
   const queryParser = new RegExp([
-    /^(cpu|\.{3}) (memory|\.{6})/.source,
-    / (delay|\.{5}) (handles|\.{7})/.source,
-    / -> (gc|event-loop|io|none|unknown)$/.source
+    /^ {2}/.source,
+    /(perf|data|\.{4}) {3}/.source,
+    /(perf|data|\.{4}) {3}/.source,
+    /(perf|data|\.{4}) {3}/.source,
+    /(perf|data|\.{4}) {3}/.source,
+    / -> (data|gc|event-loop|io|none|unknown)$/.source
   ].join(''))
+
+  const shortToLong = {
+    perf: 'performance',
+    data: 'data',
+    '....': 'none'
+  }
 
   for (const testQuery of testQueries) {
     const parsed = testQuery.match(queryParser)
@@ -36,15 +52,15 @@ test('Analysis - issue category', function (t) {
     }
 
     const issues = {
-      cpu: parsed[1] === 'cpu',
+      cpu: shortToLong[parsed[1]],
       memory: {
-        external: false,
-        rss: false,
-        heapTotal: false,
-        heapUsed: parsed[2] === 'memory'
+        external: 'none',
+        rss: 'none',
+        heapTotal: 'none',
+        heapUsed: shortToLong[parsed[2]]
       },
-      delay: parsed[3] === 'delay',
-      handles: parsed[4] === 'handles'
+      delay: shortToLong[parsed[3]],
+      handles: shortToLong[parsed[4]]
     }
     const expected = parsed[5]
 

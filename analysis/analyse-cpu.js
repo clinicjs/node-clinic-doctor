@@ -15,13 +15,17 @@ tf.ENV.set('IS_NODE', false)
 const SEPARATION_THRESHOLD = 1
 const HHM_SEED = 0xa74b9cbd4047b4bbe79f365a9f247886ac0a8a9c23ef8c5c45d98badb8
 
-async function analyseCPU (processStatSubset, traceEventSubset) {
+function performanceIssue (issue) {
+  return issue ? 'performance' : 'none'
+}
+
+async function analyseCPU (systemInfo, processStatSubset, traceEventSubset) {
   const cpu = processStatSubset.map((d) => d.cpu)
   const summaryAll = summary(cpu)
 
   // For extremely small data, this algorithm doesn't work
   if (cpu.length < 4) {
-    return summaryAll.max() < 0.9
+    return 'data'
   }
 
   // The CPU graph is typically composed of two "modes". An application mode
@@ -57,10 +61,12 @@ async function analyseCPU (processStatSubset, traceEventSubset) {
   const results = await hmm.fit(data, {
     tolerance: 0.001,
     seed: HHM_SEED
-  })
-  /* istanbul ignore if: if HMM doesn't converge it is most likely a bug */
+  }); // eslint-disable-line
+  // ^ with semicolon to work around https://github.com/istanbuljs/istanbuljs/issues/467
+
+  /* istanbul ignore if: it is not clear what causes HMM to not converge */
   if (results.tolerance >= 0.01) {
-    throw new Error(`could not converge HMM model, tolerance: ${results.tolerance}`)
+    return 'data' // has data issue
   }
 
   // Split data depending on the likelihood
@@ -75,7 +81,7 @@ async function analyseCPU (processStatSubset, traceEventSubset) {
   // If one group is too small for a summary to be computed, just threat the
   // data as ungrouped.
   if (summary0.size() <= 1 || summary1.size() <= 1) {
-    return summaryAll.quartile(0.9) < 0.9
+    return performanceIssue(summaryAll.quartile(0.9) < 0.9)
   }
 
   // It is not always that there are two "modes". Determine if the groups are
@@ -85,7 +91,7 @@ async function analyseCPU (processStatSubset, traceEventSubset) {
   const separation = (summary0.mean() - summary1.mean()) / commonSd
   // Threat the data as one "mode", if the separation coefficient is too small.
   if (Math.abs(separation) < SEPARATION_THRESHOLD) {
-    return summaryAll.quartile(0.9) < 0.9
+    return performanceIssue(summaryAll.quartile(0.9) < 0.9)
   }
 
   // The mode group with the highest mean is the V8 mode, the other is the
@@ -98,7 +104,7 @@ async function analyseCPU (processStatSubset, traceEventSubset) {
   // If the 90% quartile has less than 90% CPU load then the CPU is not
   // utilized optimally, likely because of some I/O delays. Highlight the
   // CPU curve in that case.
-  return summaryApplication.quartile(0.9) < 0.9
+  return performanceIssue(summaryApplication.quartile(0.9) < 0.9)
 }
 
 // Wrap to be a callback function

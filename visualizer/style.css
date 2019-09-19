@@ -21,7 +21,8 @@ html {
   --graph-axis-color: rgb(89, 90, 95);
   --graph-tick-color: rgb(151, 151, 151);
   --graph-good-line-color: rgb(74, 144, 226);
-  --graph-bad-line-color: rgb(233, 67, 100);
+  --graph-data-issue-line-color: rgb(233, 156, 67);
+  --graph-performance-issue-line-color: rgb(233, 67, 100);
   --graph-alert-color: rgb(233, 67, 100);
 
   --hover-text-color: rgb(255, 255, 255);
@@ -740,8 +741,8 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
   stroke: var(--graph-good-line-color);
 }
 
-#graph .sub-graph .header .legend .legend-item.bad svg line {
-  stroke: var(--graph-bad-line-color);
+#graph .sub-graph .header .legend .legend-item.performance-issue svg line {
+  stroke: var(--graph-performance-issue-line-color);
 }
 
 #graph .sub-graph .header .legend .legend-item span {
@@ -815,8 +816,8 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
   stroke-width: 2px;
 }
 
-#graph .sub-graph .chart .line.bad {
-  stroke: var(--graph-bad-line-color);
+#graph .sub-graph .chart .line.performance-issue {
+  stroke: var(--graph-performance-issue-line-color);
 }
 
 #graph .sub-graph .chart .tick line {
