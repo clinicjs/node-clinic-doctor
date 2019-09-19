@@ -40,8 +40,8 @@ test('Analysis - issue category', function (t) {
   ].join(''))
 
   const shortToLong = {
-    'perf': 'performance',
-    'data': 'data',
+    perf: 'performance',
+    data: 'data',
     '....': 'none'
   }
 

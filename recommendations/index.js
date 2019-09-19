@@ -120,16 +120,16 @@ class RenderRecommendations extends stream.Readable {
         fs.readFile(file.filepath, 'utf-8', function (err, content) {
           if (err) return done(err)
           const template =
-            `<template class="recommendation-text"` +
+            '<template class="recommendation-text"' +
             ` data-issue="${recommendation.issue ? 'yes' : 'no'}"` +
             ` data-type="${file.type}"` +
             ` data-category="${recommendation.category}"` +
             ` data-menu="${recommendation.menu}"` +
             ` data-title="${recommendation.title}"` +
             ` data-order="${recommendation.order}"` +
-            `>\n` +
+            '>\n' +
             `${md.makeHtml(content)}\n` +
-            `</template>`
+            '</template>'
 
           done(null, template)
         })

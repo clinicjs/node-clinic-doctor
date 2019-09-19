@@ -94,9 +94,9 @@ function analyseData ({ systemInfo, traceEvent, processStat }, callback) {
     const category = issueCategory(issues)
 
     callback(null, {
-      'interval': intervalTime,
-      'issues': issues,
-      'issueCategory': category
+      interval: intervalTime,
+      issues: issues,
+      issueCategory: category
     })
   })
 }
