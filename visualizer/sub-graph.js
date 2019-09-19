@@ -8,6 +8,10 @@ const HoverBox = require('./hover-box')
 const margin = { top: 20, right: 20, bottom: 30, left: 50 }
 const headerHeight = 18
 
+function has (object, property) {
+  return Object.prototype.hasOwnProperty.call(object, property)
+}
+
 // https://bl.ocks.org/d3noob/402dd382a51a4f6eea487f9a35566de0
 class SubGraph extends EventEmitter {
   constructor (container, setup) {
@@ -154,11 +158,11 @@ class SubGraph extends EventEmitter {
     // For the y-axis, ymin and ymax is supported, however they will
     // never truncate the data.
     let ymin = d3.min(data, function (d) { return Math.min(...d.y) })
-    if (this.setup.hasOwnProperty('ymin')) {
+    if (has(this.setup, 'ymin')) {
       ymin = Math.min(ymin, this.setup.ymin)
     }
     let ymax = d3.max(data, function (d) { return Math.max(...d.y) })
-    if (this.setup.hasOwnProperty('ymax')) {
+    if (has(this.setup, 'ymax')) {
       ymax = Math.max(ymax, this.setup.ymax)
     }
     this.yScale.domain([ymin, ymax])

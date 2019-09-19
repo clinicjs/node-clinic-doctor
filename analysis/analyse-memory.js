@@ -33,10 +33,10 @@ function analyseMemory (systemInfo, processStatSubset, traceEventSubset) {
   // Check that there is at least one GC event.
   if (gcevents.length === 0) {
     return {
-      'external': 'none',
-      'rss': 'none',
-      'heapTotal': 'data',
-      'heapUsed': 'data'
+      external: 'none',
+      rss: 'none',
+      heapTotal: 'data',
+      heapUsed: 'data'
     }
   }
 
@@ -70,22 +70,22 @@ function analyseMemory (systemInfo, processStatSubset, traceEventSubset) {
 
   return {
     // We are currently not checking anything related to the external memory
-    'external': 'none',
+    external: 'none',
     // If the user has a lot of code or a huge stack, the RSS could be huge.
     // This does not necessary indicate an issue, thus RSS is never used
     // as a measurement.
-    'rss': 'none',
+    rss: 'none',
     // Detect an issue if more than 100ms per 1sec, was spent doing
     // blocking garbage collection.
     // Mark the issue in heapTotal, if time was primarily spent cleaning
     // up the old space.
     // Mark the issue in heapUsed: if time was primarily spent cleaning
     // up the new space.
-    'heapTotal': performanceIssue(
+    heapTotal: performanceIssue(
       (maxBlockedTimeOver1Sec >= 100) &&
       (maxBlockedTimeOver1SecOldSpace >= maxBlockedTimeOver1SecNewSpace)
     ),
-    'heapUsed': performanceIssue(
+    heapUsed: performanceIssue(
       (maxBlockedTimeOver1Sec >= 100) &&
       (maxBlockedTimeOver1SecOldSpace < maxBlockedTimeOver1SecNewSpace)
     )
