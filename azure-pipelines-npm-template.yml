@@ -22,3 +22,7 @@ jobs:
     displayName: Check linting
   - bash: npm run ci-cov
     displayName: Run tests
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: coverage
+      artifactName: coverage-${{ parameters.name }}
