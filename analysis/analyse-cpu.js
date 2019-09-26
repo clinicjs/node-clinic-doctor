@@ -61,7 +61,7 @@ async function analyseCPU (systemInfo, processStatSubset, traceEventSubset) {
   const results = await hmm.fit(data, {
     tolerance: 0.001,
     seed: HHM_SEED
-  });
+  })
 
   /* istanbul ignore if: it is not clear what causes HMM to not converge */
   if (results.tolerance >= 0.01) {
