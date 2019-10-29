@@ -94,6 +94,28 @@ html.recommendation-open.recommendation-read-more-open {
   overflow-y: hidden;
 }
 
+/* Header */
+.is-loading-font .nc-header,
+.is-loading-font #front-matter,
+.is-loading-font #graph,
+.is-loading-font #recommendation-space,
+.is-loading-font #recommendation {
+  opacity: 0;
+}
+
+.ncd-font-spinner-container {
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+._loading_spinner_ {
+  color: var(--graph-text-color);
+}
+
 #front-matter {
   display: flex;
   align-items: flex-start;
@@ -152,10 +174,6 @@ html.grid-layout #graph {
 }
 
 /* Global Typography */
-
-html {
-  font-family: sans-serif;
-}
 
 html .nc-header, html #front-matter, html #graph, html #graph .hover text, html #recommendation .details {
   /* light text on dark background doesn't look so good in the browser compared
@@ -405,7 +423,7 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
 }
 
 #recommendation .content .read-more .article-menu {
-  flex: 0 0 240px;
+  flex: 0 0 246px;
   align-self: flex-start;
   position: sticky;
   top: 0;
@@ -666,7 +684,7 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
 #graph .sub-graph .header {
   /* margin-left: is the `graph g[margin-left] - .domain[stroke-width]` */
   margin: 0 20px 0 48px;
-  height: 18px;
+  height: 20px;
   color: var(--graph-text-color);
   font-size: 12pt;
   display: flex;

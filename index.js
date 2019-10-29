@@ -242,6 +242,7 @@ class ClinicDoctor extends events.EventEmitter {
 
     // Create body contents with recommendations
     const body = streamTemplate`
+      <div class="ncd-font-spinner-container"></div>
       <div id="front-matter">
         <div id="alert"></div>
         <div id="menu"></div>
