@@ -68,14 +68,13 @@ directory will be the value in the callback.
 stdout, stderr, and stdin will be relayed to the calling process. As will the
 `SIGINT` event.
 
-#### `doctor.check(dataFilename, callback)`
+#### `doctor.analyze(dataFilename, callback)`
 
 Will consume the datafile specified by `dataFilename`, this datafile will be
 produced by the sampler using `doctor.collect`.
 
-`doctor.check` will then analyse the data file and call the
-`callback(err, result)` with an object containing possible issues and a
-recommendation on `result.recommendation`.
+`doctor.analyze` will then analyse the data file and call the
+`callback(err, result)` with an object containing possible issues.
 
 #### `doctor.visualize(dataFilename, outputFilename, callback)`
 
