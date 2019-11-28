@@ -167,7 +167,7 @@ class ClinicDoctor extends events.EventEmitter {
     }
   }
 
-  check (dataDirname, callback) {
+  analyze (dataDirname, callback) {
     const { analysis } = this.createAnalysis(dataDirname)
     analysis
       .on('error', callback)
