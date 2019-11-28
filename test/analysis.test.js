@@ -74,7 +74,7 @@ test('Analysis - pipeline - normal interval', async function (t) {
       '..S..S..........S.........S..S..',
       5)
     t.strictDeepEqual(await getAnalysis(goodCPU, goodMemoryGC), {
-      interval: [ 300, 1200 ],
+      interval: [300, 1200],
       issues: {
         delay: 'none',
         cpu: 'none',
@@ -94,7 +94,7 @@ test('Analysis - pipeline - normal interval', async function (t) {
       cpu: [1, 1, 1, 50, 40, 10, 10, 100, 50, 40, 10, 10, 10, 1, 1, 1]
     }, noise, 10)
     t.strictDeepEqual(await getAnalysis(badCPU, goodMemoryGC), {
-      interval: [ 300, 1200 ],
+      interval: [300, 1200],
       issues: {
         delay: 'none',
         cpu: 'performance',
@@ -122,7 +122,7 @@ test('Analysis - pipeline - full interval', async function (t) {
     '.........S.........',
     5)
   t.strictDeepEqual(await getAnalysis(goodCPU, goodMemoryGC), {
-    interval: [ 0, 900 ],
+    interval: [0, 900],
     issues: {
       delay: 'none',
       cpu: 'none',
@@ -143,7 +143,7 @@ test('Analysis - pipeline - full interval', async function (t) {
   }, 0, 10)
 
   t.strictDeepEqual(await getAnalysis(badCPU, goodMemoryGC), {
-    interval: [ 0, 900 ],
+    interval: [0, 900],
     issues: {
       delay: 'none',
       cpu: 'performance',
