@@ -25,10 +25,6 @@ const buildJs = require('@nearform/clinic-common/scripts/build-js')
 const buildCss = require('@nearform/clinic-common/scripts/build-css')
 const mainTemplate = require('@nearform/clinic-common/templates/main')
 
-function getRecommendation (issueCategory) {
-  return recommendations.find(rec => rec.category === issueCategory)
-}
-
 class ClinicDoctor extends events.EventEmitter {
   constructor (settings = {}) {
     super()
@@ -172,7 +168,6 @@ class ClinicDoctor extends events.EventEmitter {
     analysis
       .on('error', callback)
       .once('data', (result) => {
-        result.recommendation = getRecommendation(result.issueCategory)
         callback(null, result)
       })
   }
@@ -312,7 +307,6 @@ class ClinicDoctor extends events.EventEmitter {
         if (err) {
           callback(err)
         } else {
-          result.recommendation = getRecommendation(result.issueCategory)
           callback(null, result)
         }
       }
