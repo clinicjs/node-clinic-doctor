@@ -17,7 +17,6 @@ const SystemInfoDecoder = require('./format/system-info-decoder.js')
 const TraceEventDecoder = require('./format/trace-event-decoder.js')
 const ProcessStatDecoder = require('./format/process-stat-decoder.js')
 const RenderRecommendations = require('./recommendations/index.js')
-const { recommendations } = RenderRecommendations
 const minifyStream = require('minify-stream')
 const v8 = require('v8')
 const HEAP_MAX = v8.getHeapStatistics().heap_size_limit
