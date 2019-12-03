@@ -39,6 +39,13 @@ test('cmd - test analyze - data exists', function (t) {
 
   const badCPU = generateProcessStat({
     cpu: [
+      // duplicate a bunch of times so the interval trimming code
+      // doesn't discard everything
+      200, 200, 15, 10, 190, 200, 5, 15, 190, 200,
+      200, 200, 15, 10, 190, 200, 5, 15, 190, 200,
+      200, 200, 15, 10, 190, 200, 5, 15, 190, 200,
+      200, 200, 15, 10, 190, 200, 5, 15, 190, 200,
+      200, 200, 15, 10, 190, 200, 5, 15, 190, 200,
       200, 200, 15, 10, 190, 200, 5, 15, 190, 200,
       200, 200, 15, 10, 190, 200, 5, 15, 190, 200
     ]
