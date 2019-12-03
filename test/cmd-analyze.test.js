@@ -7,7 +7,7 @@ const async = require('async')
 const rimraf = require('rimraf')
 const ClinicDoctor = require('../index.js')
 
-test('cmd - test check - data exists', function (t) {
+test('cmd - test analyze - data exists', function (t) {
   const tool = new ClinicDoctor({ dest: './foo' })
 
   function cleanup (err, dirname) {
@@ -26,19 +26,18 @@ test('cmd - test check - data exists', function (t) {
     function (err, dirname) {
       if (err) return cleanup(err, dirname)
 
-      tool.check(dirname, function (err, result) {
+      tool.analyze(dirname, function (err, result) {
         if (err) return cleanup(err, dirname)
 
         t.ok(result)
         t.same(result.issue, 'data')
-        t.same(result.recommendation.title, 'data analysis issue')
         cleanup(null, dirname)
       })
     }
   )
 })
 
-test('cmd - test check - memory exhausted', function (t) {
+test('cmd - test analyze - memory exhausted', function (t) {
   const tmp = process.memoryUsage
   const HEAP_MAX = v8.getHeapStatistics().heap_size_limit
 
@@ -78,22 +77,21 @@ test('cmd - test check - memory exhausted', function (t) {
     function (err, dirname) {
       if (err) return cleanup(err, dirname)
 
-      tool.check(dirname, function (err, result) {
+      tool.analyze(dirname, function (err, result) {
         if (err) return cleanup(err, dirname)
 
         t.ok(result)
         t.same(result.issue, 'data')
-        t.same(result.recommendation.title, 'data analysis issue')
         cleanup(null, dirname)
       })
     }
   )
 })
 
-test('cmd - test check - missing data', function (t) {
+test('cmd - test analyze - missing data', function (t) {
   const tool = new ClinicDoctor({ debug: true })
 
-  tool.check(
+  tool.analyze(
     'missing.clinic-doctor',
     function (err) {
       t.ok(err.message.includes('ENOENT: no such file or directory'))
