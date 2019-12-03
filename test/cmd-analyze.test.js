@@ -1,11 +1,19 @@
 'use strict'
+/* eslint-disable */
 
 const fs = require('fs')
 const v8 = require('v8')
 const { test } = require('tap')
+const pump = require('pump')
 const async = require('async')
 const rimraf = require('rimraf')
+const mkdirp = require('mkdirp')
+const semver = require('semver')
+const startpoint = require('startpoint')
 const ClinicDoctor = require('../index.js')
+const getLoggingPaths = require('@nearform/clinic-common').getLoggingPaths('doctor')
+const generateProcessStat = require('./generate-process-stat.js')
+const generateTraceEvent = require('./generate-trace-event.js')
 
 test('cmd - test analyze - data exists', function (t) {
   const tool = new ClinicDoctor({ dest: './foo' })
@@ -21,20 +29,65 @@ test('cmd - test analyze - data exists', function (t) {
     })
   }
 
-  tool.collect(
-    [process.execPath, '-e', 'setTimeout(() => {}, 400)'],
-    function (err, dirname) {
-      if (err) return cleanup(err, dirname)
+  const systemInfo = {
+    clock: {
+      hrtime: process.hrtime(),
+      unixtime: Date.now()
+    },
+    nodeVersions: process.versions
+  }
 
-      tool.analyze(dirname, function (err, result) {
-        if (err) return cleanup(err, dirname)
+  const badCPU = generateProcessStat({
+    cpu: [
+      200, 200, 15, 10, 190, 200, 5, 15, 190, 200,
+      200, 200, 15, 10, 190, 200, 5, 15, 190, 200
+    ]
+  }, 0)
 
-        t.ok(result)
-        t.same(result.issue, 'data')
-        cleanup(null, dirname)
-      })
-    }
+  const goodMemoryGC = generateTraceEvent(
+    '-S....-S....-S....-S....-S....-S....-S....-S....-S....-S....' +
+    '-M....-M....-S....-M....-M....-S....-M....-M....-FFF.. CCC..'
   )
+
+  const paths = getLoggingPaths({
+    identifier: 1234,
+    path: tool.path
+  })
+
+  mkdirp(paths['/'], ondir)
+
+  function ondir (err) {
+    if (err) return cleanup(err, paths['/'])
+    const ProcessStatEncoder = require('../format/process-stat-encoder.js')
+
+    async.parallel({
+      systeminfo (callback) {
+        fs.writeFile(paths['/systeminfo'], JSON.stringify(systemInfo), callback)
+      },
+      processstat (callback) {
+        pump(
+          startpoint(badCPU, { objectMode: true }),
+          new ProcessStatEncoder(),
+          fs.createWriteStream(paths['/processstat']),
+          callback)
+      },
+      traceevent (callback) {
+        fs.writeFile(paths['/traceevent'], JSON.stringify({ traceEvents: goodMemoryGC }), callback)
+      }
+    }, oncollected)
+  }
+
+  function oncollected (err) {
+    if (err) return cleanup(err, paths['/'])
+
+    tool.analyze(paths['/']).analysis
+      .on('error', function (err) { cleanup(err, paths['/']) })
+      .on('data', function (result) {
+        t.ok(result)
+        t.same(result.issueCategory, 'performance')
+        cleanup(null, paths['/'])
+      })
+  }
 })
 
 test('cmd - test analyze - memory exhausted', function (t) {
@@ -77,13 +130,13 @@ test('cmd - test analyze - memory exhausted', function (t) {
     function (err, dirname) {
       if (err) return cleanup(err, dirname)
 
-      tool.analyze(dirname, function (err, result) {
-        if (err) return cleanup(err, dirname)
-
-        t.ok(result)
-        t.same(result.issue, 'data')
-        cleanup(null, dirname)
-      })
+      tool.analyze(dirname).analysis
+        .on('error', function (err) { cleanup(err, dirname) })
+        .on('data', function (result) {
+          t.ok(result)
+          t.same(result.issueCategory, 'data')
+          cleanup(null, dirname)
+        })
     }
   )
 })
@@ -91,11 +144,12 @@ test('cmd - test analyze - memory exhausted', function (t) {
 test('cmd - test analyze - missing data', function (t) {
   const tool = new ClinicDoctor({ debug: true })
 
-  tool.analyze(
-    'missing.clinic-doctor',
-    function (err) {
+  tool.analyze('missing.clinic-doctor').analysis
+    .on('error', function (err) {
       t.ok(err.message.includes('ENOENT: no such file or directory'))
       t.end()
-    }
-  )
+    })
+    .on('data', function () {
+      t.fail('should error')
+    })
 })

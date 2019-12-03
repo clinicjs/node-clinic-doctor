@@ -135,7 +135,7 @@ class ClinicDoctor extends events.EventEmitter {
     })
   }
 
-  createAnalysis (dataDirname) {
+  analyze (dataDirname) {
     const paths = getLoggingPaths({ path: dataDirname })
 
     const systemInfoReader = pumpify.obj(
@@ -161,16 +161,7 @@ class ClinicDoctor extends events.EventEmitter {
     }
   }
 
-  analyze (dataDirname, callback) {
-    const { analysis } = this.createAnalysis(dataDirname)
-    analysis
-      .on('error', callback)
-      .once('data', (result) => {
-        callback(null, result)
-      })
-  }
-
-  visualize (dataDirname, outputFilename, callback) {
+  visualize (analysisData, outputFilename, callback) {
     const fakeDataPath = path.join(__dirname, 'visualizer', 'data.json')
     const stylePath = path.join(__dirname, 'visualizer', 'style.css')
     const scriptPath = path.join(__dirname, 'visualizer', 'main.js')
@@ -178,12 +169,17 @@ class ClinicDoctor extends events.EventEmitter {
     const nearFormLogoPath = path.join(__dirname, 'visualizer', 'nearform-logo.svg')
     const clinicFaviconPath = path.join(__dirname, 'visualizer', 'clinic-favicon.png.b64')
 
+    // back compat
+    if (typeof analysisData === 'string') {
+      analysisData = this.analyze(analysisData)
+    }
+
     // Load data
     const {
       traceEventReader,
       processStatReader,
       analysis
-    } = this.createAnalysis(dataDirname)
+    } = analysisData
 
     let result = null
 

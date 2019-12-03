@@ -8,7 +8,7 @@ module.exports = {
       const tool = new Tool({ debug: true })
 
       tool.visualize(
-        file,
+        tool.analyze(file),
         file + '.html',
         function (err) {
           if (err) {
