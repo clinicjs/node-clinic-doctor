@@ -13,7 +13,7 @@ function getAnalysis (processStatData, traceEventData) {
       hrtime: process.hrtime(),
       unixtime: Date.now()
     },
-    nodeVersion: semver(process.versions.node)
+    nodeVersion: semver.parse(process.versions.node)
   }], { objectMode: true })
   const processStatReader = startpoint(processStatData, { objectMode: true })
   const traceEventReader = startpoint(traceEventData, { objectMode: true })

@@ -5,8 +5,8 @@ const semver = require('semver')
 const analyseMemory = require('../analysis/analyse-memory.js')
 const generateTraceEvent = require('./generate-trace-event.js')
 
-const oldNodeVersion = semver('6.9.9')
-const newNodeVersion = semver('10.0.0')
+const oldNodeVersion = semver.parse('6.9.9')
+const newNodeVersion = semver.parse('10.0.0')
 
 test('analyse memory - genereate trace event', function (t) {
   const gcevents = generateTraceEvent(
