@@ -124,7 +124,7 @@ test('cmd - collect - startup delay is not included', function (t) {
       if (err) return t.ifError(err)
 
       const delay = output.processStat.map((stat) => stat.delay)
-      t.ok(delay[0] < 50, `startup delay was ${delay[0]}`)
+      t.ok(delay[0] < 90, `startup delay was ${delay[0]}`)
       t.end()
     })
   })
