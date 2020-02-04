@@ -40,8 +40,11 @@ function saveSample () {
 
 // start sampler on next tick, to avoid measuring the startup time
 process.nextTick(function () {
-  processStat.refresh()
-  scheduleSample()
+  // allow time delay to be specified before we start collecting data
+  setTimeout(() => {
+    processStat.refresh()
+    scheduleSample()
+  }, process.env.NODE_CLINIC_DOCTOR_TIMEOUT_DELAY)
 })
 
 // before process exits, flush the encoded data to the sample file
