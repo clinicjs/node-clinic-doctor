@@ -30,14 +30,14 @@ class ClinicDoctor extends events.EventEmitter {
 
     // define default parameters
     const {
-      timeoutDelay = 0,
+      collectDelay = 0,
       sampleInterval = 10,
       detectPort = false,
       debug = false,
       dest = null
     } = settings
 
-    this.timeoutDelay = timeoutDelay
+    this.collectDelay = collectDelay
     this.sampleInterval = sampleInterval
     this.detectPort = detectPort
     this.debug = debug
@@ -72,7 +72,7 @@ class ClinicDoctor extends events.EventEmitter {
         process.env.NODE_OPTIONS ? ' ' + process.env.NODE_OPTIONS : ''
       ),
       NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL: this.sampleInterval,
-      NODE_CLINIC_DOCTOR_TIMEOUT_DELAY: this.timeoutDelay
+      NODE_CLINIC_DOCTOR_TIMEOUT_DELAY: this.collectDelay
     }
 
     if (this.path) {
