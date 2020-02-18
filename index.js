@@ -193,7 +193,7 @@ class ClinicDoctor extends events.EventEmitter {
         traceEventReader.destroy()
         processStatReader.destroy()
         this.emit('truncate')
-        this.emit('warning', 'Truncating input data due to memory constrains')
+        this.emit('warning', 'Truncating input data due to memory constraints')
       }
     }
 

@@ -75,7 +75,7 @@ test('cmd - test visualization - memory exhausted', function (t) {
   }
 
   tool.on('warning', function (warning) {
-    t.equal(warning, 'Truncating input data due to memory constrains')
+    t.equal(warning, 'Truncating input data due to memory constraints')
   })
   tool.on('truncate', function (undef) {
     t.equal(undef, undefined)
