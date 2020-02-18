@@ -19,7 +19,17 @@ class TraceEventDecoder extends stream.Transform {
     // backpresure
     this.parser = parser()
     this.parser.on('data', (data) => this._process(data))
-    this.systemInfoReader.on('error', (err) => this.destroy(err))
+
+    const self = this
+    this.systemInfoReader.pipe(endpoint({ objectMode: true }, function (err, data) {
+      if (err) return self.destroy(err)
+
+      // Save clock offset
+      const systemInfo = data[0]
+      self.clockOffset = systemInfo.clockOffset
+
+      self.emit('clockOffset')
+    }))
   }
 
   _process (traceEvent) {
@@ -40,18 +50,11 @@ class TraceEventDecoder extends stream.Transform {
   _transform (chunk, encoding, callback) {
     const self = this
     if (this.clockOffset === null) {
-      this.systemInfoReader
-        .pipe(endpoint({ objectMode: true }, function (err, data) {
-          if (err) return // emitted in the constructor
-
-          // Save clock offset
-          const systemInfo = data[0]
-          self.clockOffset = systemInfo.clockOffset
-
-          // Now that the clock offset is known, the data can be processed
-          self.parser.write(chunk, encoding)
-          callback(null)
-        }))
+      this.once('clockOffset', function () {
+        // Now that the clock offset is known, the data can be processed
+        self.parser.write(chunk, encoding)
+        callback(null)
+      })
     } else {
       // Clock offset is already known, process directly
       this.parser.write(chunk, encoding)
