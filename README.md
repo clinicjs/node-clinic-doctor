@@ -45,12 +45,13 @@ const doctor = new ClinicDoctor()
 ### new ClinicDoctor([settings])
 
 * settings [`<Object>`][]
-  * sampleInterval [`<number>`][] Time between each sample in milliseconds.
+  * sampleInterval [`<Number>`][] Time between each sample in milliseconds.
     **Default**: 10
   * detectPort [`<boolean>`][] **Default**: false
   * dest [`<String>`][] The folder where the collected data is stored. **Default**: '.'
   * debug [`<boolean>`][] If set to true, the generated html will not be minified.
     **Default**: false
+  * collectDelay [`<Number>`][] **Default**: 0
 
 #### `doctor.collect(args, callback)`
 
@@ -90,7 +91,7 @@ possible error.
 [clinic-url]: https://github.com/nearform/node-clinic
 [`<Object>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object
 [`<boolean>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type
-[`<number>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type
+[`<Number>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type
 [`<String>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
 [azure-status]: https://dev.azure.com/node-clinic/node-clinic/_apis/build/status/nearform.node-clinic-doctor
 [azure-url]: https://dev.azure.com/node-clinic/node-clinic/_apis/build/status/nearform.node-clinic-doctor?branchName=master
