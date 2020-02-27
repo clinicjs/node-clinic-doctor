@@ -42,29 +42,7 @@ class ClinicDoctor extends events.EventEmitter {
     this.path = dest
   }
 
-  checkForTranspiledCode (args) {
-    const readFile = fs.readFileSync(path.resolve(args[1]), 'utf8')
-    const regex = /function\s+(?<functionName>\w+)/g
-    let matchedObj; let longerThanLimit = false
-
-    while ((matchedObj = regex.exec(readFile)) !== null) {
-      // Avoid infinite loops with zero-width matches
-      if (matchedObj.index === regex.lastIndex) {
-        regex.lastIndex++
-      }
-      // Loop through results and check length of fn name
-      matchedObj.forEach((match, groupIndex) => {
-        if (groupIndex !== 0 && match.length > 3) {
-          longerThanLimit = true
-        }
-      })
-    }
-    return longerThanLimit
-  }
-
   collect (args, callback) {
-    console.log(this.checkForTranspiledCode(args))
-
     // run program, but inject the sampler
     const logArgs = [
       '-r', 'no-cluster.js',

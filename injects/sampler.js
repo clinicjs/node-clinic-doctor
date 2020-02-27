@@ -23,6 +23,26 @@ const processStat = new ProcessStat(parseInt(
   process.env.NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL, 10
 ))
 
+function checkForTranspiledCode (filename) {
+  const readFile = fs.readFileSync(filename, 'utf8')
+  const regex = /function\s+(?<functionName>\w+)/g
+  let matchedObj; let longerThanLimit = false
+
+  while ((matchedObj = regex.exec(readFile)) !== null) {
+    // Avoid infinite loops with zero-width matches
+    if (matchedObj.index === regex.lastIndex) {
+      regex.lastIndex++
+    }
+    // Loop through results and check length of fn name
+    matchedObj.forEach((match, groupIndex) => {
+      if (groupIndex !== 0 && match.length > 3) {
+        longerThanLimit = true
+      }
+    })
+  }
+  return longerThanLimit
+}
+
 // keep sample time unrefed such it doesn't interfere too much
 let timer = null
 function scheduleSample () {
@@ -42,6 +62,10 @@ function saveSample () {
 process.nextTick(function () {
   processStat.refresh()
   scheduleSample()
+
+  if (!checkForTranspiledCode(process.mainModule.filename)) {
+    // Show warning to user
+  }
 })
 
 // before process exits, flush the encoded data to the sample file
