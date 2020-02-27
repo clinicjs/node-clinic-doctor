@@ -60,12 +60,11 @@ function saveSample () {
 
 // start sampler on next tick, to avoid measuring the startup time
 process.nextTick(function () {
-  processStat.refresh()
-  scheduleSample()
-
   if (!checkForTranspiledCode(process.mainModule.filename)) {
     // Show warning to user
   }
+  processStat.refresh()
+  scheduleSample()
 })
 
 // before process exits, flush the encoded data to the sample file
