@@ -62,7 +62,9 @@ function saveSample () {
 process.nextTick(function () {
   if (!checkForTranspiledCode(process.mainModule.filename)) {
     // Show warning to user
-    fs.writeSync(3, 'source_warning', null, 'utf8')
+    console.log('WRITESYNC', 'FIRE CALL')
+    fs.writeSync(0, 'source_warning', null, 'utf8')
+    process.emit('beforeExit')
   }
   processStat.refresh()
   scheduleSample()

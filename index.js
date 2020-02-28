@@ -56,6 +56,8 @@ class ClinicDoctor extends events.EventEmitter {
       logArgs.push('-r', 'detect-port.js')
       stdio.push('pipe')
     }
+    // Setup pipe for source warning
+    stdio[0] = 'pipe'
 
     let NODE_PATH = path.join(__dirname, 'injects')
     // use NODE_PATH to work around issues with spaces in inject path
@@ -88,6 +90,13 @@ class ClinicDoctor extends events.EventEmitter {
         })
       })
     }
+
+    proc.stdio[0].once('data', (data) => {
+      this.emit('source_warning', Number(data), proc, () => {
+        proc.stdio[0].destroy()
+        this.emit('warning', 'Transpiled code is not supported')
+      })
+    })
 
     // get logging directory structure
     const options = { identifier: proc.pid, path: this.path }
