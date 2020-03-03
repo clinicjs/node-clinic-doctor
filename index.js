@@ -80,23 +80,19 @@ class ClinicDoctor extends events.EventEmitter {
       env: Object.assign({}, process.env, customEnv)
     })
 
-    if (this.detectPort) {
-      proc.stdio[3].once('data', (data) => {
+    // Use fd 3 for both Port and Source Warning
+    proc.stdio[3].once('data', (data) => {
+      if (this.detectPort) {
         this.emit('port', Number(data), proc, () => {
           proc.stdio[3].destroy()
         })
-      })
-    }
-
-    proc.stdio[3].once('data', (data) => {
-      console.log('DATA', data)
-      this.emit('source_warning', Number(data), proc, () => {
-        proc.stdio[0].destroy()
-        this.emit('warning', 'Transpiled code is not supported')
-      })
+      } else {
+        this.emit('source_warning', Number(data), proc, () => {
+          proc.stdio[3].destroy()
+          this.emit('warning', 'Transpiled code is not supported')
+        })
+      }
     })
-
-    this.emit('warning', 'Transpiled code is not supported')
 
     // get logging directory structure
     const options = { identifier: proc.pid, path: this.path }
