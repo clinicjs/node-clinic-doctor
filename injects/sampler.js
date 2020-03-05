@@ -25,6 +25,7 @@ const processStat = new ProcessStat(parseInt(
 
 function checkForTranspiledCode (filename) {
   const readFile = fs.readFileSync(filename, 'utf8')
+  console.log(readFile.includes('//# sourceMappingURL='))
   const regex = /function\s+(?<functionName>\w+)/g
   let matchedObj; let longerThanLimit = false
 
