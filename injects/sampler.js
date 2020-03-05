@@ -25,9 +25,12 @@ const processStat = new ProcessStat(parseInt(
 
 function checkForTranspiledCode (filename) {
   const readFile = fs.readFileSync(filename, 'utf8')
-  console.log(readFile.includes('//# sourceMappingURL='))
   const regex = /function\s+(?<functionName>\w+)/g
-  let matchedObj; let longerThanLimit = false
+  let matchedObj
+  let isTranspiled = false
+
+  // Check for a source map
+  isTranspiled = readFile.includes('//# sourceMappingURL=')
 
   while ((matchedObj = regex.exec(readFile)) !== null) {
     // Avoid infinite loops with zero-width matches
@@ -36,12 +39,12 @@ function checkForTranspiledCode (filename) {
     }
     // Loop through results and check length of fn name
     matchedObj.forEach((match, groupIndex) => {
-      if (groupIndex !== 0 && match.length > 3) {
-        longerThanLimit = true
+      if (groupIndex !== 0 && match.length < 3) {
+        isTranspiled = true
       }
     })
   }
-  return longerThanLimit
+  return isTranspiled
 }
 
 // keep sample time unrefed such it doesn't interfere too much
@@ -61,8 +64,7 @@ function saveSample () {
 
 // start sampler on next tick, to avoid measuring the startup time
 process.nextTick(function () {
-  console.log(process.mainModule)
-  if (process.mainModule && !checkForTranspiledCode(process.mainModule.filename)) {
+  if (process.mainModule && checkForTranspiledCode(process.mainModule.filename)) {
     // Show warning to user
     fs.writeSync(3, 'source_warning', null, 'utf8')
     process.emit('beforeExit')
