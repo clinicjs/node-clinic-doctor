@@ -63,7 +63,9 @@ process.nextTick(function () {
   if (!checkForTranspiledCode(process.mainModule.filename)) {
     // Show warning to user
     console.log('WRITESYNC', 'FIRE CALL')
-    fs.writeSync(3, 'source_warning', null, 'utf8')
+    //console.log(fs.writeSync(3, 'source_warning', null, 'utf8'))
+    const data = 'source_warning';
+    fs.writeSync(3, new Buffer(data, 'utf8'), 0, data.length, null)
     // process.emit('beforeExit')
   }
   processStat.refresh()

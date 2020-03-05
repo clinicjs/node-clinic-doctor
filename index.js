@@ -50,7 +50,7 @@ class ClinicDoctor extends events.EventEmitter {
       '--trace-events-enabled', '--trace-event-categories', 'v8'
     ]
 
-    const stdio = ['inherit', 'inherit', 'pipe']
+    const stdio = ['inherit', 'inherit', 'inherit', 'pipe']
 
     if (this.detectPort) {
       logArgs.push('-r', 'detect-port.js')
@@ -82,11 +82,13 @@ class ClinicDoctor extends events.EventEmitter {
 
     // Use fd 3 for both Port and Source Warning
     proc.stdio[3].once('data', (data) => {
+      console.log('DATA', data.toString())
       if (this.detectPort) {
         this.emit('port', Number(data), proc, () => {
           proc.stdio[3].destroy()
         })
       } else {
+        console.log('SOURCE WARNING')
         this.emit('source_warning', Number(data), proc, () => {
           proc.stdio[3].destroy()
           this.emit('warning', 'Transpiled code is not supported')
