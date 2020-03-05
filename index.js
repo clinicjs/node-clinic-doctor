@@ -82,17 +82,16 @@ class ClinicDoctor extends events.EventEmitter {
 
     // Use fd 3 for both Port and Source Warning
     proc.stdio[3].once('data', (data) => {
-      console.log('DATA', data.toString())
       if (this.detectPort) {
         this.emit('port', Number(data), proc, () => {
           proc.stdio[3].destroy()
         })
-      } else {
+      } else if (data.toString() === 'source_warning') {
         console.log('SOURCE WARNING')
-        this.emit('source_warning', Number(data), proc, () => {
-          proc.stdio[3].destroy()
-          this.emit('warning', 'Transpiled code is not supported')
-        })
+        // this.emit('source_warning', Number(data), proc, () => {
+        this.emit('warning', 'Transpiled code is not supported')
+        proc.stdio[3].destroy()
+        // })
       }
     })
 
