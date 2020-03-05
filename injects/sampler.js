@@ -60,7 +60,8 @@ function saveSample () {
 
 // start sampler on next tick, to avoid measuring the startup time
 process.nextTick(function () {
-  if (!checkForTranspiledCode(process.mainModule.filename)) {
+  console.log(process.mainModule)
+  if (process.mainModule && !checkForTranspiledCode(process.mainModule.filename)) {
     // Show warning to user
     fs.writeSync(3, 'source_warning', null, 'utf8')
     process.emit('beforeExit')
