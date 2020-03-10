@@ -86,7 +86,8 @@ class ClinicDoctor extends events.EventEmitter {
         this.emit('port', Number(data), proc, () => {
           proc.stdio[3].destroy()
         })
-      } else if (data.toString() === 'source_warning') {
+      }
+      if (data.toString() === 'source_warning') {
         this.emit('warning', 'Transpiled code is not supported')
         proc.stdio[3].destroy()
       }
