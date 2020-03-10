@@ -5,6 +5,7 @@ const makeDir = require('mkdirp')
 const systemInfo = require('../collect/system-info.js')
 const ProcessStat = require('../collect/process-stat.js')
 const getLoggingPaths = require('@nearform/clinic-common').getLoggingPaths('doctor')
+const checkForTranspiledCode = require('@nearform/clinic-common').checkForTranspiledCode
 const ProcessStatEncoder = require('../format/process-stat-encoder.js')
 
 // create encoding files and directory
@@ -22,30 +23,6 @@ const out = processStatEncoder.pipe(fs.createWriteStream(paths['/processstat']))
 const processStat = new ProcessStat(parseInt(
   process.env.NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL, 10
 ))
-
-function checkForTranspiledCode (filename) {
-  const readFile = fs.readFileSync(filename, 'utf8')
-  const regex = /function\s+(?<functionName>\w+)/g
-  let matchedObj
-  let isTranspiled = false
-
-  // Check for a source map
-  isTranspiled = readFile.includes('//# sourceMappingURL=')
-
-  while ((matchedObj = regex.exec(readFile)) !== null) {
-    // Avoid infinite loops with zero-width matches
-    if (matchedObj.index === regex.lastIndex) {
-      regex.lastIndex++
-    }
-    // Loop through results and check length of fn name
-    matchedObj.forEach((match, groupIndex) => {
-      if (groupIndex !== 0 && match.length < 3) {
-        isTranspiled = true
-      }
-    })
-  }
-  return isTranspiled
-}
 
 // keep sample time unrefed such it doesn't interfere too much
 let timer = null
@@ -67,7 +44,6 @@ process.nextTick(function () {
   if (process.mainModule && checkForTranspiledCode(process.mainModule.filename)) {
     // Show warning to user
     fs.writeSync(3, 'source_warning', null, 'utf8')
-    process.emit('beforeExit')
   }
   processStat.refresh()
   scheduleSample()
