@@ -15,7 +15,7 @@ test('cmd - collect - cluster required but not used is ok', function (t) {
   })
 })
 
-test('cmd - collect - cluster used is not ok', function (t) {
+test('cmd - collect - using cluster causes error', function (t) {
   const proc = spawn(process.execPath, [
     require.resolve('./cmd-no-cluster.script.js')
   ], { stdio: 'pipe' })
