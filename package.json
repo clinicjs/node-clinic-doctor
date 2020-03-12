@@ -52,6 +52,11 @@
     "tap": "^14.10.3",
     "xorshift": "^1.1.1"
   },
+  "standard": {
+    "ignore": [
+      "/test/fixtures/"
+    ]
+  },
   "engines": {
     "node": "^8.10.0 || ^9.4.0 || >=10.0.0"
   },
