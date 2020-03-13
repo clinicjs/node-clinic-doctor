@@ -10,8 +10,6 @@ test('cmd - collect - source warning', function (t) {
   ])
   
   proc.stderr.pipe(endpoint((err, buf) => {
-  	console.log('BUF PLAIN', buf);
-  	console.log('BUF', buf.toString('utf8'));
     t.ifError(err)
     t.ok(buf.toString('utf8').includes('Transpiled code is not supported'), 'should warn if transpiled code is used')
     t.end()
