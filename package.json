@@ -6,14 +6,14 @@
   "scripts": {
     "visualize-watch": "node debug/visualize-watch.js",
     "visualize-all": "node debug/visualize-all.js",
-    "test": "standard | snazzy && tap -j1 --timeout=50 --no-cov test/*.test.js",
+    "test": "standard | snazzy && tap -j4 --timeout=50 --no-cov test/*.test.js",
     "ci-lint": "standard | snazzy",
-    "ci-test": "tap -j1 --timeout=50 test/*.test.js",
-    "ci-cov": "tap -j1 --timeout=60 --100 test/*.test.js",
+    "ci-test": "tap -j4 --timeout=50 test/*.test.js",
+    "ci-cov": "tap -j4 --timeout=60 --100 test/*.test.js",
     "lint": "standard --fix | snazzy"
   },
   "dependencies": {
-    "@nearform/clinic-common": "nearform/node-clinic-common#transpiled_warning",
+    "@nearform/clinic-common": "^2.3.0",
     "@nearform/trace-events-parser": "^1.0.4",
     "@tensorflow/tfjs-core": "^1.2.1",
     "async": "^3.0.1",
