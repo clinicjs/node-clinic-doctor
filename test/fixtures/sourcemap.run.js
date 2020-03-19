@@ -3,7 +3,7 @@ const path = require('path')
 const ClinicDoctor = require('../../index.js')
 
 const doctor = new ClinicDoctor()
-doctor.on('source_warning') => {
+doctor.on('warning') => {
 	console.log('message HERE');
 }
 
