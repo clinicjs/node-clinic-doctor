@@ -3,6 +3,10 @@ const path = require('path')
 const ClinicDoctor = require('../../index.js')
 
 const doctor = new ClinicDoctor()
+doctor.on('source_warning') => {
+	console.log('message HERE');
+}
+
 doctor.collect([
   process.execPath,
   path.join(__dirname, 'plain-with-sourcemap.js')
@@ -11,6 +15,3 @@ doctor.collect([
   if (err) throw err
 })
 
-doctor.on('warning') => {
-	console.log('message HERE');
-}
