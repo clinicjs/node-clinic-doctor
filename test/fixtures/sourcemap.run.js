@@ -3,8 +3,8 @@ const path = require('path')
 const ClinicDoctor = require('../../index.js')
 
 const doctor = new ClinicDoctor()
-doctor.on('warning') => {
-	console.log('message HERE');
+doctor.on('warning', (message)) => {
+	console.warn(message);
 }
 
 doctor.collect([
