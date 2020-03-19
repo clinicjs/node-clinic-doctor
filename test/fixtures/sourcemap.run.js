@@ -10,3 +10,7 @@ doctor.collect([
   rimraf.sync(result)
   if (err) throw err
 })
+
+doctor.on('warning') => {
+	console.log('message HERE');
+}
