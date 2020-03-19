@@ -10,6 +10,10 @@ test('cmd - collect - source warning', function (t) {
     path.join(__dirname, '/fixtures/sourcemap.run.js')
   ])
 
+  proc.on('exit', (code) => {
+    t.strictEqual(code, 0)
+  })
+
   proc.stderr.pipe(endpoint((err, buf) => {
     t.ifError(err)
     t.ok(buf.toString('utf8').includes('Transpiled code is not supported'), 'should warn if transpiled code is used')
