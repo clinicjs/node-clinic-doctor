@@ -3,9 +3,9 @@ const path = require('path')
 const ClinicDoctor = require('../../index.js')
 
 const doctor = new ClinicDoctor()
-doctor.on('warning', (message)) => {
+doctor.on('warning', (message) => {
 	console.warn(message);
-}
+})
 
 doctor.collect([
   process.execPath,
