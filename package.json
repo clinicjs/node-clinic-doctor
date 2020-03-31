@@ -27,7 +27,7 @@
     "distributions": "^2.0.0",
     "endpoint": "^0.4.5",
     "hidden-markov-model-tf": "^3.0.0",
-    "minify-stream": "^1.2.0",
+    "minify-stream": "^2.0.0",
     "mkdirp": "^1.0.0",
     "node-trace-log-join": "^1.0.0",
     "on-net-listen": "^1.0.0",
