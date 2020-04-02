@@ -1,7 +1,7 @@
 # Clinic.js Doctor
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/nearform/node-clinic-doctor.svg)](https://greenkeeper.io/)
-[![npm version][npm-version]][npm-url] [![Stability Stable][stability-stable]][stability-docs] [![Azure Pipelines build status][azure-status]][azure-url]
+[![npm version][npm-version]][npm-url] [![Stability Stable][stability-stable]][stability-docs] [![Github Actions build status][actions-status]][actions-url]
 [![Downloads][npm-downloads]][npm-url] [![Code style][lint-standard]][lint-standard-url]
 
 Programmable interface to [Clinic.js][clinic-url] Doctor. Learn more about Clinic.js: https://clinicjs.org/
@@ -82,9 +82,9 @@ possible error.
 
 [stability-stable]: https://img.shields.io/badge/stability-stable-green.svg?style=flat-square
 [stability-docs]: https://nodejs.org/api/documentation.html#documentation_stability_index
-[npm-version]: https://img.shields.io/npm/v/@nearform/clinic-doctor.svg?style=flat-square
-[npm-url]: https://www.npmjs.org/@nearform/clinic-doctor
-[npm-downloads]: http://img.shields.io/npm/dm/@nearform/clinic-doctor.svg?style=flat-square
+[npm-version]: https://img.shields.io/npm/v/@nearform/doctor.svg?style=flat-square
+[npm-url]: https://www.npmjs.org/@nearform/doctor
+[npm-downloads]: http://img.shields.io/npm/dm/@nearform/doctor.svg?style=flat-square
 [lint-standard]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square
 [lint-standard-url]: https://github.com/feross/standard
 [clinic-url]: https://github.com/nearform/node-clinic
@@ -92,5 +92,5 @@ possible error.
 [`<boolean>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type
 [`<number>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type
 [`<String>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
-[azure-status]: https://dev.azure.com/node-clinic/node-clinic/_apis/build/status/nearform.node-clinic-doctor
-[azure-url]: https://dev.azure.com/node-clinic/node-clinic/_apis/build/status/nearform.node-clinic-doctor?branchName=master
+[actions-status]: https://github.com/nearform/node-clinic-doctor/workflows/CI/badge.svg
+[actions-url]: https://github.com/nearform/node-clinic-doctor/actions
