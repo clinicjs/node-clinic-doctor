@@ -34,7 +34,7 @@
     "protocol-buffers": "^4.0.4",
     "pump": "^3.0.0",
     "pumpify": "^2.0.0",
-    "semver": "^7.0.0",
+    "semver": "^7.2.1",
     "showdown": "^1.7.6",
     "stream-template": "0.0.10",
     "streaming-json-stringify": "^3.1.0",
