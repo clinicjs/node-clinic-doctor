@@ -24,16 +24,13 @@ class Alert extends EventEmitter {
     super()
 
     this.analysis = null
-    this.opened = false
     this.fullTitleWidth = null
 
     this.container = d3.select('#alert')
+    this.container.classed('open', true)
 
     this.summary = this.container.append('div')
       .classed('summary', true)
-      .on('click', () => {
-        if (this.container.classed('has-issue')) this.emit(this.opened ? 'close' : 'open')
-      })
 
     this.alert = this.summary.append('svg')
       .classed('alert', true)
@@ -44,15 +41,6 @@ class Alert extends EventEmitter {
 
     this.titleTextNode = document.createTextNode('')
     this.title.node().appendChild(this.titleTextNode)
-
-    this.toggle = this.summary.append('div')
-      .classed('toggle', true)
-    this.toggle.append('svg')
-      .classed('arrow-down', true)
-      .call(icons.insertIcon('arrow-down'))
-    this.toggle.append('svg')
-      .classed('arrow-up', true)
-      .call(icons.insertIcon('arrow-up'))
 
     this.details = this.container.append('ul')
       .classed('details', true)
@@ -109,16 +97,6 @@ class Alert extends EventEmitter {
     } else {
       this._setTitleText(content.title)
     }
-  }
-
-  open () {
-    this.opened = true
-    this.container.classed('open', true)
-  }
-
-  close () {
-    this.opened = false
-    this.container.classed('open', false)
   }
 }
 
