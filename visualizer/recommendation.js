@@ -64,7 +64,7 @@ class Recomendation extends EventEmitter {
       .classed('menu', true)
     this.content = this.details.append('div')
       .classed('content', true)
-      // .on('scroll.scroller', () => this._drawSelectedArticleMenu())
+      .on('wheel', () => this.clearArticleMenuSelected())
     this.summaryTitle = this.content.append('div')
       .classed('summary-title', true)
     this.summary = this.content.append('div')
@@ -205,6 +205,7 @@ class Recomendation extends EventEmitter {
       this.articleMenu.append('h2')
         .text('Jump to section')
 
+      const self = this
       this.articleMenu.append('ul')
         .selectAll('li')
         .data(this.readMoreArticle.selectAll('h2').nodes())
@@ -215,7 +216,7 @@ class Recomendation extends EventEmitter {
         .on('click', function (headerElement) {
           const elementId = headerElement.textContent.replace(/\s/g, '')
           const selected = d3.select('#' + elementId)
-          d3.select('.article-menu').select('ul').selectAll('li').classed('selected', false)
+          self.clearArticleMenuSelected()
           selected.classed('selected', true)
           headerElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
         })
@@ -224,6 +225,10 @@ class Recomendation extends EventEmitter {
     // set space height such that the fixed element don't have to hide
     // something in the background.
     this.space.style('height', this.details.node().offsetHeight + 'px')
+  }
+
+  clearArticleMenuSelected () {
+    d3.select('.article-menu').select('ul').selectAll('li').classed('selected', false)
   }
 
   openPanel () {
