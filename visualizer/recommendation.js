@@ -64,7 +64,7 @@ class Recomendation extends EventEmitter {
       .classed('menu', true)
     this.content = this.details.append('div')
       .classed('content', true)
-      //.on('scroll.scroller', () => this._drawSelectedArticleMenu())
+      // .on('scroll.scroller', () => this._drawSelectedArticleMenu())
     this.summaryTitle = this.content.append('div')
       .classed('summary-title', true)
     this.summary = this.content.append('div')
@@ -204,7 +204,7 @@ class Recomendation extends EventEmitter {
 
       this.articleMenu.append('h2')
         .text('Jump to section')
-      
+
       this.articleMenu.append('ul')
         .selectAll('li')
         .data(this.readMoreArticle.selectAll('h2').nodes())
@@ -214,7 +214,7 @@ class Recomendation extends EventEmitter {
         .attr('id', (headerElement) => headerElement.textContent.replace(/\s/g, ''))
         .on('click', function (headerElement) {
           const elementId = headerElement.textContent.replace(/\s/g, '')
-          const selected = d3.select('#'+elementId)
+          const selected = d3.select('#' + elementId)
           d3.select('.article-menu').select('ul').selectAll('li').classed('selected', false)
           selected.classed('selected', true)
           headerElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
