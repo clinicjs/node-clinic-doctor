@@ -554,8 +554,8 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
   cursor: pointer;
 }
 
-#recommendation .menu ul li.recommendation-tab {
-  display: none;
+#recommendation .menu ul li.browse-label {
+  cursor: default
 }
 
 #recommendation .menu ul li,
@@ -617,7 +617,7 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
   cursor: pointer;
 }
 
-#recommendation .menu ul li.show-hide {
+#recommendation .menu ul li.browse-label {
   color: var(--recommend-link-color);
 }
 
