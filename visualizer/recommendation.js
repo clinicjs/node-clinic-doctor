@@ -170,7 +170,6 @@ class Recomendation extends EventEmitter {
     this.container
       .classed('open', this.panelOpened)
       .classed('read-more-open', this.readMoreOpened)
-      .classed('undetected-opened', this.undetectedOpened)
       .classed('has-read-more', recommendation.hasReadMore())
 
     // set content
@@ -240,14 +239,6 @@ class Recomendation extends EventEmitter {
 
   closeReadMore () {
     this.readMoreOpened = false
-  }
-
-  openUndetected () {
-    this.undetectedOpened = true
-  }
-
-  closeUndetected () {
-    this.undetectedOpened = false
   }
 }
 
