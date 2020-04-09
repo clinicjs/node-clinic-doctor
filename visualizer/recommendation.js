@@ -126,13 +126,6 @@ class Recomendation extends EventEmitter {
       .append('svg')
       .call(icons.insertIcon('arrow-down'))
 
-    const readLessText = this.readMoreButton.append('span')
-      .classed('read-more-button-text read-more-button-text-less', true)
-      .text('Read less')
-    readLessText
-      .append('svg')
-      .call(icons.insertIcon('arrow-up'))
-
     this.menu.append('svg')
       .classed('close', true)
       .on('click', () => this.emit('close-panel'))
