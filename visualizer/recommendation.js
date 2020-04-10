@@ -128,7 +128,7 @@ class Recomendation extends EventEmitter {
 
     this.menu.append('svg')
       .classed('close', true)
-      .on('click', () => this.emit('close-panel'))
+      .on('click', () => this.closeFullscreen())
       .call(icons.insertIcon('close'))
 
     this.bar = this.container.append('div')
@@ -242,6 +242,14 @@ class Recomendation extends EventEmitter {
 
   closePanel () {
     this.panelOpened = false
+  }
+
+  closeFullscreen () {
+    if (this.readMoreOpened) {
+      this.emit('close-read-more')
+    } else {
+      this.emit('close-panel')
+    }
   }
 
   openReadMore () {
