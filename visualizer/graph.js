@@ -29,6 +29,11 @@ class Graph extends EventEmitter {
       unit: 'MB',
       longLegend: ['RSS', 'Total Heap Allocated', 'Heap Used'],
       shortLegend: ['RSS', 'THA', 'HU'],
+      tooltipLegend: [
+        'Total memory allocated for the entire process',
+        'Amount of V8 memory assigned to store data',
+        'Heap memory used out of the Total Heap'
+      ],
       showLegend: true,
       lineStyle: ['1, 2', '5, 3', ''],
       numLines: 3,
