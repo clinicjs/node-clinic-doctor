@@ -848,3 +848,30 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
 html.recommendation-open #graph .sub-graph .chart .interval {
   display: block;
 }
+
+/* PRINT ONLY */
+
+@media print {
+  #graph {
+    display: block;
+  }
+  #alert .summary .title,
+  #graph .sub-graph .header .title,
+  #graph .sub-graph .header .legend .legend-item span {
+    color: black;
+  }
+  #recommendation .details {
+    display: flex;
+    color: black;
+  }
+  #recommendation .details .content {
+    overflow-y: hidden;
+  }
+  #menu, 
+  #alert,
+  #recommendation .bar,
+  #recommendation .menu ul li.show-hide,  
+  .close {
+    display: none;
+  }
+}
