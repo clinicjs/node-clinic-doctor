@@ -69,9 +69,6 @@ class Recomendation extends EventEmitter {
       .classed('summary-title', true)
     this.summary = this.content.append('div')
       .classed('summary', true)
-    this.copyButton = this.content.append('button')
-      .classed('copy-button', true)
-      .on('click', () => this.emit('copy-to-clipboard'))
     this.readMoreButton = this.content.append('div')
       .classed('read-more-button', true)
       .on('click', () => this.emit(this.readMoreOpened ? 'close-read-more' : 'open-read-more'))
@@ -176,6 +173,23 @@ class Recomendation extends EventEmitter {
     this.recommendations.get(newCategory).selected = true
   }
 
+  setSnippetListeners () {
+    var codeSnippets = document.getElementsByClassName('snippet')
+    for(let i = 0; i < codeSnippets.length; i++) {
+      codeSnippets[i].addEventListener('click', function () {
+        const body = document.getElementsByTagName('body')[0]
+        const copyText = codeSnippets[i].innerHTML
+        console.log(copyText)
+        const tempInput = document.createElement('INPUT')
+        body.appendChild(tempInput)
+        tempInput.setAttribute('value', copyText)
+        tempInput.select()
+        document.execCommand('copy')
+        body.removeChild(tempInput)
+      })
+    }
+  }
+
   draw () {
     this.pages
       .selectAll('li.recommendation-tab')
@@ -219,6 +233,7 @@ class Recomendation extends EventEmitter {
         })
 
       this._drawSelectedArticleMenu()
+      this.setSnippetListeners()
     }
 
     // set space height such that the fixed element don't have to hide

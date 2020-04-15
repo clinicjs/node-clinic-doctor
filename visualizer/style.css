@@ -43,6 +43,8 @@ html {
   --recommend-bg-color: rgba(55, 61, 79, 0.99);
 
   --article-menu-color: rgb(27, 30, 39);
+
+  --code-color: rgb(62, 167, 244);
 }
 
 html.light-theme {
@@ -69,6 +71,8 @@ html.light-theme {
   --recommend-bg-color: rgb(209, 211, 218);
 
   --article-menu-color: rgb(227, 227, 227);
+
+  --code-color: rgb(31, 91, 162);
 }
 
 /* Main layout */
@@ -847,4 +851,9 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
 
 html.recommendation-open #graph .sub-graph .chart .interval {
   display: block;
+}
+
+.snippet {
+  cursor: pointer;
+  color: var(--code-color); 
 }

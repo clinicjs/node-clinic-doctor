@@ -86,16 +86,6 @@ const drawUi = () => {
     recommendation.setPage(recommendation.defaultCategory)
     recommendation.draw()
   })
-  recommendation.on('copy-to-clipboard', function () {
-    const body = document.getElementsByTagName('body')[0]
-    const copyText = document.getElementById('copyText').innerHTML
-    const tempInput = document.createElement('INPUT')
-    body.appendChild(tempInput)
-    tempInput.setAttribute('value', copyText)
-    tempInput.select()
-    document.execCommand('copy')
-    body.removeChild(tempInput)
-  })
 
   loaddata(function maybeDone (err, data) {
     if (err) throw err
