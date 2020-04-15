@@ -183,7 +183,7 @@ class Recomendation extends EventEmitter {
 
     const recommendation = this.recommendations.get(this.selectedCategory)
     // In the case of no data display the recommendation instantly
-    if(recommendation.detected && recommendation.category === 'data') {
+    if (recommendation.detected && recommendation.category === 'data') {
       this.panelOpened = true
     }
 
