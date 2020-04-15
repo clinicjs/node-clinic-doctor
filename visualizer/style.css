@@ -871,6 +871,7 @@ html.recommendation-open #graph .sub-graph .chart .interval {
   #alert,
   #recommendation .bar,
   #recommendation .menu ul li.show-hide,  
+  #recommendation.has-read-more .content .read-more-button,
   .close {
     display: none;
   }
