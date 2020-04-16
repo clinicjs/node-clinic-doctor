@@ -30,7 +30,7 @@ class Menu extends EventEmitter {
   setupThemeToggle () {
     const themeButton = this.container.append('div')
       .classed('toggle', true)
-      .attr('id', 'toggle-theme')
+      .attr('id', 'light-theme')
       .on('click', () => this.emit('toggle-theme'))
 
     themeButton.append('svg')

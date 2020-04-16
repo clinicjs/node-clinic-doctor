@@ -15,7 +15,7 @@ const drawUi = () => {
   document.body.classList.add('is-font-loaded')
 
   menu.on('toggle-theme', function () {
-    document.documentElement.classList.toggle('toggle-theme')
+    document.documentElement.classList.toggle('light-theme')
   })
 
   menu.on('toggle-grid', function () {

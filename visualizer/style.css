@@ -45,7 +45,7 @@ html {
   --article-menu-color: rgb(27, 30, 39);
 }
 
-html.toggle-theme {
+html.light-theme {
   --main-bg-color: rgb(239, 239, 239);
 
   --nc-colour-header-background: rgb(65, 69, 85);
@@ -187,7 +187,7 @@ html .nc-header, html #front-matter, html #graph, html #graph .hover text, html 
   -moz-osx-font-smoothing: grayscale;
 }
 
-html.toggle-theme #front-matter, html.toggle-theme #graph, html.toggle-theme #recommendation .details {
+html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recommendation .details {
   -webkit-font-smoothing: unset;
   -moz-osx-font-smoothing: unset;
 }
@@ -314,7 +314,7 @@ html.toggle-theme #front-matter, html.toggle-theme #graph, html.toggle-theme #re
 }
 
 #toggle-grid svg, 
-#toggle-theme svg {
+#light-theme svg {
   height: 18px;
   width: 18px;
 }
@@ -325,11 +325,11 @@ html.toggle-theme #front-matter, html.toggle-theme #graph, html.toggle-theme #re
   padding: 1px;
 }
 
-html:not(.toggle-theme) #toggle-theme svg.theme-light {
+html:not(.light-theme) #light-theme svg.theme-light {
   display: none;
 }
 
-html.toggle-theme #toggle-theme svg.theme-dark {
+html.light-theme #light-theme svg.theme-dark {
   display: none;
 }
 
