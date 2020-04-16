@@ -855,11 +855,11 @@ html.recommendation-open #graph .sub-graph .chart .interval {
   display: block;
 }
 
-code {
+.snippet {
   cursor: pointer;
   color: var(--code-color);
 }
 
-code:hover {
+.snippet:hover {
   color: var(--code-color-hover);
 }
