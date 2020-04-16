@@ -16,15 +16,11 @@ We can make eliminate the possibility of ambient noise and make it easier for Cl
 
 By way of example, instead of running `clinic -- node app.js` in one terminal and `autocannon localhost:3000` in another, it is preferable and recommended to trigger both in one command using the following command:
 
-```sh
-clinic doctor --on-port="autocannon localhost:3000" -- node app.js
-```
+<code class='snippet'>clinic doctor --on-port="autocannon localhost:3000" -- node app.js</code>
 
 An even simpler form of this is to use the `--autocannon` flag,
 
-```sh
-clinic doctor --autocannon / -- node app.js
-```
+<code class='snippet'>clinic doctor --autocannon / -- node app.js</code>
 
 If after taking these steps an unknown categorization continues to occur then we can instead attempt to infer the nature of the performance issue using specialist diagnostic tooling, such
 as `clinic flame`, `clinic bubble` or Node Inspector.
@@ -34,14 +30,14 @@ as `clinic flame`, `clinic bubble` or Node Inspector.
 - First eliminate the possibility of ambient noise
     - Reduce noise by closing down as many other applications running on the system as possible - especially CPU or Memory intensive applications
     - Ensure that the `--on-port` flag is being used to trigger load testing instead of initiating load testing independently
-- Use `clinic bubbleprof` to create a diagram of the application's asynchronous flow (see `clinic bubbleprof --help`)
+- Use `clinic bubbleprof` to create a diagram of the application's asynchronous flow (see <code class='snippet'>clinic bubbleprof --help</code>)
 - Explore the Bubbleprof diagram. Look for long lines and large circles representing persistent delays, then drill down to reveal the lines of code responsible
     - A common problem is the overuse or misuse of promises. `clinic bubbleprof` will visualize promise activity, make a point of looking out for it in the diagram.
 - Use `clinic flame` to generate a flamegraph
-    - Run `clinic flame --help` to get started
+    - Run <code class='snippet'>clinic flame --help</code> to get started
 - Look for "hot" blocks, these are functions that are observed (at a higher relative frequency) to be at the top the stack per CPU sample – in other words, such functions are blocking the event loop
 - For memory analysis use the [`--inspect`](https://nodejs.org/en/docs/inspector) flag with the Chrome Devtools *Memory* tab.
-    - Run `node --inspect <FILENAME>`
+    - Run <code class='snippet'>node --inspect <FILENAME></code>
     - Open Chrome and navigate to [chrome://inspect](chrome://inspect)
     - Under the **Remote Target** heading, there should be a target with the official Node.js icon
     - Click the `inspect` link for that target – this will connect Chrome Devtools to the Node processes remote debug interface

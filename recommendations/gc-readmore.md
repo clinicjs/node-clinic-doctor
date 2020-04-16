@@ -46,7 +46,7 @@ root cause behind the high memory consumption.
 
 - If the system is already deployed, mitigate the issue immediately by implementing
   HTTP 503 Service Unavailable functionality (see *Load Shedding* in **Reference**)
-- Run `node --inspect <FILENAME>`
+- Run <code class='snippet'>node --inspect <FILENAME></code>
 - Open Chrome and navigate to [chrome://inspect](chrome://inspect)
 - Under the **Remote Target** heading, there should be a target with the official Node.js icon
 - Click the `inspect` link for that target – this will connect Chrome Devtools to the Node processes remote debug interface

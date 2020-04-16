@@ -19,7 +19,7 @@ I/O root cause analysis is mostly a reasoning exercise. [Clinic.js Bubbleprof](h
 
 ## Next Steps
 - Use `clinic bubbleprof` to create a diagram of the application's asynchronous flow.
-    + See `clinic bubbleprof --help` for how to generate the profile
+    + See <code class='snippet'>clinic bubbleprof --help</code> for how to generate the profile
     + Visit the [Bubbleprof walkthrough](https://clinicjs.org/bubbleprof/walkthrough) for a guide on how to use and interpret this output
 - Explore the Bubbleprof diagram. Look for long lines and large circles representing persistent delays, then drill down to reveal the lines of code responsible
 - Pay particular attention to "userland" delays, originating from code in the profiled application itself.
