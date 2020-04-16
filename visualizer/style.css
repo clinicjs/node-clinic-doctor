@@ -313,7 +313,8 @@ html.toggle-theme #front-matter, html.toggle-theme #graph, html.toggle-theme #re
   fill: var(--button-highlight-color);
 }
 
-#toggle-grid svg {
+#toggle-grid svg, 
+#toggle-theme svg {
   height: 18px;
   width: 18px;
 }
