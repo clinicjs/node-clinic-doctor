@@ -174,7 +174,7 @@ class Recomendation extends EventEmitter {
   }
 
   setSnippetListeners () {
-    let codeSnippets = document.getElementsByClassName('snippet')
+    let codeSnippets = document.getElementsByTagName('code')
     for (let i = 0; i < codeSnippets.length; i++) {
       codeSnippets[i].addEventListener('click', function () {
         const body = document.getElementsByTagName('body')[0]
