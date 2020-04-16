@@ -234,7 +234,6 @@ class Recomendation extends EventEmitter {
 
       this._drawSelectedArticleMenu()
       this.setSnippetListeners()
-      this.appendClipboardIcon()
     }
 
     // set space height such that the fixed element don't have to hide
