@@ -182,6 +182,10 @@ class Recomendation extends EventEmitter {
       .classed('has-read-more', (d) => d.hasReadMore())
 
     const recommendation = this.recommendations.get(this.selectedCategory)
+    // In the case of no data display the recommendation instantly
+    if (recommendation.detected && recommendation.category === 'data') {
+      this.panelOpened = true
+    }
 
     // update state classes
     this.container
