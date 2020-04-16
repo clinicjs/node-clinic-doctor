@@ -174,7 +174,7 @@ class Recomendation extends EventEmitter {
   }
 
   setSnippetListeners () {
-    var codeSnippets = document.getElementsByClassName('snippet')
+    let codeSnippets = document.getElementsByClassName('snippet')
     for (let i = 0; i < codeSnippets.length; i++) {
       codeSnippets[i].addEventListener('click', function () {
         const body = document.getElementsByTagName('body')[0]
@@ -188,6 +188,17 @@ class Recomendation extends EventEmitter {
         body.removeChild(tempInput)
       })
     }
+  }
+
+  appendClipboardIcon () {
+    d3.selectAll('.snippet').each(function () {
+      const parent = d3.select(this.parentNode)
+      const icon = parent.append('span')
+        .classed('icon', true)
+      icon.append('svg')
+        .classed('clipboard', true)
+        .call(icons.insertIcon('clipboard'))
+    })
   }
 
   draw () {
@@ -234,6 +245,7 @@ class Recomendation extends EventEmitter {
 
       this._drawSelectedArticleMenu()
       this.setSnippetListeners()
+      this.appendClipboardIcon()
     }
 
     // set space height such that the fixed element don't have to hide
