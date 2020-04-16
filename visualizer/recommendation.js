@@ -4,6 +4,7 @@ const d3 = require('./d3.js')
 const icons = require('./icons.js')
 const categories = require('./categories.js')
 const EventEmitter = require('events')
+const copy = require('clipboard-copy')
 
 class RecomendationWrapper {
   constructor (categoryContent) {
@@ -174,20 +175,10 @@ class Recomendation extends EventEmitter {
   }
 
   setSnippetListeners () {
-    const codeSnippets = document.getElementsByTagName('code')
-    for (let i = 0; i < codeSnippets.length; i++) {
-      codeSnippets[i].addEventListener('click', function () {
-        const body = document.getElementsByTagName('body')[0]
-        const copyText = codeSnippets[i].innerHTML
-        console.log(copyText)
-        const tempInput = document.createElement('INPUT')
-        body.appendChild(tempInput)
-        tempInput.setAttribute('value', copyText)
-        tempInput.select()
-        document.execCommand('copy')
-        body.removeChild(tempInput)
-      })
-    }
+    d3.selectAll('.snippet').on('click', function() {
+      const copyText = this.innerHTML
+      copy(copyText)
+    })
   }
 
   draw () {
