@@ -45,6 +45,7 @@ html {
   --article-menu-color: rgb(27, 30, 39);
 
   --code-color: rgb(62, 167, 244);
+  --code-color-hover: rgb(156, 210, 248);
 }
 
 html.light-theme {
@@ -73,6 +74,7 @@ html.light-theme {
   --article-menu-color: rgb(227, 227, 227);
 
   --code-color: rgb(31, 91, 162);
+  --code-color-hover: rgb(114, 193, 250);
 }
 
 /* Main layout */
@@ -855,5 +857,9 @@ html.recommendation-open #graph .sub-graph .chart .interval {
 
 .snippet {
   cursor: pointer;
-  color: var(--code-color); 
+  color: var(--code-color);
+}
+
+.snippet:hover {
+  color: var(--code-color-hover);
 }
