@@ -190,17 +190,6 @@ class Recomendation extends EventEmitter {
     }
   }
 
-  appendClipboardIcon () {
-    d3.selectAll('.snippet').each(function () {
-      const parent = d3.select(this.parentNode)
-      const icon = parent.append('span')
-        .classed('icon', true)
-      icon.append('svg')
-        .classed('clipboard', true)
-        .call(icons.insertIcon('clipboard'))
-    })
-  }
-
   draw () {
     this.pages
       .selectAll('li.recommendation-tab')
