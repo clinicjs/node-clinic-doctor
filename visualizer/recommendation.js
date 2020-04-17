@@ -174,14 +174,7 @@ class Recomendation extends EventEmitter {
     this.recommendations.get(newCategory).selected = true
   }
 
-  setSnippetListeners () {
-    d3.selectAll('.snippet').on('click', function() {
-      const copyText = this.innerHTML
-      copy(copyText)
-    })
-  }
-
-  appendClipboardIcon () {
+  formatSnippet () {
     d3.selectAll('.snippet').each(function () {
       const parent = d3.select(this.parentNode)
       const holder = parent.insert('span', '.snippet')
@@ -196,6 +189,10 @@ class Recomendation extends EventEmitter {
         .classed('snippet', true)
         .html(code)
       this.remove()
+
+      holder.on('click', function () {
+        copy(code)
+      })
     })
   }
 
@@ -242,8 +239,7 @@ class Recomendation extends EventEmitter {
         })
 
       this._drawSelectedArticleMenu()
-      this.setSnippetListeners()
-      this.appendClipboardIcon()
+      this.formatSnippet()
     }
 
     // set space height such that the fixed element don't have to hide
