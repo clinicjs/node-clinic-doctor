@@ -51,9 +51,12 @@ class ClinicDoctor extends events.EventEmitter {
     this.detectPort = detectPort
     this.debug = debug
     this.path = dest
+
+    this.param
   }
 
   collect (args, callback) {
+    this.param = args;
     // run program, but inject the sampler
     const logArgs = [
       '-r', 'no-cluster.js',
@@ -182,10 +185,19 @@ class ClinicDoctor extends events.EventEmitter {
         }
       })
     )
-
+    const proc = this.param[1]
     readStream(analysisStringified)
     .then(function(result) {
-      console.log(JSON.parse(result))
+      const analysis = JSON.parse(result)
+      const issueCategory = analysis.issueCategory
+      if (issueCategory === 'event-loop') {
+        console.log('clinic flame --autocannon [ / ] -- node ' + proc)
+      } else if (issueCategory === 'io') {
+        console.log('clinic bubbleprof --autocannon [ / ] -- node ' + proc)
+      }
+    })
+    .catch(function(err) {
+      console.log(err)
     })
 
     const traceEventStringify = pumpify(
