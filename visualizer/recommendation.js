@@ -184,11 +184,18 @@ class Recomendation extends EventEmitter {
   appendClipboardIcon () {
     d3.selectAll('.snippet').each(function () {
       const parent = d3.select(this.parentNode)
-      const icon = parent.insert('span','.snippet')
+      const holder = parent.insert('span', '.snippet')
+        .classed('snippet-holder', true)
+      const icon = holder.append('span')
         .classed('copy-icon-holder', true)
       icon.append('svg')
         .classed('copy-icon', true)
         .call(icons.insertIcon('copy'))
+      const code = this.innerHTML
+      holder.append('code')
+        .classed('snippet', true)
+        .html(code)
+      this.remove()
     })
   }
 
