@@ -74,7 +74,7 @@ html.light-theme {
   --article-menu-color: rgb(227, 227, 227);
 
   --code-color: rgb(31, 91, 162);
-  --code-color-hover: rgb(114, 193, 250);
+  --code-color-hover: rgb(77, 163, 224);
 }
 
 /* Main layout */
@@ -855,13 +855,20 @@ html.recommendation-open #graph .sub-graph .chart .interval {
   display: block;
 }
 
-.snippet {
+.snippet-holder {
   cursor: pointer;
-  color: var(--code-color);
 }
 
-.snippet:hover {
+.snippet-holder:hover .snippet {
   color: var(--code-color-hover);
+}
+
+.snippet-holder:hover .copy-icon {
+  fill: var(--code-color-hover);
+}
+
+.snippet {
+  color: var(--code-color);
 }
 
 .copy-icon-holder {
@@ -870,13 +877,8 @@ html.recommendation-open #graph .sub-graph .chart .interval {
 
 .copy-icon {
   fill: var(--code-color);
-  cursor: pointer;
   width: 1em;
   height: 1em;
   position: relative;
   top: 0.2em;
-}
-
-.copy-icon:hover {
-  fill: var(--code-color-hover);
 }
