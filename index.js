@@ -24,6 +24,15 @@ const buildJs = require('@nearform/clinic-common/scripts/build-js')
 const buildCss = require('@nearform/clinic-common/scripts/build-css')
 const mainTemplate = require('@nearform/clinic-common/templates/main')
 
+function readStream (stream) {
+  const chunks = []
+  return new Promise((resolve, reject) => {
+    stream.on('data', chunk => chunks.push(chunk))
+    stream.on('error', reject)
+    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')))
+  })
+}
+
 class ClinicDoctor extends events.EventEmitter {
   constructor (settings = {}) {
     super()
@@ -173,6 +182,11 @@ class ClinicDoctor extends events.EventEmitter {
         }
       })
     )
+
+    readStream(analysisStringified)
+    .then(function(result) {
+      console.log(JSON.parse(result))
+    })
 
     const traceEventStringify = pumpify(
       traceEventReader,
