@@ -181,6 +181,17 @@ class Recomendation extends EventEmitter {
     })
   }
 
+  appendClipboardIcon () {
+    d3.selectAll('.snippet').each(function () {
+      const parent = d3.select(this.parentNode)
+      const icon = parent.insert('span','.snippet')
+        .classed('copy-icon-holder', true)
+      icon.append('svg')
+        .classed('copy-icon', true)
+        .call(icons.insertIcon('copy'))
+    })
+  }
+
   draw () {
     this.pages
       .selectAll('li.recommendation-tab')
@@ -225,6 +236,7 @@ class Recomendation extends EventEmitter {
 
       this._drawSelectedArticleMenu()
       this.setSnippetListeners()
+      this.appendClipboardIcon()
     }
 
     // set space height such that the fixed element don't have to hide

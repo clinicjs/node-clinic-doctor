@@ -863,3 +863,20 @@ html.recommendation-open #graph .sub-graph .chart .interval {
 .snippet:hover {
   color: var(--code-color-hover);
 }
+
+.copy-icon-holder {
+  margin-right: 0.125em;
+}
+
+.copy-icon {
+  fill: var(--code-color);
+  cursor: pointer;
+  width: 1em;
+  height: 1em;
+  position: relative;
+  top: 0.2em;
+}
+
+.copy-icon:hover {
+  fill: var(--code-color-hover);
+}
