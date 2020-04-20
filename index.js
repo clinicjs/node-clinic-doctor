@@ -190,7 +190,11 @@ class ClinicDoctor extends events.EventEmitter {
 
     readStream(analysisStringified)
       .then((result) => {
-        this.issue = JSON.parse(result).issueCategory
+        const issue = JSON.parse(result).issueCategory
+        if (issue === 'gc') {
+          this.issue = 'garbage collection'
+        }
+        this.issue = issue
       })
       .catch(function (err) {
         console.error(err)
