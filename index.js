@@ -194,7 +194,7 @@ class ClinicDoctor extends events.EventEmitter {
         this.issue = analysis.issueCategory
       })
       .catch(function (err) {
-        console.log(err)
+        console.error(err)
       })
 
     const traceEventStringify = pumpify(
