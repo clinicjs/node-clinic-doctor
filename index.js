@@ -57,9 +57,8 @@ class ClinicDoctor extends events.EventEmitter {
   getIssue () {
     console.log(this.issue)
   }
-  
+
   collect (args, callback) {
-    this.param = args;
     // run program, but inject the sampler
     const logArgs = [
       '-r', 'no-cluster.js',
@@ -188,15 +187,15 @@ class ClinicDoctor extends events.EventEmitter {
         }
       })
     )
-    
+
     readStream(analysisStringified)
-    .then((result) => {
-      const analysis = JSON.parse(result)
-      this.issue = analysis.issueCategory
-    })
-    .catch(function(err) {
-      console.log(err)
-    })
+      .then((result) => {
+        const analysis = JSON.parse(result)
+        this.issue = analysis.issueCategory
+      })
+      .catch(function (err) {
+        console.log(err)
+      })
 
     const traceEventStringify = pumpify(
       traceEventReader,
