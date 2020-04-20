@@ -882,3 +882,31 @@ html.recommendation-open #graph .sub-graph .chart .interval {
   position: relative;
   top: 0.2em;
 }
+
+/* PRINT ONLY */
+
+@media print {
+  #graph {
+    display: block;
+  }
+  #alert .summary .title,
+  #graph .sub-graph .header .title,
+  #graph .sub-graph .header .legend .legend-item span {
+    color: black;
+  }
+  #recommendation .details {
+    display: flex;
+    color: black;
+  }
+  #recommendation .details .content {
+    overflow-y: hidden;
+  }
+  #menu, 
+  #alert,
+  #recommendation .bar,
+  #recommendation .menu ul li.show-hide,  
+  #recommendation.has-read-more .content .read-more-button,
+  .close {
+    display: none;
+  }
+}
