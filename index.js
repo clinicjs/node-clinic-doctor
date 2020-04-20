@@ -54,6 +54,10 @@ class ClinicDoctor extends events.EventEmitter {
     this.issue = null
   }
 
+  getIssue () {
+    console.log(this.issue)
+  }
+  
   collect (args, callback) {
     this.param = args;
     // run program, but inject the sampler
