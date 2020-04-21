@@ -319,7 +319,8 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   fill: var(--button-highlight-color);
 }
 
-#toggle-grid svg {
+#toggle-grid svg, 
+#light-theme svg {
   height: 18px;
   width: 18px;
 }
@@ -328,6 +329,14 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   height: 22px;
   width: 22px;
   padding: 1px;
+}
+
+html:not(.light-theme) #light-theme svg.theme-light {
+  display: none;
+}
+
+html.light-theme #light-theme svg.theme-dark {
+  display: none;
 }
 
 html:not(.grid-layout) #toggle-grid svg.grid-1x4 {

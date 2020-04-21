@@ -65,7 +65,7 @@ class Recomendation extends EventEmitter {
       .classed('menu', true)
     this.content = this.details.append('div')
       .classed('content', true)
-      .on('scroll.scroller', () => this._drawSelectedArticleMenu())
+      .on('wheel', () => this.clearArticleMenuSelected())
     this.summaryTitle = this.content.append('div')
       .classed('summary-title', true)
     this.summary = this.content.append('div')
@@ -238,12 +238,14 @@ class Recomendation extends EventEmitter {
         .enter()
         .append('li')
         .text((headerElement) => headerElement.textContent)
-        .on('click', function (headerElement) {
+        .attr('id', (headerElement) => headerElement.textContent.replace(/\s/g, ''))
+        .on('click', (headerElement) => {
+          const elementId = headerElement.textContent.replace(/\s/g, '')
+          const selected = d3.select('#' + elementId)
+          this.clearArticleMenuSelected()
+          selected.classed('selected', true)
           headerElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
         })
-
-      this._drawSelectedArticleMenu()
-      this.formatSnippet()
     }
 
     // set space height such that the fixed element don't have to hide
@@ -251,24 +253,8 @@ class Recomendation extends EventEmitter {
     this.space.style('height', this.details.node().offsetHeight + 'px')
   }
 
-  _drawSelectedArticleMenu () {
-    const contentScrollTop = this.content.node().scrollTop
-    const contentClientHeight = this.content.node().clientHeight
-
-    function isAboveScrollBottom (headerElement) {
-      const elementBottom = headerElement.offsetTop + headerElement.clientHeight
-      const relativeTopPosition = elementBottom - contentScrollTop
-      return relativeTopPosition <= contentClientHeight
-    }
-
-    const selection = this.articleMenu.select('ul').selectAll('li')
-    const mostRecentHeader = selection.data()
-      .filter(isAboveScrollBottom)
-      .pop()
-
-    selection.classed('selected', function (headerElement) {
-      return headerElement === mostRecentHeader
-    })
+  clearArticleMenuSelected () {
+    d3.select('.article-menu').select('ul').selectAll('li').classed('selected', false)
   }
 
   openPanel () {

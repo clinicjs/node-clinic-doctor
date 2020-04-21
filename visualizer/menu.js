@@ -28,11 +28,17 @@ class Menu extends EventEmitter {
   }
 
   setupThemeToggle () {
-    this.container.append('svg')
+    const themeButton = this.container.append('div')
       .classed('toggle', true)
-      .attr('id', 'toggle-theme')
+      .attr('id', 'light-theme')
       .on('click', () => this.emit('toggle-theme'))
-      .call(icons.insertIcon('theme'))
+
+    themeButton.append('svg')
+      .classed('theme-dark', true)
+      .call(icons.insertIcon('lightmode'))
+    themeButton.append('svg')
+      .classed('theme-light', true)
+      .call(icons.insertIcon('darkmode'))
   }
 }
 
