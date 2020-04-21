@@ -48,7 +48,8 @@ class Icons {
       close: sanitizeIcon(require('@nearform/clinic-common/icons/close')),
       'grid-1x4': sanitizeIcon(require('@nearform/clinic-common/icons/list-view')),
       'grid-2x2': sanitizeIcon(require('@nearform/clinic-common/icons/grid-view')),
-      theme: sanitizeIcon(require('@nearform/clinic-common/icons/eye-show')),
+      lightmode: sanitizeIcon(require('@nearform/clinic-common/icons/light-mode')),
+      darkmode: sanitizeIcon(require('@nearform/clinic-common/icons/dark-mode')),
       warning: sanitizeIcon(require('@nearform/clinic-common/icons/warning-triangle'))
     }
 
