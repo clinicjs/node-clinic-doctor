@@ -205,7 +205,6 @@ class Recomendation extends EventEmitter {
       this.articleMenu.append('h2')
         .text('Jump to section')
 
-      const self = this
       this.articleMenu.append('ul')
         .selectAll('li')
         .data(this.readMoreArticle.selectAll('h2').nodes())
@@ -213,10 +212,10 @@ class Recomendation extends EventEmitter {
         .append('li')
         .text((headerElement) => headerElement.textContent)
         .attr('id', (headerElement) => headerElement.textContent.replace(/\s/g, ''))
-        .on('click', function (headerElement) {
+        .on('click', (headerElement) => {
           const elementId = headerElement.textContent.replace(/\s/g, '')
           const selected = d3.select('#' + elementId)
-          self.clearArticleMenuSelected()
+          this.clearArticleMenuSelected()
           selected.classed('selected', true)
           headerElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
         })
