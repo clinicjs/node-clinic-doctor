@@ -247,7 +247,7 @@ class Recomendation extends EventEmitter {
           headerElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
         })
     }
-
+    this.formatSnippet()
     // set space height such that the fixed element don't have to hide
     // something in the background.
     this.space.style('height', this.details.node().offsetHeight + 'px')
