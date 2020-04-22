@@ -24,15 +24,6 @@ const buildJs = require('@nearform/clinic-common/scripts/build-js')
 const buildCss = require('@nearform/clinic-common/scripts/build-css')
 const mainTemplate = require('@nearform/clinic-common/templates/main')
 
-function readStream (stream) {
-  const chunks = []
-  return new Promise((resolve, reject) => {
-    stream.on('data', chunk => chunks.push(chunk))
-    stream.on('error', reject)
-    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')))
-  })
-}
-
 class ClinicDoctor extends events.EventEmitter {
   constructor (settings = {}) {
     super()
@@ -176,29 +167,20 @@ class ClinicDoctor extends events.EventEmitter {
       new ProcessStatDecoder()
     )
 
+    const analysis = new Analysis(systemInfoReader, traceEventReader, processStatReader)
+    analysis.on('data', (data) => { this.issue = data.issueCategory })
     // create analysis
     const analysisStringified = pumpify(
-      new Analysis(systemInfoReader, traceEventReader, processStatReader),
+      analysis,
       new stream.Transform({
         readableObjectMode: false,
         writableObjectMode: true,
         transform (data, encoding, callback) {
+          this.issue = data.issueCategory
           callback(null, JSON.stringify(data))
         }
       })
     )
-
-    readStream(analysisStringified)
-      .then((result) => {
-        const issue = JSON.parse(result).issueCategory
-        if (issue === 'gc') {
-          this.issue = 'garbage collection'
-        }
-        this.issue = issue
-      })
-      .catch(function (err) {
-        console.error(err)
-      })
 
     const traceEventStringify = pumpify(
       traceEventReader,
