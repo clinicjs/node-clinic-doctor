@@ -18,6 +18,7 @@
     "@nearform/trace-events-parser": "^1.0.4",
     "@tensorflow/tfjs-core": "^1.2.1",
     "async": "^3.0.1",
+    "clipboard-copy": "^3.1.0",
     "d3-array": "^2.0.0",
     "d3-axis": "^1.0.8",
     "d3-scale": "^3.0.0",

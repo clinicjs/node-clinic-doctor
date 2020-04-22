@@ -4,6 +4,7 @@ const d3 = require('./d3.js')
 const icons = require('./icons.js')
 const categories = require('./categories.js')
 const EventEmitter = require('events')
+const copy = require('clipboard-copy')
 
 class RecomendationWrapper {
   constructor (categoryContent) {
@@ -173,6 +174,28 @@ class Recomendation extends EventEmitter {
     this.recommendations.get(newCategory).selected = true
   }
 
+  formatSnippet () {
+    d3.selectAll('.snippet').each(function () {
+      const parent = d3.select(this.parentNode)
+      const holder = parent.insert('span', '.snippet')
+        .classed('snippet-holder', true)
+      const icon = holder.append('span')
+        .classed('copy-icon-holder', true)
+      icon.append('svg')
+        .classed('copy-icon', true)
+        .call(icons.insertIcon('copy'))
+      const code = this.innerHTML
+      holder.append('code')
+        .classed('snippet', true)
+        .html(code)
+      this.remove()
+
+      holder.on('click', function () {
+        copy(code)
+      })
+    })
+  }
+
   draw () {
     this.pages
       .selectAll('li.recommendation-tab')
@@ -224,7 +247,7 @@ class Recomendation extends EventEmitter {
           headerElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
         })
     }
-
+    this.formatSnippet()
     // set space height such that the fixed element don't have to hide
     // something in the background.
     this.space.style('height', this.details.node().offsetHeight + 'px')
