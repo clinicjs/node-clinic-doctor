@@ -8,6 +8,7 @@ const graph = require('./graph.js')
 const recommendation = require('./recommendation.js')
 const askBehaviours = require('@nearform/clinic-common/behaviours/ask')
 const loadFonts = require('@nearform/clinic-common/behaviours/font-loader')
+const versionInfo = require('./version-info.js')
 
 // Called on font load or timeout
 const drawUi = () => {
@@ -98,6 +99,8 @@ const drawUi = () => {
 
     recommendation.setData(data)
     recommendation.draw()
+
+    versionInfo.draw()
 
     window.addEventListener('resize', function () {
       alert.draw()

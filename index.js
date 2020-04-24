@@ -263,6 +263,7 @@ class ClinicDoctor extends events.EventEmitter {
         <div id="menu"></div>
       </div>
       <div id="graph"></div>
+      <div id="version-info"></div>
       <div id="recommendation-space"></div>
       <div id="recommendation"></div>
       ${recommendations}
