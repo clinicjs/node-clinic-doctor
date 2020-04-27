@@ -34,7 +34,6 @@ class VersionInfo {
     const cmdString = cmdArray.toString()
     cmdString.replace(',', ' ')
     this.cmdLineArgs = cmdString
-    
   }
 }
 module.exports = new VersionInfo()
