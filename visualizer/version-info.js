@@ -1,5 +1,4 @@
 const d3 = require('./d3.js')
-const info = require('./data.json')
 
 class VersionInfo {
   constructor () {
@@ -32,8 +31,8 @@ class VersionInfo {
     const args = data.args
     const cmdArray = Object.values(args)
     const cmdString = cmdArray.toString()
-    cmdString.replace(',', ' ')
-    this.cmdLineArgs = cmdString
+    const cmdStringNoComma = cmdString.replace(',', ' ')
+    this.cmdLineArgs = cmdStringNoComma
   }
 }
 module.exports = new VersionInfo()
