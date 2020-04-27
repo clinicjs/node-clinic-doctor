@@ -145,23 +145,12 @@ class ClinicDoctor extends events.EventEmitter {
     const logoPath = path.join(__dirname, 'visualizer', 'app-logo.svg')
     const nearFormLogoPath = path.join(__dirname, 'visualizer', 'nearform-logo.svg')
     const clinicFaviconPath = path.join(__dirname, 'visualizer', 'clinic-favicon.png.b64')
-    const systemInfoPath = path.join(__dirname, 'visualizer', 'info.json')
 
     // Load data
     const paths = getLoggingPaths({ path: dataDirname })
 
-    const chunks = []
-    const systemInfoStream = fs.createReadStream(paths['/systeminfo'])
-      .on('data', (data) => {
-        chunks.push(data)
-      })
-      .on('end', () => {
-        fs.writeFile(systemInfoPath, chunks.toString(), 'utf-8', function () {
-        })
-      })
-
     const systemInfoReader = pumpify.obj(
-      systemInfoStream,
+      fs.createReadStream(paths['/systeminfo']),
       new SystemInfoDecoder()
     )
 
@@ -202,6 +191,14 @@ class ClinicDoctor extends events.EventEmitter {
       })
     )
 
+    const systemInfoStringify = pumpify(
+      systemInfoReader,
+      new Stringify({
+        seperator: ',`\n',
+        stringifier: JSON.stringify
+      })
+    )
+
     const hasFreeMemory = () => {
       const used = process.memoryUsage().heapTotal / HEAP_MAX
       if (used > 0.5) {
@@ -218,7 +215,8 @@ class ClinicDoctor extends events.EventEmitter {
       {
         "traceEvent": ${traceEventStringify},
         "processStat": ${processStatStringify},
-        "analysis": ${analysisStringified}
+        "analysis": ${analysisStringified},
+        "systemInfo": ${systemInfoStringify}
       }
     `
 
@@ -290,7 +288,6 @@ class ClinicDoctor extends events.EventEmitter {
       fs.createWriteStream(outputFilename),
       function (err) {
         clearInterval(checkHeapInterval)
-        fs.writeFile(systemInfoPath, '', () => {})
         callback(err)
       }
     )
