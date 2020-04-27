@@ -45,6 +45,7 @@ class ClinicDoctor extends events.EventEmitter {
   }
 
   collect (args, callback) {
+    this.args = args
     // run program, but inject the sampler
     const logArgs = [
       '-r', 'no-cluster.js',
@@ -153,7 +154,6 @@ class ClinicDoctor extends events.EventEmitter {
       fs.createReadStream(paths['/systeminfo']),
       new SystemInfoDecoder()
     )
-
     const traceEventReader = pumpify.obj(
       fs.createReadStream(paths['/traceevent']),
       new TraceEventDecoder(systemInfoReader)
@@ -194,7 +194,7 @@ class ClinicDoctor extends events.EventEmitter {
     const systemInfoStringify = pumpify(
       systemInfoReader,
       new Stringify({
-        seperator: ',`\n',
+        seperator: ',\n',
         stringifier: JSON.stringify
       })
     )
@@ -211,12 +211,20 @@ class ClinicDoctor extends events.EventEmitter {
 
     const checkHeapInterval = setInterval(hasFreeMemory, 50)
 
+    const args = {}
+    Object.assign(args, this.args)
+    const argsStringify = JSON.stringify(args)
+    const argsStream = new stream.Readable()
+    argsStream.push(argsStringify)
+    argsStream.push(null)
+
     const dataFile = streamTemplate`
       {
         "traceEvent": ${traceEventStringify},
         "processStat": ${processStatStringify},
         "analysis": ${analysisStringified},
-        "systemInfo": ${systemInfoStringify}
+        "systemInfo": ${systemInfoStringify},
+        "args": ${argsStream}
       }
     `
 
