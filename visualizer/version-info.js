@@ -1,5 +1,5 @@
 const d3 = require('./d3.js')
-const info = require('./info.json')
+const info = require('./data.json')
 
 class VersionInfo {
   constructor () {
@@ -12,8 +12,11 @@ class VersionInfo {
       .classed('version-holder', true)
       .attr('id', 'doctor-version')
 
-    this.nodeVersion = info.nodeVersions.node
-    this.doctorVersion = info.toolVersion
+    this.container.append('span')
+      .classed('version-holder', true)
+      .attr('id', 'cmd-line-args')
+
+    this.cmdLineArgs = ''
   }
 
   draw () {
@@ -21,6 +24,13 @@ class VersionInfo {
       .text('Node version: ' + this.nodeVersion)
     d3.select('#doctor-version').append('span')
       .text('Doctor version: ' + this.doctorVersion)
+    d3.select('#cmd-line-args').append('span')
+      .text('Arguments :' + this.cmdLineArgs)
+  }
+
+  setData (data) {
+    this.nodeVersion = data.system.nodeVersion.version
+    this.doctorVersion = data.system.toolVersion.version
   }
 }
 module.exports = new VersionInfo()
