@@ -100,6 +100,7 @@ const drawUi = () => {
     recommendation.setData(data)
     recommendation.draw()
 
+    versionInfo.setData(data)
     versionInfo.draw()
 
     window.addEventListener('resize', function () {
