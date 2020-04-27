@@ -892,9 +892,12 @@ html.recommendation-open #graph .sub-graph .chart .interval {
   top: 0.2em;
 }
 
+#version-info {
+  margin-top: 16px;
+}
+
 .version-holder {
   color: var(--graph-text-color);
-  padding-top: 12px;
   padding-left: 12px;
 }
 
