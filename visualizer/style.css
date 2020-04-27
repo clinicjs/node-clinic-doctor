@@ -614,8 +614,10 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
   cursor: pointer;
 }
 
-#recommendation .menu ul li.browse-label {
+#recommendation .menu ul li.undetected-label {
   color: var(--recommend-link-color);
+  line-height: 31px;
+  cursor: default;
 }
 
 #recommendation .menu-text-inner svg {

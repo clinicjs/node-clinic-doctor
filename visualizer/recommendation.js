@@ -97,9 +97,8 @@ class Recomendation extends EventEmitter {
       .call(icons.insertIcon('warning'))
 
     this.pages.append('li')
-      .classed('browse-label', true)
+      .classed('undetected-label', true)
       .append('span')
-      .classed('menu-text', true)
       .text('Browse undetected issues:')
 
     const readMoreText = this.readMoreButton.append('span')
@@ -134,6 +133,8 @@ class Recomendation extends EventEmitter {
     arrow.append('svg')
       .classed('arrow-down', true)
       .call(icons.insertIcon('arrow-down'))
+
+    this.openUndetected()
   }
 
   setData (data) {
@@ -170,6 +171,7 @@ class Recomendation extends EventEmitter {
     this.container
       .classed('open', this.panelOpened)
       .classed('read-more-open', this.readMoreOpened)
+      .classed('undetected-opened', this.undetectedOpened)
       .classed('has-read-more', recommendation.hasReadMore())
 
     // set content
@@ -239,6 +241,14 @@ class Recomendation extends EventEmitter {
 
   closeReadMore () {
     this.readMoreOpened = false
+  }
+
+  openUndetected () {
+    this.undetectedOpened = true
+  }
+
+  closeUndetected () {
+    this.undetectedOpened = false
   }
 }
 
