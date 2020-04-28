@@ -35,7 +35,7 @@ test('get issue', function (t) {
         if (err) return cleanup(err, dirname)
 
         const issue = tool.getIssue()
-        t.equal(issue, 'data')
+        t.equal(issue, 'io')
         cleanup(null, dirname)
       })
     }
