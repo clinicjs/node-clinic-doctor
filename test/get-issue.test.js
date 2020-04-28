@@ -5,7 +5,6 @@ const ClinicDoctor = require('../index.js')
 
 test('get issue', function (t) {
   const tool = new ClinicDoctor({ dest: './foo' })
-  const issue = tool.getIssue()
-  t.equal(issue, null)
+  t.equal(tool.issue, null)
   t.end()
 })
