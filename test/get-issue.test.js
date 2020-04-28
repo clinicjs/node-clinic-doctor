@@ -24,7 +24,7 @@ test('get issue', function (t) {
   }
 
   const script =
-  'setTimeout(() => {}, 1000)'
+  'setTimeout(() => {}, 5000)'
 
   tool.collect(
     [process.execPath, '-e', script],
