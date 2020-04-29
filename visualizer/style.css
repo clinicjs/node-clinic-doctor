@@ -561,6 +561,9 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
 #recommendation .menu ul li,
 #recommendation .menu ul li.detected,
 #recommendation .menu ul li.selected,
+#recommendation.undetected-opened .menu ul li.has-read-more {
+  display: flex;
+}
 
 #recommendation .menu ul li.detected {
   float: left;
