@@ -109,16 +109,14 @@ class Recomendation extends EventEmitter {
       .append('svg')
       .call(icons.insertIcon('arrow-down'))
 
-    const readLessText = this.readMoreButton.append('span')
-      .classed('read-more-button-text read-more-button-text-less', true)
-      .text('Read less')
-    readLessText
-      .append('svg')
-      .call(icons.insertIcon('arrow-up'))
+    this.menu.append('svg')
+      .classed('close', true)
+      .on('click', () => this.minimize())
+      .call(icons.insertIcon('arrow-down'))
 
     this.menu.append('svg')
       .classed('close', true)
-      .on('click', () => this.emit('close-panel'))
+      .on('click', () => this.closeFullscreen())
       .call(icons.insertIcon('close'))
 
     this.bar = this.container.append('div')
@@ -247,6 +245,14 @@ class Recomendation extends EventEmitter {
 
   closePanel () {
     this.panelOpened = false
+  }
+
+  minimize () {
+    this.emit('close-read-more')
+  }
+
+  closeFullscreen () {
+    this.emit('close-panel')
   }
 
   openReadMore () {
