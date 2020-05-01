@@ -218,6 +218,8 @@ class ClinicDoctor extends events.EventEmitter {
     const nearFormLogoFile = fs.createReadStream(nearFormLogoPath)
     const clinicFaviconBase64 = fs.createReadStream(clinicFaviconPath)
 
+    const doctorVersion = require('./package.json').version
+
     // build JS
     let scriptFile = buildJs({
       basedir: __dirname,
@@ -267,6 +269,7 @@ class ClinicDoctor extends events.EventEmitter {
       headerLogoTitle: 'Clinic Doctor on Clinicjs.org',
       headerLogo: logoFile,
       headerText: 'Doctor',
+      toolVersion: doctorVersion,
       nearFormLogo: nearFormLogoFile,
       uploadId: outputFilename.split('/').pop().split('.html').shift(),
       body
