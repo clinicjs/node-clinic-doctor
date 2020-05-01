@@ -9,25 +9,18 @@ class VersionInfo {
 
     this.container.append('span')
       .classed('version-holder', true)
-      .attr('id', 'doctor-version')
-
-    this.container.append('span')
-      .classed('version-holder', true)
       .attr('id', 'cmd-line-args')
   }
 
   draw () {
     d3.select('#node-version').append('span')
       .text('Node version: ' + this.nodeVersion)
-    d3.select('#doctor-version').append('span')
-      .text('Doctor version: ' + this.doctorVersion)
     d3.select('#cmd-line-args').append('span')
       .text('Arguments: ' + this.cmdLineArgs)
   }
 
   setData (data) {
     this.nodeVersion = data.system.nodeVersion.version
-    this.doctorVersion = data.system.toolVersion.version
     const args = data.args
     const cmdArray = Object.values(args)
     const cmdString = cmdArray.toString()

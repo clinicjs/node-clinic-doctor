@@ -6,7 +6,6 @@ const stream = require('../lib/destroyable-stream')
 class SystemInfo {
   constructor (systemInfo) {
     this.nodeVersion = semver.parse(systemInfo.nodeVersions.node)
-    this.toolVersion = semver.parse(systemInfo.toolVersion)
 
     this.clock = systemInfo.clock
 

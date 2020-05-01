@@ -25,8 +25,7 @@ test('Format - system info - decoding', function (t) {
         unixtime: 33000000
       },
       clockOffset: 32999999.6,
-      nodeVersion: semver.parse(process.versions.node),
-      toolVersion: semver.parse(require('../package').version)
+      nodeVersion: semver.parse(process.versions.node)
     })
 
     t.end()
