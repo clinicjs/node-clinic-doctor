@@ -569,8 +569,8 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
   cursor: pointer;
 }
 
-#recommendation .menu ul li.recommendation-tab {
-  display: none;
+#recommendation .menu ul li.browse-label {
+  cursor: default
 }
 
 #recommendation .menu ul li,
@@ -632,8 +632,10 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
   cursor: pointer;
 }
 
-#recommendation .menu ul li.show-hide {
+#recommendation .menu ul li.undetected-label {
   color: var(--recommend-link-color);
+  line-height: 31px;
+  cursor: default;
 }
 
 #recommendation .menu-text-inner svg {
@@ -647,14 +649,6 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
 
 #recommendation .menu-text-inner-hide {
   display: none;
-}
-
-#recommendation.undetected-opened .menu-text-inner {
-  display: none;
-}
-
-#recommendation.undetected-opened .menu-text-inner-hide {
-  display: inline-block;
 }
 
 #recommendation .bar {

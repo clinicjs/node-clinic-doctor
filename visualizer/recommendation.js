@@ -97,28 +97,10 @@ class Recomendation extends EventEmitter {
       .classed('warning-icon', true)
       .call(icons.insertIcon('warning'))
 
-    // Add button to show-hide tabs described undetected issues
-    const button = this.pages.append('li')
-      .classed('show-hide', true)
-      .on('click', () => this.emit(this.undetectedOpened ? 'close-undetected' : 'open-undetected'))
+    this.pages.append('li')
+      .classed('undetected-label', true)
       .append('span')
-      .classed('menu-text', true)
-
-    const buttonText = button
-      .append('span')
-      .classed('menu-text-inner', true)
-    buttonText
-      .append('svg')
-      .call(icons.insertIcon('arrow-left'))
-    buttonText
-      .append('span')
-      .text('Browse undetected issues')
-    button
-      .append('span')
-      .text('Hide')
-      .classed('menu-text-inner menu-text-inner-hide', true)
-      .append('svg')
-      .call(icons.insertIcon('arrow-right'))
+      .text('Browse undetected issues:')
 
     const readMoreText = this.readMoreButton.append('span')
       .classed('read-more-button-text', true)
@@ -152,6 +134,8 @@ class Recomendation extends EventEmitter {
     arrow.append('svg')
       .classed('arrow-down', true)
       .call(icons.insertIcon('arrow-down'))
+
+    this.openUndetected()
   }
 
   setData (data) {
