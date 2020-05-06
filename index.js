@@ -138,15 +138,7 @@ class ClinicDoctor extends events.EventEmitter {
     })
   }
 
-  visualize (dataDirname, outputFilename, callback) {
-    const fakeDataPath = path.join(__dirname, 'visualizer', 'data.json')
-    const stylePath = path.join(__dirname, 'visualizer', 'style.css')
-    const scriptPath = path.join(__dirname, 'visualizer', 'main.js')
-    const logoPath = path.join(__dirname, 'visualizer', 'app-logo.svg')
-    const nearFormLogoPath = path.join(__dirname, 'visualizer', 'nearform-logo.svg')
-    const clinicFaviconPath = path.join(__dirname, 'visualizer', 'clinic-favicon.png.b64')
-
-    // Load data
+  analyze (dataDirname) {
     const paths = getLoggingPaths({ path: dataDirname })
 
     const systemInfoReader = pumpify.obj(
@@ -163,12 +155,45 @@ class ClinicDoctor extends events.EventEmitter {
     )
 
     // create analysis
+    const analysis = new Analysis(systemInfoReader, traceEventReader, processStatReader)
+
+    return {
+      traceEventReader,
+      processStatReader,
+      analysis
+    }
+  }
+
+  visualize (analysisData, outputFilename, callback) {
+    const fakeDataPath = path.join(__dirname, 'visualizer', 'data.json')
+    const stylePath = path.join(__dirname, 'visualizer', 'style.css')
+    const scriptPath = path.join(__dirname, 'visualizer', 'main.js')
+    const logoPath = path.join(__dirname, 'visualizer', 'app-logo.svg')
+    const nearFormLogoPath = path.join(__dirname, 'visualizer', 'nearform-logo.svg')
+    const clinicFaviconPath = path.join(__dirname, 'visualizer', 'clinic-favicon.png.b64')
+
+    // back compat
+    if (typeof analysisData === 'string') {
+      analysisData = this.analyze(analysisData)
+    }
+
+    // Load data
+    const {
+      traceEventReader,
+      processStatReader,
+      analysis
+    } = analysisData
+
+    let result = null
+
+    // create analysis
     const analysisStringified = pumpify(
-      new Analysis(systemInfoReader, traceEventReader, processStatReader),
+      analysis,
       new stream.Transform({
         readableObjectMode: false,
         writableObjectMode: true,
         transform (data, encoding, callback) {
+          result = data
           callback(null, JSON.stringify(data))
         }
       })
@@ -280,7 +305,11 @@ class ClinicDoctor extends events.EventEmitter {
       fs.createWriteStream(outputFilename),
       function (err) {
         clearInterval(checkHeapInterval)
-        callback(err)
+        if (err) {
+          callback(err)
+        } else {
+          callback(null, result)
+        }
       }
     )
   }

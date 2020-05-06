@@ -26,7 +26,8 @@ const doctor = new ClinicDoctor()
 doctor.collect(['node', './path-to-script.js'], function (err, filepath) {
   if (err) throw err
 
-  doctor.visualize(filepath, filepath + '.html', function (err) {
+  const analysis = doctor.analyze(filepath)
+  doctor.visualize(analysis, filepath + '.html', function (err) {
     if (err) throw err
   });
 })
@@ -69,10 +70,18 @@ directory will be the value in the callback.
 stdout, stderr, and stdin will be relayed to the calling process. As will the
 `SIGINT` event.
 
-#### `doctor.visualize(dataFilename, outputFilename, callback)`
+#### `doctor.analyze(dataFilename)`
 
 Will consume the datafile specified by `dataFilename`, this datafile will be
 produced by the sampler using `doctor.collect`.
+
+`doctor.analyze` will then return an object that can be passed to
+`doctor.visualize()` to generate a visualization.
+
+#### `doctor.visualize(analysis, outputFilename, callback)`
+
+Will consume the analysis specified by `analysis`, which can be produced by
+calling `doctor.analyze()`.
 
 `doctor.visualize` will then output a standalone HTML file to `outputFilename`.
 When completed the `callback` will be called with no extra arguments, except a
