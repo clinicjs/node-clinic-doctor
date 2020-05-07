@@ -11,7 +11,7 @@ const { spawn } = require('child_process')
 const Analysis = require('./analysis/index.js')
 const Stringify = require('streaming-json-stringify')
 const streamTemplate = require('stream-template')
-const joinTrace = require('node-trace-log-join')
+const joinTrace = require('@nearform/node-trace-log-join')
 const getLoggingPaths = require('@nearform/clinic-common').getLoggingPaths('doctor')
 const SystemInfoDecoder = require('./format/system-info-decoder.js')
 const TraceEventDecoder = require('./format/trace-event-decoder.js')
@@ -217,6 +217,8 @@ class ClinicDoctor extends events.EventEmitter {
     const nearFormLogoFile = fs.createReadStream(nearFormLogoPath)
     const clinicFaviconBase64 = fs.createReadStream(clinicFaviconPath)
 
+    const doctorVersion = require('./package.json').version
+
     // build JS
     let scriptFile = buildJs({
       basedir: __dirname,
@@ -255,10 +257,11 @@ class ClinicDoctor extends events.EventEmitter {
       styles: styleFile,
       data: dataFile,
       script: scriptFile,
-      headerLogoUrl: 'https://github.com/nearform/node-clinic-doctor',
-      headerLogoTitle: 'Clinic Doctor on GitHub',
+      headerLogoUrl: 'https://clinicjs.org/doctor/',
+      headerLogoTitle: 'Clinic Doctor on Clinicjs.org',
       headerLogo: logoFile,
       headerText: 'Doctor',
+      toolVersion: doctorVersion,
       nearFormLogo: nearFormLogoFile,
       uploadId: outputFilename.split('/').pop().split('.html').shift(),
       body

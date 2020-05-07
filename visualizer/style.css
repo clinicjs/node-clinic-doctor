@@ -43,6 +43,9 @@ html {
   --recommend-bg-color: rgba(55, 61, 79, 0.99);
 
   --article-menu-color: rgb(27, 30, 39);
+
+  --code-color: rgb(62, 167, 244);
+  --code-color-hover: rgb(156, 210, 248);
 }
 
 html.light-theme {
@@ -69,6 +72,9 @@ html.light-theme {
   --recommend-bg-color: rgb(209, 211, 218);
 
   --article-menu-color: rgb(227, 227, 227);
+
+  --code-color: rgb(31, 91, 162);
+  --code-color-hover: rgb(77, 163, 224);
 }
 
 /* Main layout */
@@ -313,7 +319,8 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   fill: var(--button-highlight-color);
 }
 
-#toggle-grid svg {
+#toggle-grid svg, 
+#light-theme svg {
   height: 18px;
   width: 18px;
 }
@@ -322,6 +329,14 @@ html.light-theme #front-matter, html.light-theme #graph, html.light-theme #recom
   height: 22px;
   width: 22px;
   padding: 1px;
+}
+
+html:not(.light-theme) #light-theme svg.theme-light {
+  display: none;
+}
+
+html.light-theme #light-theme svg.theme-dark {
+  display: none;
 }
 
 html:not(.grid-layout) #toggle-grid svg.grid-1x4 {
@@ -554,8 +569,8 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
   cursor: pointer;
 }
 
-#recommendation .menu ul li.recommendation-tab {
-  display: none;
+#recommendation .menu ul li.browse-label {
+  cursor: default
 }
 
 #recommendation .menu ul li,
@@ -617,8 +632,10 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
   cursor: pointer;
 }
 
-#recommendation .menu ul li.show-hide {
+#recommendation .menu ul li.undetected-label {
   color: var(--recommend-link-color);
+  line-height: 31px;
+  cursor: default;
 }
 
 #recommendation .menu-text-inner svg {
@@ -632,14 +649,6 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
 
 #recommendation .menu-text-inner-hide {
   display: none;
-}
-
-#recommendation.undetected-opened .menu-text-inner {
-  display: none;
-}
-
-#recommendation.undetected-opened .menu-text-inner-hide {
-  display: inline-block;
 }
 
 #recommendation .bar {
@@ -847,4 +856,60 @@ html.grid-layout #toggle-grid svg.grid-2x2 {
 
 html.recommendation-open #graph .sub-graph .chart .interval {
   display: block;
+}
+
+.snippet-holder {
+  cursor: pointer;
+}
+
+.snippet-holder:hover .snippet {
+  color: var(--code-color-hover);
+}
+
+.snippet-holder:hover .copy-icon {
+  fill: var(--code-color-hover);
+}
+
+.snippet {
+  color: var(--code-color);
+}
+
+.copy-icon-holder {
+  margin-right: 0.125em;
+}
+
+.copy-icon {
+  fill: var(--code-color);
+  width: 1em;
+  height: 1em;
+  position: relative;
+  top: 0.2em;
+}
+
+/* PRINT ONLY */
+
+@media print {
+  #graph {
+    display: block;
+  }
+  #alert .summary .title,
+  #graph .sub-graph .header .title,
+  #graph .sub-graph .header .legend .legend-item span {
+    color: black;
+  }
+  #recommendation .details {
+    display: flex;
+    color: black;
+  }
+  #recommendation .details .content {
+    overflow-y: hidden;
+  }
+  #menu, 
+  #alert,
+  #recommendation .bar,
+  #recommendation .menu ul li.show-hide,  
+  #recommendation.has-read-more .content .read-more-button,
+  .close {
+    display: none;
+  }
 }

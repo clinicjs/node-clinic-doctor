@@ -67,7 +67,7 @@ class SubGraph extends EventEmitter {
 
         legendItem.append('span')
           .classed('long-legend', true)
-          .attr('title', this.setup.longLegend[i])
+          .attr('title', this.setup.tooltipLegend[i])
           .text(this.setup.longLegend[i])
         legendItem.append('span')
           .classed('short-legend', true)
