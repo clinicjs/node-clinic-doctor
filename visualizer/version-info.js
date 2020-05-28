@@ -24,7 +24,7 @@ class VersionInfo {
     const args = data.args
     const cmdArray = Object.values(args)
     const cmdString = cmdArray.toString()
-    const cmdStringNoComma = cmdString.replace(',', ' ')
+    const cmdStringNoComma = cmdString.replace(/,/g, ' ')
     this.cmdLineArgs = cmdStringNoComma
   }
 }
