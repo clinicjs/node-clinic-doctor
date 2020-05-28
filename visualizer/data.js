@@ -1,8 +1,8 @@
-
-const data = require('./data.json')
-
 function loaddata (callback) {
   setTimeout(function () {
+    const dataElement = document.querySelector('#clinic-data')
+    const data = JSON.parse(dataElement.textContent)
+
     callback(null, wrapData(data))
   })
 }

@@ -97,28 +97,10 @@ class Recomendation extends EventEmitter {
       .classed('warning-icon', true)
       .call(icons.insertIcon('warning'))
 
-    // Add button to show-hide tabs described undetected issues
-    const button = this.pages.append('li')
-      .classed('show-hide', true)
-      .on('click', () => this.emit(this.undetectedOpened ? 'close-undetected' : 'open-undetected'))
+    this.pages.append('li')
+      .classed('undetected-label', true)
       .append('span')
-      .classed('menu-text', true)
-
-    const buttonText = button
-      .append('span')
-      .classed('menu-text-inner', true)
-    buttonText
-      .append('svg')
-      .call(icons.insertIcon('arrow-left'))
-    buttonText
-      .append('span')
-      .text('Browse undetected issues')
-    button
-      .append('span')
-      .text('Hide')
-      .classed('menu-text-inner menu-text-inner-hide', true)
-      .append('svg')
-      .call(icons.insertIcon('arrow-right'))
+      .text('Browse undetected issues:')
 
     const readMoreText = this.readMoreButton.append('span')
       .classed('read-more-button-text', true)
@@ -127,16 +109,14 @@ class Recomendation extends EventEmitter {
       .append('svg')
       .call(icons.insertIcon('arrow-down'))
 
-    const readLessText = this.readMoreButton.append('span')
-      .classed('read-more-button-text read-more-button-text-less', true)
-      .text('Read less')
-    readLessText
-      .append('svg')
-      .call(icons.insertIcon('arrow-up'))
+    this.menu.append('svg')
+      .classed('close', true)
+      .on('click', () => this.minimize())
+      .call(icons.insertIcon('arrow-down'))
 
     this.menu.append('svg')
       .classed('close', true)
-      .on('click', () => this.emit('close-panel'))
+      .on('click', () => this.closeFullscreen())
       .call(icons.insertIcon('close'))
 
     this.bar = this.container.append('div')
@@ -152,6 +132,8 @@ class Recomendation extends EventEmitter {
     arrow.append('svg')
       .classed('arrow-down', true)
       .call(icons.insertIcon('arrow-down'))
+
+    this.openUndetected()
   }
 
   setData (data) {
@@ -263,6 +245,14 @@ class Recomendation extends EventEmitter {
 
   closePanel () {
     this.panelOpened = false
+  }
+
+  minimize () {
+    this.emit('close-read-more')
+  }
+
+  closeFullscreen () {
+    this.emit('close-panel')
   }
 
   openReadMore () {

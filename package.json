@@ -13,7 +13,7 @@
     "lint": "standard --fix | snazzy"
   },
   "dependencies": {
-    "@nearform/clinic-common": "^2.0.0",
+    "@nearform/clinic-common": "^3.1.0",
     "@nearform/node-trace-log-join": "2.0.0-0",
     "@nearform/trace-events-parser": "^1.0.4",
     "@tensorflow/tfjs-core": "^1.2.1",
@@ -29,7 +29,7 @@
     "distributions": "^2.0.0",
     "endpoint": "^0.4.5",
     "hidden-markov-model-tf": "^3.0.0",
-    "minify-stream": "^1.2.0",
+    "minify-stream": "^2.0.0",
     "mkdirp": "^1.0.0",
     "on-net-listen": "^1.0.0",
     "protocol-buffers": "^4.0.4",
