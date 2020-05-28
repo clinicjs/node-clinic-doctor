@@ -211,9 +211,7 @@ class ClinicDoctor extends events.EventEmitter {
 
     const checkHeapInterval = setInterval(hasFreeMemory, 50)
 
-    const args = {}
-    Object.assign(args, this.args)
-    const argsStringify = JSON.stringify(args)
+    const argsString = JSON.stringify(this.args)
     const argsStream = new stream.Readable()
     argsStream.push(argsStringify)
     argsStream.push(null)
