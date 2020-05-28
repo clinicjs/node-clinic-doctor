@@ -212,9 +212,6 @@ class ClinicDoctor extends events.EventEmitter {
     const checkHeapInterval = setInterval(hasFreeMemory, 50)
 
     const argsString = JSON.stringify(this.args)
-    const argsStream = new stream.Readable()
-    argsStream.push(argsStringify)
-    argsStream.push(null)
 
     const dataFile = streamTemplate`
       {
@@ -222,7 +219,7 @@ class ClinicDoctor extends events.EventEmitter {
         "processStat": ${processStatStringify},
         "analysis": ${analysisStringified},
         "systemInfo": ${systemInfoStringify},
-        "args": ${argsStream}
+        "args": ${argsString}
       }
     `
 
