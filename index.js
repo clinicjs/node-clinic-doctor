@@ -139,7 +139,6 @@ class ClinicDoctor extends events.EventEmitter {
   }
 
   visualize (dataDirname, outputFilename, callback) {
-    const fakeDataPath = path.join(__dirname, 'visualizer', 'data.json')
     const stylePath = path.join(__dirname, 'visualizer', 'style.css')
     const scriptPath = path.join(__dirname, 'visualizer', 'main.js')
     const logoPath = path.join(__dirname, 'visualizer', 'app-logo.svg')
@@ -224,11 +223,7 @@ class ClinicDoctor extends events.EventEmitter {
     let scriptFile = buildJs({
       basedir: __dirname,
       debug: this.debug,
-      fakeDataPath,
-      scriptPath,
-      beforeBundle: b => b.require(dataFile, {
-        file: fakeDataPath
-      })
+      scriptPath
     })
 
     if (!this.debug) {
@@ -240,10 +235,6 @@ class ClinicDoctor extends events.EventEmitter {
       stylePath,
       debug: this.debug
     })
-
-    // forward dataFile errors to the scriptFile explicitly
-    // we cannot use destroy until nodejs/node#18172 and nodejs/node#18171 are fixed
-    dataFile.on('error', (err) => scriptFile.emit('error', err))
 
     // Create body contents with recommendations
     const body = streamTemplate`
@@ -264,6 +255,7 @@ class ClinicDoctor extends events.EventEmitter {
       favicon: clinicFaviconBase64,
       title: 'Clinic Doctor',
       styles: styleFile,
+      data: dataFile,
       script: scriptFile,
       headerLogoUrl: 'https://clinicjs.org/doctor/',
       headerLogoTitle: 'Clinic Doctor on Clinicjs.org',
