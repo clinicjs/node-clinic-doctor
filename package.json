@@ -2,7 +2,7 @@
   "name": "@nearform/doctor",
   "description": "Programmable interface to Clinic.js Doctor",
   "repository": "nearform/node-clinic-doctor",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "scripts": {
     "visualize-watch": "node debug/visualize-watch.js",
     "visualize-all": "node debug/visualize-all.js",
@@ -29,7 +29,7 @@
     "distributions": "^2.0.0",
     "endpoint": "^0.4.5",
     "hidden-markov-model-tf": "^3.0.0",
-    "minify-stream": "^2.0.0",
+    "minify-stream": "^2.0.1",
     "mkdirp": "^1.0.0",
     "on-net-listen": "^1.0.0",
     "protocol-buffers": "^4.0.4",
