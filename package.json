@@ -2,7 +2,7 @@
   "name": "@nearform/doctor",
   "description": "Programmable interface to Clinic.js Doctor",
   "repository": "nearform/node-clinic-doctor",
-  "version": "5.0.3",
+  "version": "6.0.0",
   "scripts": {
     "visualize-watch": "node debug/visualize-watch.js",
     "visualize-all": "node debug/visualize-all.js",
@@ -13,7 +13,7 @@
     "lint": "standard --fix | snazzy"
   },
   "dependencies": {
-    "@nearform/clinic-common": "^3.2.1",
+    "@nearform/clinic-common": "^4.0.0",
     "@nearform/node-trace-log-join": "2.0.0-0",
     "@nearform/trace-events-parser": "^1.0.4",
     "@tensorflow/tfjs-core": "^1.2.1",
@@ -57,5 +57,5 @@
     "node": ">=10.12.0"
   },
   "keywords": [],
-  "license": "GPL-3.0-or-later"
+  "license": "MIT"
 }

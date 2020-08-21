@@ -79,7 +79,7 @@ When completed the `callback` will be called with no extra arguments, except a
 possible error.
 
 ## License
-[GPL 3.0](LICENSE)
+[MIT](LICENSE)
 
 [stability-stable]: https://img.shields.io/badge/stability-stable-green.svg?style=flat-square
 [stability-docs]: https://nodejs.org/api/documentation.html#documentation_stability_index
