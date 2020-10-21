@@ -104,6 +104,12 @@ class ClinicDoctor extends events.EventEmitter {
       if (os.platform() !== 'win32') proc.kill('SIGINT')
     })
 
+    process.once('beforeExit', function () {
+      if (!fs.existsSync(paths['/processstat']) || fs.statSync(paths['/processstat']).size === 0) {
+        console.log('Profile data collected seems to be empty, report may not be generated')
+      }
+    })
+
     proc.once('exit', (code, signal) => {
       // Windows exit code STATUS_CONTROL_C_EXIT 0xC000013A returns 3221225786
       // if not caught. See https://msdn.microsoft.com/en-us/library/cc704588.aspx
