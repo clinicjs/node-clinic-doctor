@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-var chokidar = require('chokidar')
-var v = require('./visualize-mod.js')
+const chokidar = require('chokidar')
+const v = require('./visualize-mod.js')
 
 const debounce = require('lodash.debounce')
 
