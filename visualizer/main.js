@@ -6,7 +6,6 @@ const menu = require('./menu.js')
 const alert = require('./alert.js')
 const graph = require('./graph.js')
 const recommendation = require('./recommendation.js')
-const askBehaviours = require('@nearform/clinic-common/behaviours/ask')
 const loadFonts = require('@nearform/clinic-common/behaviours/font-loader')
 
 // Called on font load or timeout
@@ -105,9 +104,6 @@ const drawUi = () => {
     })
   })
 }
-
-// Attach ask tray behaviours
-askBehaviours()
 
 // Orchestrate font loading
 loadFonts()
