@@ -23,6 +23,7 @@ test('cmd - collect - NODE_PATH works', function (t) {
   child.stdout.pipe(endpoint(function (err, output) {
     if (err) return t.ifError(err)
 
-    t.strictEqual(output.toString().trim(), `${path.join(__dirname, '../injects')}${path.delimiter}${__dirname}`)
+    t.strictEqual(output.toString().trim(), `${path.join(__dirname, '../injects')}${path.delimiter}${__dirname}
+Profile data collected seems to be empty, report may not be generated`)
   }))
 })
