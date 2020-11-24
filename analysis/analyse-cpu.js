@@ -13,8 +13,9 @@ tf.ENV.set('IS_NODE', false)
 
 // There is no truth here. This parameter might need more tuning.
 const SEPARATION_THRESHOLD = 1
+/* eslint-disable no-loss-of-precision */
 const HHM_SEED = 0xa74b9cbd4047b4bbe79f365a9f247886ac0a8a9c23ef8c5c45d98badb8
-
+/* eslint-enable no-loss-of-precision */
 function performanceIssue (issue) {
   return issue ? 'performance' : 'none'
 }

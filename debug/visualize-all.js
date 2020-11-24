@@ -1,3 +1,3 @@
 #!/usr/bin/env node
-var v = require('./visualize-mod.js')
+const v = require('./visualize-mod.js')
 v.visualize({ debug: true })
