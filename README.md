@@ -33,7 +33,7 @@ doctor.collect(['node', './path-to-script.js'], function (err, filepath) {
 ```
 
 You can find examples in
-[node-clinic-doctor-examples](https://github.com/nearform/node-clinic-doctor-examples)
+[node-clinic-doctor-examples](https://github.com/clinicjs/node-clinic-doctor-examples)
 
 ## Documentation
 
@@ -88,10 +88,10 @@ possible error.
 [npm-downloads]: http://img.shields.io/npm/dm/@nearform/doctor.svg?style=flat-square
 [lint-standard]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square
 [lint-standard-url]: https://github.com/feross/standard
-[clinic-url]: https://github.com/nearform/node-clinic
+[clinic-url]: https://github.com/clinicjs/node-clinic
 [`<Object>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object
 [`<boolean>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type
 [`<Number>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type
 [`<String>`]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
-[actions-status]: https://github.com/nearform/node-clinic-doctor/workflows/CI/badge.svg
-[actions-url]: https://github.com/nearform/node-clinic-doctor/actions
+[actions-status]: https://github.com/clinicjs/node-clinic-doctor/workflows/CI/badge.svg
+[actions-url]: https://github.com/clinicjs/node-clinic-doctor/actions
