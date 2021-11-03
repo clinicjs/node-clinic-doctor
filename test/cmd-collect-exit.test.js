@@ -38,7 +38,7 @@ test('cmd - collect - external SIGINT is relayed', { skip }, function (t) {
 })
 
 test('cmd - collect - non-success exit code should not throw', function (t) {
-  const cmd = new CollectAndRead({}, '--expose-gc', '-e', 'process.nextTick(() => { process.exit(1) }, 100)')
+  const cmd = new CollectAndRead({}, '--expose-gc', '-e', 'process.nextTick(() => { process.exit(1) })')
   cmd.on('error', t.error.bind(t))
   cmd.on('ready', function () {
     t.end()
