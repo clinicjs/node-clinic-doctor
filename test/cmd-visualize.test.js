@@ -11,7 +11,7 @@ test('cmd - test visualization - data exists', function (t) {
   const tool = new ClinicDoctor({ dest: './foo' })
 
   function cleanup (err, dirname) {
-    t.ifError(err)
+    t.error(err)
 
     t.match(dirname, /^foo(\/|\\)[0-9]+\.clinic-doctor$/)
 
@@ -19,7 +19,7 @@ test('cmd - test visualization - data exists', function (t) {
       (done) => rimraf(dirname, done),
       (done) => fs.unlink(dirname + '.html', done)
     ], function (err) {
-      t.ifError(err)
+      t.error(err)
       t.end()
     })
   }
@@ -61,7 +61,7 @@ test('cmd - test visualization - memory exhausted', function (t) {
 
   function cleanup (err, dirname) {
     process.memoryUsage = tmp
-    t.ifError(err)
+    t.error(err)
 
     t.match(dirname, /^[0-9]+\.clinic-doctor$/)
 
@@ -69,7 +69,7 @@ test('cmd - test visualization - memory exhausted', function (t) {
       (done) => rimraf(dirname, done),
       (done) => fs.unlink(dirname + '.html', done)
     ], function (err) {
-      t.ifError(err)
+      t.error(err)
       t.end()
     })
   }

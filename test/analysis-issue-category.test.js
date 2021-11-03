@@ -64,7 +64,7 @@ test('Analysis - issue category', function (t) {
     }
     const expected = parsed[5]
 
-    t.strictEqual(issueCategory(issues), expected, testQuery)
+    t.equal(issueCategory(issues), expected, testQuery)
   }
 
   t.end()

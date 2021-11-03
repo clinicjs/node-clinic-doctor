@@ -17,9 +17,9 @@ test('Format - system info - decoding', function (t) {
   }))
 
   systemInfoReader.pipe(endpoint({ objectMode: true }, function (err, data) {
-    if (err) return t.ifError(err)
+    if (err) return t.error(err)
 
-    t.strictDeepEqual(Object.assign({}, data[0]), {
+    t.strictSame(Object.assign({}, data[0]), {
       clock: {
         hrtime: [0, 400000],
         unixtime: 33000000

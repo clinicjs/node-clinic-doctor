@@ -22,11 +22,11 @@ test('cmd - collect - NODE_OPTIONS environment is not ignored', function (t) {
     stdout (done) { child.stdout.pipe(endpoint(done)) },
     stderr (done) { child.stderr.pipe(endpoint(done)) }
   }, function (err, output) {
-    if (err) return t.ifError(err)
+    if (err) return t.error(err)
 
     // Expect the WARNING output to be shown
     t.ok(output.stderr.toString().split('\n').length, 1)
-    t.strictEqual(output.stdout.toString().trim(), '4013')
+    t.equal(output.stdout.toString().trim(), '4013')
     t.end()
   })
 })

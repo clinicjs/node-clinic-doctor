@@ -21,7 +21,7 @@ test('Collect - process stat - timestamp', function (t) {
 test('Collect - process stat - number of handles', function (t) {
   const stat = new ProcessStat(1)
   const sample = stat.sample()
-  t.strictEqual(sample.handles, process._getActiveHandles().length)
+  t.equal(sample.handles, process._getActiveHandles().length)
   t.end()
 })
 

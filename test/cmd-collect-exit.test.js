@@ -27,11 +27,11 @@ test('cmd - collect - external SIGINT is relayed', { skip }, function (t) {
     stdout (done) { child.stdout.pipe(endpoint(done)) },
     stderr (done) { child.stderr.pipe(endpoint(done)) }
   }, function (err, output) {
-    if (err) return t.ifError(err)
+    if (err) return t.error(err)
 
     // Expect the WARNING output to be shown
     t.ok(output.stderr.toString().split('\n').length, 1)
-    t.strictEqual(output.stdout.toString(),
+    t.equal(output.stdout.toString(),
       'listening for SIGINT\nSIGINT received\n')
     t.end()
   })
@@ -39,7 +39,7 @@ test('cmd - collect - external SIGINT is relayed', { skip }, function (t) {
 
 test('cmd - collect - non-success exit code should not throw', function (t) {
   const cmd = new CollectAndRead({}, '--expose-gc', '-e', 'process.exit(1)')
-  cmd.on('error', t.ifError.bind(t))
+  cmd.on('error', t.error.bind(t))
   cmd.on('ready', function () {
     t.end()
   })
@@ -56,7 +56,7 @@ test('cmd - collect - SIGKILL causes error', { skip }, function (t) {
 
   cmd.once('error', function (err) {
     cmd.cleanup()
-    t.strictDeepEqual(err, new Error('process exited by signal SIGKILL'))
+    t.strictSame(err, new Error('process exited by signal SIGKILL'))
     t.end()
   })
 })

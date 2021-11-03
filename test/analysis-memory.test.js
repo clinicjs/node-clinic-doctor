@@ -12,7 +12,7 @@ test('analyse memory - genereate trace event', function (t) {
   const gcevents = generateTraceEvent(
     'SSSSS.....--MMMMMFC'
   )
-  t.strictDeepEquals(gcevents, [
+  t.strictSame(gcevents, [
     {
       pid: 0,
       tid: 0,
@@ -64,7 +64,7 @@ test('analyse memory - no issues', function (t) {
   )
 
   for (const nodeVersion of [oldNodeVersion, newNodeVersion]) {
-    t.strictDeepEquals(analyseMemory({ nodeVersion }, [], gcevents), {
+    t.strictSame(analyseMemory({ nodeVersion }, [], gcevents), {
       external: 'none',
       heapTotal: 'none',
       heapUsed: 'none',
@@ -80,7 +80,7 @@ test('analyse memory - no data', function (t) {
   )
 
   for (const nodeVersion of [oldNodeVersion, newNodeVersion]) {
-    t.strictDeepEquals(analyseMemory({ nodeVersion }, [], gcevents), {
+    t.strictSame(analyseMemory({ nodeVersion }, [], gcevents), {
       external: 'none',
       heapTotal: 'data',
       heapUsed: 'data',
@@ -96,14 +96,14 @@ test('analyse memory - only old node version has issue', function (t) {
     ' MMM..-MMM..-MMM..-MMM..-S....-MMM-.-MMM-.-MMM..-FFFF. CCCCC'
   )
 
-  t.strictDeepEquals(analyseMemory({ nodeVersion: newNodeVersion }, [], gcevents), {
+  t.strictSame(analyseMemory({ nodeVersion: newNodeVersion }, [], gcevents), {
     external: 'none',
     heapTotal: 'none',
     heapUsed: 'none',
     rss: 'none'
   })
 
-  t.strictDeepEquals(analyseMemory({ nodeVersion: oldNodeVersion }, [], gcevents), {
+  t.strictSame(analyseMemory({ nodeVersion: oldNodeVersion }, [], gcevents), {
     external: 'none',
     heapTotal: 'performance',
     heapUsed: 'none',
@@ -119,7 +119,7 @@ test('analyse memory - issue old space', function (t) {
   )
 
   for (const nodeVersion of [oldNodeVersion, newNodeVersion]) {
-    t.strictDeepEquals(analyseMemory({ nodeVersion }, [], gcevents), {
+    t.strictSame(analyseMemory({ nodeVersion }, [], gcevents), {
       external: 'none',
       heapTotal: 'performance',
       heapUsed: 'none',
@@ -136,7 +136,7 @@ test('analyse memory - issue with new space', function (t) {
   )
 
   for (const nodeVersion of [oldNodeVersion, newNodeVersion]) {
-    t.strictDeepEquals(analyseMemory({ nodeVersion }, [], gcevents), {
+    t.strictSame(analyseMemory({ nodeVersion }, [], gcevents), {
       external: 'none',
       heapTotal: 'none',
       heapUsed: 'performance',

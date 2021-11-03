@@ -34,8 +34,8 @@ test('Format - process stat - encoder-decoder', function (t) {
   encoder.end()
 
   decoder.pipe(endpoint({ objectMode: true }, function (err, outputSamples) {
-    if (err) t.ifError(err)
-    t.strictDeepEqual(inputSamples, outputSamples)
+    if (err) t.error(err)
+    t.strictSame(inputSamples, outputSamples)
     t.end()
   }))
 })
@@ -53,30 +53,30 @@ test('Format - process stat - partial decoding', function (t) {
 
   // No data, chunk is too small
   decoder.write(sampleEncoded.slice(0, 20))
-  t.strictEqual(decoder.read(), null)
+  t.equal(decoder.read(), null)
 
   // Ended previuse sample, but a partial remains
   decoder.write(Buffer.concat([
     sampleEncoded.slice(20),
     sampleEncoded.slice(0, 30)
   ]))
-  t.strictDeepEqual(decoder.read(), normalizeSample(sample))
-  t.strictEqual(decoder.read(), null)
+  t.strictSame(decoder.read(), normalizeSample(sample))
+  t.equal(decoder.read(), null)
 
   // Ended previuse, no partial remains
   decoder.write(Buffer.concat([
     sampleEncoded.slice(30),
     sampleEncoded
   ]))
-  t.strictDeepEqual(decoder.read(), normalizeSample(sample))
-  t.strictDeepEqual(decoder.read(), normalizeSample(sample))
-  t.strictEqual(decoder.read(), null)
+  t.strictSame(decoder.read(), normalizeSample(sample))
+  t.strictSame(decoder.read(), normalizeSample(sample))
+  t.equal(decoder.read(), null)
 
   // No previuse ended
   decoder.write(sampleEncoded)
-  t.strictDeepEqual(decoder.read(), normalizeSample(sample))
+  t.strictSame(decoder.read(), normalizeSample(sample))
 
   // No more data
-  t.strictEqual(decoder.read(), null)
+  t.equal(decoder.read(), null)
   t.end()
 })

@@ -6,10 +6,10 @@
   "scripts": {
     "visualize-watch": "node debug/visualize-watch.js",
     "visualize-all": "node debug/visualize-all.js",
-    "test": "standard | snazzy && tap -j1 --timeout=50 --no-cov test/*.test.js",
+    "test": "standard | snazzy && tap --no-cov test/*.test.js",
     "ci-lint": "standard | snazzy",
-    "ci-test": "tap -j1 --timeout=50 test/*.test.js",
-    "ci-cov": "tap -j1 --timeout=60 --100 test/*.test.js",
+    "ci-test": "tap test/*.test.js",
+    "ci-cov": "tap --100 test/*.test.js",
     "lint": "standard --fix | snazzy"
   },
   "dependencies": {
@@ -50,7 +50,7 @@
     "snazzy": "^9.0.0",
     "standard": "^16.0.3",
     "startpoint": "^0.3.2",
-    "tap": "^14.11.0",
+    "tap": "^15.0.10",
     "xorshift": "^1.1.1"
   },
   "engines": {

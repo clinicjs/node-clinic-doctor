@@ -39,7 +39,7 @@ test('cmd - collect - gc events', function (t) {
     }, 200)
   `)
 
-  cmd.on('error', t.ifError.bind(t))
+  cmd.on('error', t.error.bind(t))
   cmd.on('ready', function () {
     async.parallel({
       traceEvent (done) {
@@ -50,7 +50,7 @@ test('cmd - collect - gc events', function (t) {
         cmd.processStat.pipe(endpoint({ objectMode: true }, done))
       }
     }, function (err, output) {
-      if (err) return t.ifError(err)
+      if (err) return t.error(err)
 
       const scavenge = output.traceEvent
         .filter((event) => event.name === 'V8.GCScavenger')
@@ -62,7 +62,7 @@ test('cmd - collect - gc events', function (t) {
       t.ok(Math.abs(scavenge[0].args.endTimestamp - Date.now()) < 10000)
       t.ok(Math.abs(scavenge[0].args.startTimestamp - Date.now()) < 10000)
 
-      t.strictEqual(compactor.length, 1)
+      t.equal(compactor.length, 1)
       t.ok(compactor[0].args.startTimestamp <= compactor[0].args.endTimestamp)
       t.ok(Math.abs(compactor[0].args.startTimestamp - Date.now()) < 10000)
       t.ok(Math.abs(compactor[0].args.endTimestamp - Date.now()) < 10000)
@@ -76,7 +76,7 @@ test('cmd - collect - data files have content', function (t) {
   const cmd = new CollectAndRead({
     sampleInterval: 100
   }, '-e', 'setTimeout(() => {}, 1000)')
-  cmd.on('error', t.ifError.bind(t))
+  cmd.on('error', t.error.bind(t))
   cmd.on('ready', function () {
     async.parallel({
       traceEvent (done) {
@@ -87,7 +87,7 @@ test('cmd - collect - data files have content', function (t) {
         cmd.processStat.pipe(endpoint({ objectMode: true }, done))
       }
     }, function (err, output) {
-      if (err) return t.ifError(err)
+      if (err) return t.error(err)
 
       // expect time seperation to be 10ms, allow 20ms error
       const sampleTimes = output.processStat.map((stat) => stat.timestamp)
@@ -110,7 +110,7 @@ test('cmd - collect - startup delay is not included', function (t) {
     while (deltams(now) < 100) { }
     setTimeout(() => {}, 100)
   `)
-  cmd.on('error', t.ifError.bind(t))
+  cmd.on('error', t.error.bind(t))
   cmd.on('ready', function () {
     async.parallel({
       traceEvent (done) {
@@ -121,7 +121,7 @@ test('cmd - collect - startup delay is not included', function (t) {
         cmd.processStat.pipe(endpoint({ objectMode: true }, done))
       }
     }, function (err, output) {
-      if (err) return t.ifError(err)
+      if (err) return t.error(err)
 
       const delay = output.processStat.map((stat) => stat.delay)
       t.ok(delay[0] < 90, `startup delay was ${delay[0]}`)

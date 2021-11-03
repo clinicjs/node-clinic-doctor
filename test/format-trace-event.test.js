@@ -37,9 +37,9 @@ test('Format - trace event - combine', function (t) {
   const decoder = new TraceEventDecoder(systemInfoReader)
 
   decoder.pipe(endpoint({ objectMode: true }, function (err, data) {
-    if (err) return t.ifError(err)
+    if (err) return t.error(err)
 
-    t.strictDeepEqual(data, [
+    t.strictSame(data, [
       {
         pid: 10,
         tid: 1,
@@ -148,7 +148,7 @@ test('Format - trace event - error', function (t) {
   const decoder = new TraceEventDecoder(systemInfoReader)
 
   decoder.pipe(endpoint({ objectMode: true }, function (err, data) {
-    t.strictDeepEqual(err, new Error('expected error'))
+    t.strictSame(err, new Error('expected error'))
     t.end()
   }))
 
