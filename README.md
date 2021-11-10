@@ -8,6 +8,12 @@ Programmable interface to [Clinic.js][clinic-url] Doctor. Learn more about Clini
 
 ![Screenshot](screenshot.png)
 
+## Installation
+
+```console
+npm i -S @nearform/doctor
+```
+
 ## Supported node versions
 
 * Node.js 10.0.0 and above
