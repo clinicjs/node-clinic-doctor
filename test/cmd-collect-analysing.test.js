@@ -8,10 +8,10 @@ test('cmd - test collect - emits "analysing" event', function (t) {
   const tool = new ClinicDoctor()
 
   function cleanup (err, dirname) {
-    t.ifError(err)
+    t.error(err)
     t.match(dirname, /^[0-9]+\.clinic-doctor/)
     rimraf(dirname, (err) => {
-      t.ifError(err)
+      t.error(err)
       t.end()
     })
   }

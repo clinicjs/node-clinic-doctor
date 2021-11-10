@@ -6,7 +6,7 @@ const cmd = new CollectAndRead({}, '-e', `
   setInterval(() => {}, 100)
   process.once('SIGINT', function () {
     console.log('SIGINT received')
-    process.kill(process.pid, 'SIGINT')
+    process.exit()
   })
   console.log('listening for SIGINT')
 `)

@@ -1,0 +1,2 @@
+# # This option avoid an wrap over spawn by nyc that affects our tests.
+use-spawn-wrap: true

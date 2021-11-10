@@ -11,7 +11,7 @@ test('guess interval - expected data', function (t) {
     }, noise, 10)
 
     const interval = guessInterval(data)
-    t.strictDeepEqual(interval, [5, 12])
+    t.strictSame(interval, [5, 12])
   }
 
   t.end()
@@ -30,7 +30,7 @@ test('guess interval - trims 100 ms from left and right side', function (t) {
     }, noise)
 
     const interval = guessInterval(data)
-    t.strictDeepEqual(interval, [14, 23])
+    t.strictSame(interval, [14, 23])
   }
 
   t.end()
@@ -43,7 +43,7 @@ test('guess interval - overtrim is not possible', function (t) {
     }, noise)
 
     const interval = guessInterval(data)
-    t.strictDeepEqual(interval, [7, 7])
+    t.strictSame(interval, [7, 7])
   }
 
   t.end()
@@ -56,7 +56,7 @@ test('guess interval - missing left tail', function (t) {
     }, noise, 10)
 
     const interval = guessInterval(data)
-    t.strictDeepEqual(interval, [5, 12])
+    t.strictSame(interval, [5, 12])
   }
 
   t.end()
@@ -69,7 +69,7 @@ test('guess interval - missing right tail', function (t) {
     }, noise, 10)
 
     const interval = guessInterval(data)
-    t.strictDeepEqual(interval, [0, 5])
+    t.strictSame(interval, [0, 5])
   }
 
   t.end()
@@ -81,7 +81,7 @@ test('guess interval - flat data', function (t) {
   }, 0, 10)
 
   const interval = guessInterval(data)
-  t.strictDeepEqual(interval, [0, 8])
+  t.strictSame(interval, [0, 8])
 
   t.end()
 })

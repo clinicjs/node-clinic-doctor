@@ -17,13 +17,13 @@ test('cmd - collect - NODE_PATH works', function (t) {
   )
 
   child.on('exit', function (code) {
-    t.strictEqual(code, 0)
+    t.equal(code, 0)
   })
 
   child.stdout.pipe(endpoint(function (err, output) {
-    if (err) return t.ifError(err)
+    if (err) return t.error(err)
 
-    t.strictEqual(output.toString().trim(), `${path.join(__dirname, '../injects')}${path.delimiter}${__dirname}
+    t.equal(output.toString().trim(), `${path.join(__dirname, '../injects')}${path.delimiter}${__dirname}
 Profile data collected seems to be empty, report may not be generated`)
   }))
 })

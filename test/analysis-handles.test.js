@@ -8,7 +8,7 @@ test('analyse handles - no data', function (t) {
   const goodHandles = generateProcessStat({
     handles: [100]
   }, 0)
-  t.strictEqual(analyseHandles({}, goodHandles, []), 'data')
+  t.equal(analyseHandles({}, goodHandles, []), 'data')
 
   t.end()
 })
@@ -17,7 +17,7 @@ test('analyse handles - flat', function (t) {
   const goodHandles = generateProcessStat({
     handles: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
   }, 0)
-  t.strictEqual(analyseHandles({}, goodHandles, []), 'none')
+  t.equal(analyseHandles({}, goodHandles, []), 'none')
 
   t.end()
 })
@@ -27,7 +27,7 @@ test('analyse handles - symetric data', function (t) {
     const goodHandles = generateProcessStat({
       handles: [100, 100, 120, 90, 110, 100, 80, 110, 90, 110]
     }, noise)
-    t.strictEqual(analyseHandles({}, goodHandles, []), 'none')
+    t.equal(analyseHandles({}, goodHandles, []), 'none')
   }
   t.end()
 })
@@ -45,7 +45,7 @@ test('analyse handles - sawtooth data', function (t) {
         100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 100
       ]
     }, noise)
-    t.strictEqual(analyseHandles({}, badHandles, []), 'performance')
+    t.equal(analyseHandles({}, badHandles, []), 'performance')
   }
   t.end()
 })
@@ -74,7 +74,7 @@ test('analyse handles - increasing data', function (t) {
         999, 999, 999, 999, 999, 999, 999, 999, 999, 999
       ]
     }, noise)
-    t.strictEqual(analyseHandles({}, badHandles, []), 'performance')
+    t.equal(analyseHandles({}, badHandles, []), 'performance')
   }
   t.end()
 })
@@ -85,7 +85,7 @@ test('analyse handles - almost constant', function (t) {
       100, 100, 100, 100, 100, 100, 100, 100, 100,
       101, 101, 101, 101, 101, 101, 101, 101, 101]
   }, 0)
-  t.strictEqual(analyseHandles({}, goodHandles, []), 'none')
+  t.equal(analyseHandles({}, goodHandles, []), 'none')
 
   t.end()
 })

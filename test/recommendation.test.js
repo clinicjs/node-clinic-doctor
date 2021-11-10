@@ -8,7 +8,7 @@ const RenderRecommendations = require('../recommendations/index.js')
 
 test('Recommendation - contains all categories', function (t) {
   new RenderRecommendations().pipe(endpoint(function (err, content) {
-    if (err) return t.ifError(err)
+    if (err) return t.error(err)
 
     const doc = cheerio.load(content.toString())
     const templates = doc('template').map(function (index, rawElement) {
@@ -32,15 +32,15 @@ test('Recommendation - contains all categories', function (t) {
     for (const templateElement of templates) {
       categories.add(templateElement.data.category)
 
-      t.strictEqual(templateElement.attr.class, 'recommendation-text')
+      t.equal(templateElement.attr.class, 'recommendation-text')
       t.ok(['yes', 'no'].includes(templateElement.data.issue))
       t.ok(['summary', 'read-more'].includes(templateElement.data.type))
       t.ok(templateElement.data.menu.length > 0)
       t.ok(templateElement.data.title.length > 0)
-      t.strictEqual(typeof templateElement.data.order, 'number')
+      t.equal(typeof templateElement.data.order, 'number')
     }
 
-    t.strictDeepEqual(Array.from(categories).sort(), [
+    t.strictSame(Array.from(categories).sort(), [
       'data', 'event-loop', 'gc', 'io', 'none', 'unknown'
     ])
     t.end()
@@ -49,21 +49,19 @@ test('Recommendation - contains all categories', function (t) {
 
 test('Recommendation - read failure', function (t) {
   const originalReadFile = fs.readFile
-  t.beforeEach(function (done) {
+  t.beforeEach(function () {
     fs.readFile = function (filepath, encoding, callback) {
       callback(new Error('mocked fs error'))
     }
-    done()
   })
 
-  t.afterEach(function (done) {
+  t.afterEach(function () {
     fs.readFile = originalReadFile
-    done()
   })
 
   t.test('mock test', function (t) {
     new RenderRecommendations().pipe(endpoint(function (err, content) {
-      t.strictDeepEqual(err, new Error('mocked fs error'))
+      t.strictSame(err, new Error('mocked fs error'))
       t.end()
     }))
   })

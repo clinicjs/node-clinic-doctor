@@ -29,7 +29,7 @@ test('Destroyable streams', function (t) {
 
     s.once('error', function (err) {
       errored = true
-      t.strictEqual(err, error)
+      t.equal(err, error)
     })
 
     s.once('close', function () {

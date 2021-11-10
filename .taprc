@@ -1,0 +1,5 @@
+jobs: 1
+timeout: 60
+branches: 97
+statements: 99
+lines: 99

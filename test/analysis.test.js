@@ -37,7 +37,7 @@ function getAnalysis (processStatData, traceEventData) {
 }
 
 test('Analysis - pipeline - no data', async function (t) {
-  t.strictDeepEqual(await getAnalysis([], []), {
+  t.strictSame(await getAnalysis([], []), {
     interval: [-Infinity, Infinity],
     issues: {
       delay: 'data',
@@ -59,7 +59,7 @@ test('Analysis - pipeline - error', async function (t) {
   try {
     await getAnalysis([], error)
   } catch (e) {
-    t.strictDeepEqual(e, error)
+    t.strictSame(e, error)
     t.end()
   }
 })
@@ -73,7 +73,7 @@ test('Analysis - pipeline - normal interval', async function (t) {
     const goodMemoryGC = generateTraceEvent(
       '..S..S..........S.........S..S..',
       5)
-    t.strictDeepEqual(await getAnalysis(goodCPU, goodMemoryGC), {
+    t.strictSame(await getAnalysis(goodCPU, goodMemoryGC), {
       interval: [300, 1200],
       issues: {
         delay: 'none',
@@ -93,7 +93,7 @@ test('Analysis - pipeline - normal interval', async function (t) {
       handles: [3, 3, 3, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 3, 3, 3],
       cpu: [1, 1, 1, 50, 40, 10, 10, 100, 50, 40, 10, 10, 10, 1, 1, 1]
     }, noise, 10)
-    t.strictDeepEqual(await getAnalysis(badCPU, goodMemoryGC), {
+    t.strictSame(await getAnalysis(badCPU, goodMemoryGC), {
       interval: [300, 1200],
       issues: {
         delay: 'none',
@@ -121,7 +121,7 @@ test('Analysis - pipeline - full interval', async function (t) {
   const goodMemoryGC = generateTraceEvent(
     '.........S.........',
     5)
-  t.strictDeepEqual(await getAnalysis(goodCPU, goodMemoryGC), {
+  t.strictSame(await getAnalysis(goodCPU, goodMemoryGC), {
     interval: [0, 900],
     issues: {
       delay: 'none',
@@ -142,7 +142,7 @@ test('Analysis - pipeline - full interval', async function (t) {
     cpu: [50, 40, 10, 10, 100, 50, 40, 10, 10, 10]
   }, 0, 10)
 
-  t.strictDeepEqual(await getAnalysis(badCPU, goodMemoryGC), {
+  t.strictSame(await getAnalysis(badCPU, goodMemoryGC), {
     interval: [0, 900],
     issues: {
       delay: 'none',

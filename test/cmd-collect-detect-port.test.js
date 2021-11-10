@@ -25,7 +25,7 @@ test('cmd - collect - detect server port', function (t) {
       const buf = []
       res.on('data', data => buf.push(data))
       res.on('end', function () {
-        t.deepEquals(Buffer.concat(buf), Buffer.from('from server'))
+        t.same(Buffer.concat(buf), Buffer.from('from server'))
         t.end()
       })
     })
@@ -51,7 +51,7 @@ test('cmd - collect - detect server port and cb', function (t) {
       const buf = []
       res.on('data', data => buf.push(data))
       res.on('end', function () {
-        t.deepEquals(Buffer.concat(buf), Buffer.from('from server'))
+        t.same(Buffer.concat(buf), Buffer.from('from server'))
         t.end()
         cb()
       })
