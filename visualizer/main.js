@@ -6,7 +6,7 @@ const menu = require('./menu.js')
 const alert = require('./alert.js')
 const graph = require('./graph.js')
 const recommendation = require('./recommendation.js')
-const loadFonts = require('@nearform/clinic-common/behaviours/font-loader')
+const loadFonts = require('@clinic/clinic-common/behaviours/font-loader')
 
 // Called on font load or timeout
 const drawUi = () => {

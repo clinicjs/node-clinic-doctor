@@ -1,5 +1,5 @@
 {
-  "name": "@nearform/doctor",
+  "name": "@clinic/doctor",
   "description": "Programmable interface to Clinic.js Doctor",
   "repository": "clinicjs/node-clinic-doctor",
   "version": "8.1.0",
@@ -13,9 +13,9 @@
     "lint": "standard --fix | snazzy"
   },
   "dependencies": {
-    "@nearform/clinic-common": "^6.0.0",
-    "@nearform/node-trace-log-join": "2.0.0-0",
-    "@nearform/trace-events-parser": "^1.0.4",
+    "@clinic/clinic-common": "^7.0.0",
+    "@clinic/node-trace-log-join": "^2.0.0",
+    "@clinic/trace-events-parser": "^2.0.0",
     "@tensorflow/tfjs-core": "^1.2.1",
     "async": "^3.0.1",
     "clipboard-copy": "^4.0.1",
