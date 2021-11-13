@@ -2,7 +2,7 @@
 
 const stream = require('../lib/destroyable-stream')
 const endpoint = require('endpoint')
-const parser = require('@nearform/trace-events-parser')
+const parser = require('@clinic/trace-events-parser')
 
 class TraceEventDecoder extends stream.Transform {
   constructor (systemInfoReader) {

@@ -1,6 +1,6 @@
 # Clinic.js Doctor
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/nearform/node-clinic-doctor.svg)](https://greenkeeper.io/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/clinic/node-clinic-doctor.svg)](https://greenkeeper.io/)
 [![npm version][npm-version]][npm-url] [![Stability Stable][stability-stable]][stability-docs] [![Github Actions build status][actions-status]][actions-url]
 [![Downloads][npm-downloads]][npm-url] [![Code style][lint-standard]][lint-standard-url]
 
@@ -11,7 +11,7 @@ Programmable interface to [Clinic.js][clinic-url] Doctor. Learn more about Clini
 ## Installation
 
 ```console
-npm i -S @nearform/doctor
+npm i -S @clinic/doctor
 ```
 
 ## Supported node versions
@@ -26,7 +26,7 @@ the process nicely.
 ## Example
 
 ```js
-const ClinicDoctor = require('@nearform/doctor')
+const ClinicDoctor = require('@clinic/doctor')
 const doctor = new ClinicDoctor()
 
 doctor.collect(['node', './path-to-script.js'], function (err, filepath) {
@@ -44,7 +44,7 @@ You can find examples in
 ## Documentation
 
 ```js
-const ClinicDoctor = require('@nearform/doctor')
+const ClinicDoctor = require('@clinic/doctor')
 const doctor = new ClinicDoctor()
 ```
 
@@ -89,9 +89,9 @@ possible error.
 
 [stability-stable]: https://img.shields.io/badge/stability-stable-green.svg?style=flat-square
 [stability-docs]: https://nodejs.org/api/documentation.html#documentation_stability_index
-[npm-version]: https://img.shields.io/npm/v/@nearform/doctor.svg?style=flat-square
-[npm-url]: https://www.npmjs.org/@nearform/doctor
-[npm-downloads]: http://img.shields.io/npm/dm/@nearform/doctor.svg?style=flat-square
+[npm-version]: https://img.shields.io/npm/v/@clinic/doctor.svg?style=flat-square
+[npm-url]: https://www.npmjs.org/@clinic/doctor
+[npm-downloads]: http://img.shields.io/npm/dm/@clinic/doctor.svg?style=flat-square
 [lint-standard]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square
 [lint-standard-url]: https://github.com/feross/standard
 [clinic-url]: https://github.com/clinicjs/node-clinic

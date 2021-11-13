@@ -11,8 +11,8 @@ const { spawn } = require('child_process')
 const Analysis = require('./analysis/index.js')
 const Stringify = require('streaming-json-stringify')
 const streamTemplate = require('stream-template')
-const joinTrace = require('@nearform/node-trace-log-join')
-const getLoggingPaths = require('@nearform/clinic-common').getLoggingPaths('doctor')
+const joinTrace = require('@clinic/node-trace-log-join')
+const getLoggingPaths = require('@clinic/clinic-common').getLoggingPaths('doctor')
 const SystemInfoDecoder = require('./format/system-info-decoder.js')
 const TraceEventDecoder = require('./format/trace-event-decoder.js')
 const ProcessStatDecoder = require('./format/process-stat-decoder.js')
@@ -20,9 +20,9 @@ const RenderRecommendations = require('./recommendations/index.js')
 const minifyStream = require('minify-stream')
 const v8 = require('v8')
 const HEAP_MAX = v8.getHeapStatistics().heap_size_limit
-const buildJs = require('@nearform/clinic-common/scripts/build-js')
-const buildCss = require('@nearform/clinic-common/scripts/build-css')
-const mainTemplate = require('@nearform/clinic-common/templates/main')
+const buildJs = require('@clinic/clinic-common/scripts/build-js')
+const buildCss = require('@clinic/clinic-common/scripts/build-css')
+const mainTemplate = require('@clinic/clinic-common/templates/main')
 
 class ClinicDoctor extends events.EventEmitter {
   constructor (settings = {}) {
