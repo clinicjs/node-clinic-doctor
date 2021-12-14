@@ -46,29 +46,11 @@ root cause behind the high memory consumption.
 
 - If the system is already deployed, mitigate the issue immediately by implementing
   HTTP 503 Service Unavailable functionality (see *Load Shedding* in **Reference**)
-- Run <code class='snippet'>node --inspect <FILENAME></code>
-- Open Chrome and navigate to [chrome://inspect](chrome://inspect)
-- Under the **Remote Target** heading, there should be a target with the official Node.js icon
-- Click the `inspect` link for that target – this will connect Chrome Devtools to the Node processes remote debug interface
-- In Devtools, select the *Memory* tab
-- Select the *Take heap snapshot* radio box, and then click *Take snapshot*
-- Put the process under load (in the same way that the process was load tested for Clinic.js)
-- Click *Profiles* in the left panel, then click *Take snapshot* again
-- Under the *HEAP SNAPSHOTS* left panel, select the second Snapshot (it will be called *Snapshot 2*)
-- Locate the dropdown box just above the "Constructor" column (most likely the dropdown box says *Summary*)
-- Click the dropdown, and select *Comparison* – this compares the before and after snapshots of the heap
-- Click the *# Delta* and/or *Size Delta* columns to sort by the difference in object counts
-  or object size, categorized by constructor type
-- Use the interactive trees in the Constructor column to drill down into the specifics
-- Use the *Retainers* panel to understand the chain of object references
-    + This can lead to useful clues about the origins of an object
-    + Retained size (the aggregate total space used due to references *from* an object) may be important where a reference to a large amount of objects is relevant
-    + Shallow size (the actual space used by the object itself) will be pertinent when there are particularly large objects in play
-
-**Advanced**: Other Devtools memory profiling functionality, Record allocation profile and Record allocation timeline may also be very helpful
-
-**Advanced**: An alternative approach is to use a generate a core dump and use
-a core dump analysis tool to list all JS objects in a core dump file (this approach isn't viable on macOS)
+- Use `clinic heapprofiler` to create a flamegraph of memory allocations in the application.
+    + See <code class='snippet'>clinic heapprofiler --help</code> for how to generate the memory profile.
+    + Visit the [Heapprofiler walkthrough](https://clinicjs.org/documentation/heapprofiler/) for a guide on how to use and interpret this output
+- Look for "hot" blocks, those are functions that are observed to be at the top the stack per memory allocation sample – in other words, such functions are allocation more memory in the heap
+  - (In the case of a distributed bottleneck, start by looking for lots of wide tips at the top of the Flamegraph)
 
 ## Reference
 
@@ -80,7 +62,6 @@ a core dump analysis tool to list all JS objects in a core dump file (this appro
 - [Chrome Devtools Docs: Fix Memory Problems](https://developers.google.com/web/tools/chrome-devtools/memory-problems/)
 - [Chrome Devtools Docs: Memory Terminology](https://developers.google.com/web/tools/chrome-devtools/memory-problems/memory-101)
 - [Chrome Devtools Docs: How to record heap snapshots](https://developers.google.com/web/tools/chrome-devtools/memory-problems/heap-snapshots)
-- [Node Docs: Inspector](https://nodejs.org/en/docs/inspector/)
 - **Advanced**: [Core dump analysis tool for Linux: llnode](https://github.com/nodejs/llnode)
 - **Advanced**: [Core dump analysis tool for SmartOS: mdb_v8](https://github.com/joyent/mdb_v8)
 - **Advanced**: [Core dump analysis tool for Linux which wraps SmartOS mdb](https://www.npmjs.com/package/autopsy)
