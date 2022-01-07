@@ -34,7 +34,6 @@ class ProcessStat {
   refresh () {
     this._lastSampleTime = process.hrtime()
     this._lastSampleCpuUsage = process.cpuUsage()
-    this._lastSampleEventLoopUtilization = eventLoopUtilization()
   }
 
   sample () {
