@@ -44,6 +44,11 @@ class Data {
       x: new Date(point.timestamp),
       y: [point.handles]
     }))
+
+    this.loopUtilization = data.map((point) => ({
+      x: new Date(point.timestamp),
+      y: [point.loopUtilization]
+    }))
   }
 
   getPoints (time) {
@@ -55,7 +60,8 @@ class Data {
       cpu: this.cpu[index],
       delay: this.delay[index],
       memory: this.memory[index],
-      handles: this.handles[index]
+      handles: this.handles[index],
+      loopUtilization: this.loopUtilization[index]
     }
   }
 }

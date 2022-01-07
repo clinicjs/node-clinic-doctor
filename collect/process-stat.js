@@ -1,5 +1,7 @@
 'use strict'
 
+const { eventLoopUtilization } = require('perf_hooks').performance
+
 function hrtime2ms (time) {
   return time[0] * 1e3 + time[1] * 1e-6
 }
@@ -32,6 +34,7 @@ class ProcessStat {
   refresh () {
     this._lastSampleTime = process.hrtime()
     this._lastSampleCpuUsage = process.cpuUsage()
+    this._lastSampleEventLoopUtilization = eventLoopUtilization()
   }
 
   sample () {
@@ -42,7 +45,8 @@ class ProcessStat {
       delay: this._sampleDelay(elapsedTime),
       cpu: this._sampleCpuUsage(elapsedTime),
       memory: process.memoryUsage(),
-      handles: process._getActiveHandles().length
+      handles: process._getActiveHandles().length,
+      loopUtilization: eventLoopUtilization().utilization * 100
     }
   }
 }

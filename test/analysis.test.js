@@ -48,7 +48,8 @@ test('Analysis - pipeline - no data', async function (t) {
         heapTotal: 'data',
         heapUsed: 'data'
       },
-      handles: 'data'
+      handles: 'data',
+      loopUtilization: 'data'
     },
     issueCategory: 'data'
   })
@@ -84,7 +85,8 @@ test('Analysis - pipeline - normal interval', async function (t) {
           heapTotal: 'none',
           heapUsed: 'none'
         },
-        handles: 'none'
+        handles: 'none',
+        loopUtilization: 'none'
       },
       issueCategory: 'none'
     })
@@ -104,7 +106,8 @@ test('Analysis - pipeline - normal interval', async function (t) {
           heapTotal: 'none',
           heapUsed: 'none'
         },
-        handles: 'none'
+        handles: 'none',
+        loopUtilization: 'none'
       },
       issueCategory: 'io'
     })
@@ -132,7 +135,8 @@ test('Analysis - pipeline - full interval', async function (t) {
         heapTotal: 'none',
         heapUsed: 'none'
       },
-      handles: 'none'
+      handles: 'none',
+      loopUtilization: 'none'
     },
     issueCategory: 'none'
   })
@@ -153,7 +157,8 @@ test('Analysis - pipeline - full interval', async function (t) {
         heapTotal: 'none',
         heapUsed: 'none'
       },
-      handles: 'none'
+      handles: 'none',
+      loopUtilization: 'none'
     },
     issueCategory: 'io'
   })

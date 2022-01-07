@@ -64,8 +64,20 @@ class Graph extends EventEmitter {
       interpolation: 'curveStepBefore'
     })
 
+    this.loopUtilization = new SubGraph(this.container, {
+      className: 'loopUtilization',
+      name: 'Event Loop Utilization',
+      unit: '%',
+      shortLegend: ['ELU'],
+      showLegend: false,
+      lineStyle: [''],
+      numLines: 1,
+      ymin: 0,
+      ymax: 100
+    })
+
     // relay events
-    for (const subgraph of [this.cpu, this.memory, this.delay, this.handles]) {
+    for (const subgraph of [this.cpu, this.memory, this.delay, this.handles, this.loopUtilization]) {
       subgraph.on('hover-update', (unitX) => this.emit('hover-update', unitX))
       subgraph.on('hover-show', () => this.emit('hover-show'))
       subgraph.on('hover-hide', () => this.emit('hover-hide'))
@@ -83,6 +95,7 @@ class Graph extends EventEmitter {
     this.memory.hoverUpdate(points.memory)
     this.delay.hoverUpdate(points.delay)
     this.handles.hoverUpdate(points.handles)
+    this.loopUtilization.hoverUpdate(points.loopUtilization)
   }
 
   hoverShow () {
@@ -94,6 +107,7 @@ class Graph extends EventEmitter {
     this.memory.hoverShow()
     this.delay.hoverShow()
     this.handles.hoverShow()
+    this.loopUtilization.hoverShow()
   }
 
   hoverHide () {
@@ -105,6 +119,7 @@ class Graph extends EventEmitter {
     this.memory.hoverHide()
     this.delay.hoverHide()
     this.handles.hoverHide()
+    this.loopUtilization.hoverHide()
   }
 
   setData (data) {
@@ -124,6 +139,9 @@ class Graph extends EventEmitter {
       data.analysis.issues.memory.heapTotal,
       data.analysis.issues.memory.heapUsed
     ])
+    this.loopUtilization.setData(data.loopUtilization, data.analysis.interval, [
+      data.analysis.issues.loopUtilization
+    ])
   }
 
   draw () {
@@ -131,6 +149,7 @@ class Graph extends EventEmitter {
     this.memory.draw()
     this.delay.draw()
     this.handles.draw()
+    this.loopUtilization.draw()
   }
 }
 
