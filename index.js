@@ -24,15 +24,7 @@ const buildJs = require('@clinic/clinic-common/scripts/build-js')
 const buildCss = require('@clinic/clinic-common/scripts/build-css')
 const mainTemplate = require('@clinic/clinic-common/templates/main')
 
-const semver = require('semver')
-
-function isOneOfNodeVersions (versions) {
-  return versions.some(version => semver.satisfies(process.version, version))
-}
-
-// cannot calculate ELU on these node versions
-const collectLoopUtilization = !isOneOfNodeVersions(['12', '14'])
-
+const isOneOfNodeVersions = require('./checkNodeVersion.js')
 class ClinicDoctor extends events.EventEmitter {
   constructor (settings = {}) {
     super()
@@ -51,6 +43,9 @@ class ClinicDoctor extends events.EventEmitter {
     this.detectPort = detectPort
     this.debug = debug
     this.path = dest
+
+    // cannot calculate ELU on these node versions
+    this.collectLoopUtilization = !isOneOfNodeVersions(['12', '14'])
   }
 
   collect (args, callback) {
@@ -82,7 +77,7 @@ class ClinicDoctor extends events.EventEmitter {
       ),
       NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL: this.sampleInterval,
       NODE_CLINIC_DOCTOR_TIMEOUT_DELAY: this.collectDelay,
-      NODE_CLINIC_DOCTOR_COLLECT_LOOP_UTILIZATION: collectLoopUtilization
+      NODE_CLINIC_DOCTOR_COLLECT_LOOP_UTILIZATION: this.collectLoopUtilization
     }
 
     if (this.path) {
@@ -238,7 +233,7 @@ class ClinicDoctor extends events.EventEmitter {
       basedir: __dirname,
       debug: this.debug,
       scriptPath,
-      env: { NODE_CLINIC_DOCTOR_COLLECT_LOOP_UTILIZATION: collectLoopUtilization }
+      env: { NODE_CLINIC_DOCTOR_COLLECT_LOOP_UTILIZATION: this.collectLoopUtilization }
     })
 
     if (!this.debug) {

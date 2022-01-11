@@ -3,6 +3,7 @@
 const { test } = require('tap')
 const rimraf = require('rimraf')
 const ClinicDoctor = require('../index.js')
+const isOneOfNodeVersions = require('../checkNodeVersion.js')
 
 test('cmd - test collect - emits "analysing" event', function (t) {
   const tool = new ClinicDoctor()
@@ -30,4 +31,16 @@ test('cmd - test collect - emits "analysing" event', function (t) {
       cleanup(null, dirname)
     }
   )
+})
+
+test('cmd - test ELU is not calculated with unsupported node versions', function (t) {
+  const tool = new ClinicDoctor()
+
+  if (isOneOfNodeVersions(['12', '14'])) {
+    t.notOk(tool.collectLoopUtilization)
+  } else {
+    t.ok(tool.collectLoopUtilization)
+  }
+
+  t.end()
 })
