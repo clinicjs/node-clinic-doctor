@@ -18,6 +18,28 @@ const normalizeSample = Object.prototype.hasOwnProperty.call(process.memoryUsage
     }
   }
 
+test('Format - process stat - encoder-decoder - collectLoopUtilization provided to call', function (t) {
+  const stat = new ProcessStat(1, false)
+
+  const encoder = new ProcessStatEncoder()
+  const decoder = new ProcessStatDecoder()
+  encoder.pipe(decoder)
+
+  const inputSamples = []
+  for (let i = 0; i < 1; i++) {
+    const sample = stat.sample()
+    encoder.write(sample)
+    inputSamples.push(normalizeSample(sample))
+  }
+  encoder.end()
+
+  decoder.pipe(endpoint({ objectMode: true }, function (err, outputSamples) {
+    if (err) t.error(err)
+    t.strictSame(inputSamples, outputSamples)
+    t.end()
+  }))
+})
+
 test('Format - process stat - encoder-decoder', function (t) {
   const stat = new ProcessStat(1)
 
@@ -55,7 +77,7 @@ test('Format - process stat - partial decoding', function (t) {
   decoder.write(sampleEncoded.slice(0, 20))
   t.equal(decoder.read(), null)
 
-  // Ended previuse sample, but a partial remains
+  // Ended previous sample, but a partial remains
   decoder.write(Buffer.concat([
     sampleEncoded.slice(20),
     sampleEncoded.slice(0, 30)
@@ -63,7 +85,7 @@ test('Format - process stat - partial decoding', function (t) {
   t.strictSame(decoder.read(), normalizeSample(sample))
   t.equal(decoder.read(), null)
 
-  // Ended previuse, no partial remains
+  // Ended previous, no partial remains
   decoder.write(Buffer.concat([
     sampleEncoded.slice(30),
     sampleEncoded
@@ -72,7 +94,7 @@ test('Format - process stat - partial decoding', function (t) {
   t.strictSame(decoder.read(), normalizeSample(sample))
   t.equal(decoder.read(), null)
 
-  // No previuse ended
+  // No previous ended
   decoder.write(sampleEncoded)
   t.strictSame(decoder.read(), normalizeSample(sample))
 

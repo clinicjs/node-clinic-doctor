@@ -54,7 +54,7 @@ function generateProcessStat (data, noiseLevel, timeStretching) {
         external: !flat.external ? 0 : (flat.external[i] + noise()) * MB
       },
       handles: !flat.handles ? 0 : (flat.handles[i] + noise()),
-      loopUtilization: !flat.loopUtilization ? 0 : flat.loopUtilization[i] + noise()
+      loopUtilization: !flat.loopUtilization ? NaN : flat.loopUtilization[i] + noise()
     })
   }
 

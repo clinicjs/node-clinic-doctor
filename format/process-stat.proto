@@ -3,8 +3,8 @@ message ProcessStat {
   required double delay = 2;
   required double cpu = 3;
   required Memory memory = 4;
-  required double loopUtilization = 5;
-  required int32 handles = 6;
+  required int32 handles = 5;
+  optional int32 loopUtilization = 6 [default = NaN];
 
   message Memory {
     required double rss = 1;

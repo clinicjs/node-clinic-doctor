@@ -18,10 +18,11 @@ fs.writeFileSync(paths['/systeminfo'], JSON.stringify(systemInfo(), null, 2))
 const processStatEncoder = new ProcessStatEncoder()
 const out = processStatEncoder.pipe(fs.createWriteStream(paths['/processstat']))
 
-// sample every 10ms
-const processStat = new ProcessStat(parseInt(
-  process.env.NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL, 10
-))
+// sample every 10ms by default if env var not present
+const processStat = new ProcessStat(
+  parseInt(process.env.NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL, 10),
+  process.env.NODE_CLINIC_DOCTOR_COLLECT_LOOP_UTILIZATION === 'true'
+)
 
 // keep sample time unrefed such it doesn't interfere too much
 let timer = null

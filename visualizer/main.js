@@ -4,12 +4,13 @@ const loaddata = require('./data.js')
 
 const menu = require('./menu.js')
 const alert = require('./alert.js')
-const graph = require('./graph.js')
+const Graph = require('./graph.js')
 const recommendation = require('./recommendation.js')
 const loadFonts = require('@clinic/clinic-common/behaviours/font-loader')
 
 // Called on font load or timeout
 const drawUi = () => {
+  const graph = new Graph({ collectLoopUtilization: process.env.NODE_CLINIC_DOCTOR_COLLECT_LOOP_UTILIZATION })
   document.body.classList.remove('is-loading-font')
   document.body.classList.add('is-font-loaded')
 

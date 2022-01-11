@@ -7,12 +7,13 @@ function hrtime2ms (time) {
 }
 
 class ProcessStat {
-  constructor (sampleInterval) {
+  constructor (sampleInterval, collectLoopUtilization = true) {
     if (typeof sampleInterval !== 'number') {
       throw new TypeError('sample interval must be a number')
     }
 
     this.sampleInterval = sampleInterval
+    this.collectLoopUtilization = collectLoopUtilization
     this.refresh()
   }
 
@@ -39,14 +40,16 @@ class ProcessStat {
   sample () {
     const elapsedTime = hrtime2ms(process.hrtime(this._lastSampleTime))
 
-    return {
+    const thisSample = {
       timestamp: Date.now(),
       delay: this._sampleDelay(elapsedTime),
       cpu: this._sampleCpuUsage(elapsedTime),
       memory: process.memoryUsage(),
       handles: process._getActiveHandles().length,
-      loopUtilization: eventLoopUtilization().utilization * 100
+      loopUtilization: this.collectLoopUtilization ? eventLoopUtilization().utilization * 100 : NaN
     }
+
+    return thisSample
   }
 }
 

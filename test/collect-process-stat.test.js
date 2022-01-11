@@ -11,6 +11,13 @@ test('Collect - process stat - input validation', function (t) {
   t.end()
 })
 
+test('Collect - process stat - collectLoopUtilization provided to call', function (t) {
+  const stat = new ProcessStat(1, false)
+  const sample = stat.sample()
+  t.ok(isNaN(sample.loopUtilization))
+  t.end()
+})
+
 test('Collect - process stat - timestamp', function (t) {
   const stat = new ProcessStat(1)
   const sample = stat.sample()
