@@ -7,12 +7,12 @@ const generateProcessStat = require('./generate-process-stat.js')
 test('analyse event loop utilization - low and high', function (t) {
   for (const noise of [0, 1, 10]) {
     const good = generateProcessStat({
-      loopUtilization: [1, 2, 1, 1, 2, 2, 3, 19]
+      loopUtilization: [70, 70, 70, 70, 70, 75, 79, 80]
     }, noise)
     t.equal(analyseLoopUtilisation({}, good, []), 'none')
 
     const bad = generateProcessStat({
-      loopUtilization: [40, 60, 64, 15, 80, 90, 85]
+      loopUtilization: [85, 60, 80, 90, 80, 90, 85]
     }, noise)
     t.equal(analyseLoopUtilisation({}, bad, []), 'performance')
   }
@@ -22,12 +22,12 @@ test('analyse event loop utilization - low and high', function (t) {
 
 test('analyse event loop utilization - spikes', function (t) {
   const good = generateProcessStat({
-    loopUtilization: [1, 2, 1, 20, 2, 2, 3, 1]
+    loopUtilization: [70, 20, 70, 60, 70, 80, 70, 180]
   }, 1)
   t.equal(analyseLoopUtilisation({}, good, []), 'none')
 
   const bad = generateProcessStat({
-    loopUtilization: [10, 20, 10, 90, 20, 20, 30, 10]
+    loopUtilization: [100, 20, 100, 90, 70, 60, 60, 100]
   }, 1)
   t.equal(analyseLoopUtilisation({}, bad, []), 'performance')
 
