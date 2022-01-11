@@ -30,6 +30,7 @@ function isOneOfNodeVersions (versions) {
   return versions.some(version => semver.satisfies(process.version, version))
 }
 
+// cannot calculate ELU on these node versions
 const collectLoopUtilization = !isOneOfNodeVersions(['12', '14'])
 
 class ClinicDoctor extends events.EventEmitter {
