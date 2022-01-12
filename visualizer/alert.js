@@ -61,7 +61,7 @@ class Alert extends EventEmitter {
     const issues = this.analysis.issues
     const memory = issues.memory.external !== 'none' ||
                    issues.memory.heapTotal !== 'none' ||
-                   issues.memory.heapUsage !== 'none' ||
+                   issues.memory.heapUsed !== 'none' ||
                    issues.memory.rss !== 'none'
 
     const issuesAsData = [
