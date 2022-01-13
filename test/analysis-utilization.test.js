@@ -12,7 +12,7 @@ test('analyse event loop utilization - low and high', function (t) {
     t.equal(analyseLoopUtilisation({}, good, []), 'none')
 
     const bad = generateProcessStat({
-      loopUtilization: [85, 60, 80, 90, 80, 90, 85]
+      loopUtilization: [100, 100, 100, 95, 98, 96, 94]
     }, noise)
     t.equal(analyseLoopUtilisation({}, bad, []), 'performance')
   }
@@ -27,7 +27,7 @@ test('analyse event loop utilization - spikes', function (t) {
   t.equal(analyseLoopUtilisation({}, good, []), 'none')
 
   const bad = generateProcessStat({
-    loopUtilization: [100, 20, 100, 90, 70, 60, 60, 100]
+    loopUtilization: [100, 60, 100, 98, 70, 100, 98, 100]
   }, 1)
   t.equal(analyseLoopUtilisation({}, bad, []), 'performance')
 

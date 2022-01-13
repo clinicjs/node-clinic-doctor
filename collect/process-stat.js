@@ -12,6 +12,10 @@ class ProcessStat {
       throw new TypeError('sample interval must be a number')
     }
 
+    if (typeof collectLoopUtilization !== 'boolean') {
+      throw new TypeError('collectLoopUtilization must be a boolean')
+    }
+
     this.sampleInterval = sampleInterval
     this.collectLoopUtilization = collectLoopUtilization
     this.refresh()
