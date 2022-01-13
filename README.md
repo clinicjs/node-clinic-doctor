@@ -16,12 +16,7 @@ npm i -S @clinic/doctor
 
 ## Supported node versions
 
-* Node.js 10.0.0 and above
-* Node.js 9.4.0 and above
-* Node.js 8.10.0 and above
-
-Node.js 8.9.4 also works, however you have to listen to `SIGINT` and shutdown
-the process nicely.
+* Node.js 12.13.0 and above
 
 ## Example
 
