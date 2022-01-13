@@ -5,6 +5,11 @@ const endpoint = require('endpoint')
 const ProcessStat = require('../collect/process-stat.js')
 const ProcessStatDecoder = require('../format/process-stat-decoder.js')
 const ProcessStatEncoder = require('../format/process-stat-encoder.js')
+const isOneOfNodeVersions = require('../checkNodeVersion.js')
+
+// ProcessStat will crash if collectLoopUtilization not specified on these node versions
+// class is only used internally so backwards compatability not maintained
+const collectLoopUtilization = !isOneOfNodeVersions(['12', '14'])
 
 const normalizeSample = Object.prototype.hasOwnProperty.call(process.memoryUsage(), 'arrayBuffers')
   ? function (sample) { return sample }
@@ -18,30 +23,8 @@ const normalizeSample = Object.prototype.hasOwnProperty.call(process.memoryUsage
     }
   }
 
-test('Format - process stat - encoder-decoder - collectLoopUtilization provided to call', function (t) {
-  const stat = new ProcessStat(1, false)
-
-  const encoder = new ProcessStatEncoder()
-  const decoder = new ProcessStatDecoder()
-  encoder.pipe(decoder)
-
-  const inputSamples = []
-  for (let i = 0; i < 1; i++) {
-    const sample = stat.sample()
-    encoder.write(sample)
-    inputSamples.push(normalizeSample(sample))
-  }
-  encoder.end()
-
-  decoder.pipe(endpoint({ objectMode: true }, function (err, outputSamples) {
-    if (err) t.error(err)
-    t.strictSame(inputSamples, outputSamples)
-    t.end()
-  }))
-})
-
 test('Format - process stat - encoder-decoder', function (t) {
-  const stat = new ProcessStat(1)
+  const stat = new ProcessStat(1, collectLoopUtilization)
 
   const encoder = new ProcessStatEncoder()
   const decoder = new ProcessStatDecoder()
@@ -63,7 +46,7 @@ test('Format - process stat - encoder-decoder', function (t) {
 })
 
 test('Format - process stat - partial decoding', function (t) {
-  const stat = new ProcessStat(1)
+  const stat = new ProcessStat(1, collectLoopUtilization)
 
   const encoder = new ProcessStatEncoder()
   const decoder = new ProcessStatDecoder()
