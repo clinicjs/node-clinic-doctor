@@ -6,7 +6,7 @@ const isOneOfNodeVersions = require('../checkNodeVersion.js')
 
 // ProcessStat will crash if collectLoopUtilization not specified on these node versions
 // class is only used internally so backwards compatability not maintained
-const collectLoopUtilization = isOneOfNodeVersions(['12', '14'])
+const collectLoopUtilization = !isOneOfNodeVersions(['12', '14'])
 
 test('Collect - process stat - input validation - sampleInterval', function (t) {
   t.throws(
