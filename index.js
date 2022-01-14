@@ -23,8 +23,8 @@ const HEAP_MAX = v8.getHeapStatistics().heap_size_limit
 const buildJs = require('@clinic/clinic-common/scripts/build-js')
 const buildCss = require('@clinic/clinic-common/scripts/build-css')
 const mainTemplate = require('@clinic/clinic-common/templates/main')
+const semver = require('semver')
 
-const isOneOfNodeVersions = require('./checkNodeVersion.js')
 class ClinicDoctor extends events.EventEmitter {
   constructor (settings = {}) {
     super()
@@ -45,7 +45,7 @@ class ClinicDoctor extends events.EventEmitter {
     this.path = dest
 
     // cannot calculate ELU on these node versions
-    this.collectLoopUtilization = !isOneOfNodeVersions(['12', '14'])
+    this.collectLoopUtilization = semver.gt(process.version, 'v14.10.0')
   }
 
   collect (args, callback) {

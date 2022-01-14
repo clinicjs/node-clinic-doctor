@@ -2,11 +2,11 @@
 
 const test = require('tap').test
 const ProcessStat = require('../collect/process-stat.js')
-const isOneOfNodeVersions = require('../checkNodeVersion.js')
+const semver = require('semver')
 
 // ProcessStat will crash if collectLoopUtilization not specified on these node versions
 // class is only used internally so backwards compatability not maintained
-const collectLoopUtilization = !isOneOfNodeVersions(['12', '14'])
+const collectLoopUtilization = semver.gt(process.version, 'v14.10.0')
 
 test('Collect - process stat - input validation - sampleInterval', function (t) {
   t.throws(

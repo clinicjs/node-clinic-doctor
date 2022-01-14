@@ -5,11 +5,11 @@ const endpoint = require('endpoint')
 const ProcessStat = require('../collect/process-stat.js')
 const ProcessStatDecoder = require('../format/process-stat-decoder.js')
 const ProcessStatEncoder = require('../format/process-stat-encoder.js')
-const isOneOfNodeVersions = require('../checkNodeVersion.js')
+const semver = require('semver')
 
 // ProcessStat will crash if collectLoopUtilization not specified on these node versions
 // class is only used internally so backwards compatability not maintained
-const collectLoopUtilization = !isOneOfNodeVersions(['12', '14'])
+const collectLoopUtilization = semver.gt(process.version, 'v14.10.0')
 
 const normalizeSample = Object.prototype.hasOwnProperty.call(process.memoryUsage(), 'arrayBuffers')
   ? function (sample) { return sample }
