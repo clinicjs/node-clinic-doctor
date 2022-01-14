@@ -8,6 +8,7 @@ const analyseCPU = require('./analyse-cpu.js')
 const analyseDelay = require('./analyse-delay.js')
 const analyseMemory = require('./analyse-memory.js')
 const analyseHandles = require('./analyse-handles.js')
+const analyseLoopUtilization = require('./analyse-loop-utilization.js')
 const issueCategory = require('./issue-category.js')
 
 class Analysis extends stream.Readable {
@@ -64,7 +65,8 @@ function analyseData ({ systemInfo, traceEvent, processStat }, callback) {
           heapTotal: 'data',
           heapUsed: 'data'
         },
-        handles: 'data'
+        handles: 'data',
+        loopUtilization: 'data'
       },
       issueCategory: 'data'
     })
@@ -88,7 +90,8 @@ function analyseData ({ systemInfo, traceEvent, processStat }, callback) {
       delay: analyseDelay(systemInfo, processStatSubset, traceEventSubset),
       cpu: cpuIssue,
       memory: analyseMemory(systemInfo, processStatSubset, traceEventSubset),
-      handles: analyseHandles(systemInfo, processStatSubset, traceEventSubset)
+      handles: analyseHandles(systemInfo, processStatSubset, traceEventSubset),
+      loopUtilization: analyseLoopUtilization(systemInfo, processStatSubset, traceEventSubset)
     }
 
     const category = issueCategory(issues)

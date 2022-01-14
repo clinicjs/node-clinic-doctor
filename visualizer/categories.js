@@ -22,7 +22,7 @@ class CategoryContent {
         this.readMore = document.adoptNode(node.content)
         break
       default:
-        throw new Error('unknow type: ' + node.dataset.type)
+        throw new Error('unknown type: ' + node.dataset.type)
     }
   }
 

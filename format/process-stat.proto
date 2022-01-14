@@ -4,6 +4,7 @@ message ProcessStat {
   required double cpu = 3;
   required Memory memory = 4;
   required int32 handles = 5;
+  optional int32 loopUtilization = 6 [default = NaN];
 
   message Memory {
     required double rss = 1;

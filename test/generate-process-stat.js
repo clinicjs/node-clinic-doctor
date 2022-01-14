@@ -23,7 +23,8 @@ function generateProcessStat (data, noiseLevel, timeStretching) {
     heapTotal: data.memory && data.memory.heapTotal,
     heapUsed: data.memory && data.memory.heapUsed,
     external: data.memory && data.memory.external,
-    handles: data.handles && data.handles
+    handles: data.handles && data.handles,
+    loopUtilization: data.loopUtilization && data.loopUtilization
   }
 
   // check lengths are equal
@@ -52,7 +53,8 @@ function generateProcessStat (data, noiseLevel, timeStretching) {
         heapUsed: !flat.heapUsed ? 0 : (flat.heapUsed[i] + noise()) * MB,
         external: !flat.external ? 0 : (flat.external[i] + noise()) * MB
       },
-      handles: !flat.handles ? 0 : (flat.handles[i] + noise())
+      handles: !flat.handles ? 0 : (flat.handles[i] + noise()),
+      loopUtilization: !flat.loopUtilization ? NaN : flat.loopUtilization[i] + noise()
     })
   }
 

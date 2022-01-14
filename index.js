@@ -23,6 +23,7 @@ const HEAP_MAX = v8.getHeapStatistics().heap_size_limit
 const buildJs = require('@clinic/clinic-common/scripts/build-js')
 const buildCss = require('@clinic/clinic-common/scripts/build-css')
 const mainTemplate = require('@clinic/clinic-common/templates/main')
+const semver = require('semver')
 
 class ClinicDoctor extends events.EventEmitter {
   constructor (settings = {}) {
@@ -42,6 +43,9 @@ class ClinicDoctor extends events.EventEmitter {
     this.detectPort = detectPort
     this.debug = debug
     this.path = dest
+
+    // cannot calculate ELU on these node versions
+    this.collectLoopUtilization = semver.gt(process.version, 'v14.10.0')
   }
 
   collect (args, callback) {
@@ -72,7 +76,8 @@ class ClinicDoctor extends events.EventEmitter {
         process.env.NODE_OPTIONS ? ' ' + process.env.NODE_OPTIONS : ''
       ),
       NODE_CLINIC_DOCTOR_SAMPLE_INTERVAL: this.sampleInterval,
-      NODE_CLINIC_DOCTOR_TIMEOUT_DELAY: this.collectDelay
+      NODE_CLINIC_DOCTOR_TIMEOUT_DELAY: this.collectDelay,
+      NODE_CLINIC_DOCTOR_COLLECT_LOOP_UTILIZATION: this.collectLoopUtilization
     }
 
     if (this.path) {
@@ -227,7 +232,8 @@ class ClinicDoctor extends events.EventEmitter {
     let scriptFile = buildJs({
       basedir: __dirname,
       debug: this.debug,
-      scriptPath
+      scriptPath,
+      env: { NODE_CLINIC_DOCTOR_COLLECT_LOOP_UTILIZATION: this.collectLoopUtilization }
     })
 
     if (!this.debug) {

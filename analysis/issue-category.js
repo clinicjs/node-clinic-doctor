@@ -43,7 +43,7 @@ function issueCategory (issues) {
              !hasPerformanceIssue(issues.handles)) {
     category = 'gc'
   } else if (!hasPerformanceIssue(memoryIssue) &&
-             hasPerformanceIssue(issues.delay) &&
+             (hasPerformanceIssue(issues.delay) || hasPerformanceIssue(issues.loopUtilization)) &&
              !hasPerformanceIssue(issues.cpu) &&
              !hasPerformanceIssue(issues.handles)) {
     category = 'event-loop'

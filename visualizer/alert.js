@@ -68,7 +68,8 @@ class Alert extends EventEmitter {
       new Issue('cpu', issues.cpu !== 'none', 'CPU Usage'),
       new Issue('memory', memory, 'Memory Usage'),
       new Issue('delay', issues.delay !== 'none', 'Event Loop Delay'),
-      new Issue('handles', issues.handles !== 'none', 'Active Handles')
+      new Issue('handles', issues.handles !== 'none', 'Active Handles'),
+      new Issue('loopUtilization', issues.loopUtilization !== 'none', 'Event Loop Utilization')
     ].filter((issue) => issue.detected)
 
     this.details

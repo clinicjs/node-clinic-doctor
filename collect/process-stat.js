@@ -1,16 +1,23 @@
 'use strict'
 
+const { eventLoopUtilization } = require('perf_hooks').performance
+
 function hrtime2ms (time) {
   return time[0] * 1e3 + time[1] * 1e-6
 }
 
 class ProcessStat {
-  constructor (sampleInterval) {
+  constructor (sampleInterval, collectLoopUtilization = true) {
     if (typeof sampleInterval !== 'number') {
       throw new TypeError('sample interval must be a number')
     }
 
+    if (typeof collectLoopUtilization !== 'boolean') {
+      throw new TypeError('collectLoopUtilization must be a boolean')
+    }
+
     this.sampleInterval = sampleInterval
+    this.collectLoopUtilization = collectLoopUtilization
     this.refresh()
   }
 
@@ -37,13 +44,16 @@ class ProcessStat {
   sample () {
     const elapsedTime = hrtime2ms(process.hrtime(this._lastSampleTime))
 
-    return {
+    const thisSample = {
       timestamp: Date.now(),
       delay: this._sampleDelay(elapsedTime),
       cpu: this._sampleCpuUsage(elapsedTime),
       memory: process.memoryUsage(),
-      handles: process._getActiveHandles().length
+      handles: process._getActiveHandles().length,
+      loopUtilization: this.collectLoopUtilization ? eventLoopUtilization().utilization * 100 : NaN
     }
+
+    return thisSample
   }
 }
 
