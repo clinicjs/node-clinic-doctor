@@ -26,9 +26,12 @@ test('cmd - collect - detect server port', function (t) {
       res.on('data', data => buf.push(data))
       res.on('end', function () {
         t.same(Buffer.concat(buf), Buffer.from('from server'))
-        t.end()
       })
     })
+  })
+
+  cmd.on('ready', () => {
+    t.end()
   })
 })
 
@@ -41,7 +44,6 @@ test('cmd - collect - detect server port and cb', function (t) {
       res.end('from server')
     }
   `)
-  cmds.push(cmd)
 
   cmd.tool.on('port', function (port, proc, cb) {
     t.ok(typeof port === 'number')
@@ -52,15 +54,12 @@ test('cmd - collect - detect server port and cb', function (t) {
       res.on('data', data => buf.push(data))
       res.on('end', function () {
         t.same(Buffer.concat(buf), Buffer.from('from server'))
-        t.end()
         cb()
       })
     })
   })
-})
 
-process.on('beforeExit', function () {
-  for (const cmd of cmds) {
-    cmd.cleanup()
-  }
+  cmd.on('ready', () => {
+    t.end()
+  })
 })

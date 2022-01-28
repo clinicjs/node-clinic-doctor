@@ -49,6 +49,7 @@ class ClinicDoctor extends events.EventEmitter {
   }
 
   collect (args, callback) {
+    checkPriorTraceLogs()
     // run program, but inject the sampler
     const logArgs = [
       '-r', 'no-cluster.js',
@@ -284,6 +285,19 @@ class ClinicDoctor extends events.EventEmitter {
         callback(err)
       }
     )
+  }
+}
+
+function checkPriorTraceLogs () {
+  const files = fs.readdirSync(path.dirname('node_trace.*.log'))
+  const traceLogs = files.filter((file) => {
+    return file.match(/node_trace\.[0-9]+\.log/)
+  })
+  if (traceLogs.length) {
+    console.log(traceLogs)
+    throw new Error(`
+      The root folder contains node_trace.*.log files. You should delete or move them to proceed.
+    `)
   }
 }
 

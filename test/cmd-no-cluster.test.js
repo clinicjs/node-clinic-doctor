@@ -23,6 +23,6 @@ test('cmd - collect - using cluster causes error', function (t) {
   proc.stderr.pipe(endpoint((err, buf) => {
     t.error(err)
     t.ok(buf.toString('utf8').includes('does not support clustering'), 'should crash once cluster is used')
-    t.end()
+    rimraf('node_trace.1.log', () => t.end())
   }))
 })
