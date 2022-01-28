@@ -2,6 +2,7 @@
 
 const summary = require('summary')
 const tf = require('@tensorflow/tfjs-core')
+require('@tensorflow/tfjs-backend-cpu')
 const HMM = require('hidden-markov-model-tf')
 const util = require('util')
 
