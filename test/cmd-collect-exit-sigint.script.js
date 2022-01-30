@@ -13,6 +13,3 @@ const cmd = new CollectAndRead({}, '-e', `
 cmd.on('ready', function () {
   cmd.cleanup()
 })
-process.on('exit', function () {
-  cmd.cleanup()
-})
