@@ -34,5 +34,5 @@ I/O root cause analysis is mostly a reasoning exercise. [Clinic.js Bubbleprof](h
 * [`console.time`](https://developer.mozilla.org/en-US/docs/Web/API/Console/time)
 * [`console.timeEnd`](https://developer.mozilla.org/en-US/docs/Web/API/Console/timeEnd)
 * **Advanced**: [Node Docs: Perf Hooks](https://nodejs.org/api/perf_hooks.html)
-* **Advanced**: [Node Docs: Async Hooks](https://nodejs.org/dist/latest-v8.x/docs/api/async_hooks.html)
+* **Advanced**: [Node Docs: Async Hooks](https://nodejs.org/api/async_hooks.html)
 * **Advanced**: [V8 Stack Trace API](https://github.com/v8/v8/wiki/Stack-Trace-API)
