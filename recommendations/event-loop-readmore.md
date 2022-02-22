@@ -46,7 +46,7 @@ the bottleneck may be distributed which would take rather more detective work.
 
 - Load Shedding
     + Express, Koa, Restify, `http`: [overload-protection](https://www.npmjs.com/package/overload-protection)
-    + Hapi: [Server load sampleInterval option](https://hapi.dev/api/#-serveroptionsload) & [Server connections load maxEventLoopDelay](https://hapijs.com/api#-serveroptionsload)
+    + Hapi: [Server load sampleInterval option](https://hapi.dev/api/#server.options.load) & [Server load maxEventLoopDelay option](https://hapi.dev/api/#server.options.load)
     + Fastify: [under-pressure](https://www.npmjs.com/package/under-pressure)
     + General: [loopbench](https://www.npmjs.com/package/loopbench)
 - [Concurrency model and Event Loop
