@@ -54,9 +54,6 @@
     "tap": "^15.0.10",
     "xorshift": "^1.1.1"
   },
-  "engines": {
-    "node": ">=12.13.0"
-  },
   "keywords": [],
   "license": "MIT"
 }
