@@ -25,7 +25,9 @@ identified by an API that requires a callback, or uses promises (or async/await)
 
 Whereas synchronous operations simply return a value. Long running synchronous operations are either
 functions that perform blocking I/O (such as `fs.readFileSync`) or potentially resource intensive
-algorithms (such as `JSON.stringify` or `react.renderToString`).
+algorithms (such as `JSON.stringify` or `react.renderToString`). The `--trace-sync-io` can help
+by printing a stack trace whenever synchronous I/O is detected after the first run of the event
+loop.
 
 To solve the Event Loop issue, we need to find out where the synchronous bottleneck is.
 This may (commonly) be identified as a single long-running synchronous function, or
