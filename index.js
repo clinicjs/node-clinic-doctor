@@ -35,7 +35,8 @@ class ClinicDoctor extends events.EventEmitter {
       sampleInterval = 10,
       detectPort = false,
       debug = false,
-      dest = null
+      dest = null,
+      name
     } = settings
 
     this.collectDelay = collectDelay
@@ -43,6 +44,7 @@ class ClinicDoctor extends events.EventEmitter {
     this.detectPort = detectPort
     this.debug = debug
     this.path = dest
+    this.name = name
 
     // cannot calculate ELU on these node versions
     this.collectLoopUtilization = semver.gt(process.version, 'v14.10.0')
@@ -85,6 +87,10 @@ class ClinicDoctor extends events.EventEmitter {
       customEnv.NODE_CLINIC_DOCTOR_DATA_PATH = this.path
     }
 
+    if (this.name) {
+      customEnv.NODE_CLINIC_DOCTOR_NAME = this.name
+    }
+
     const proc = spawn(args[0], args.slice(1), {
       stdio,
       env: Object.assign({}, process.env, customEnv)
@@ -99,7 +105,7 @@ class ClinicDoctor extends events.EventEmitter {
     }
 
     // get logging directory structure
-    const options = { identifier: proc.pid, path: this.path }
+    const options = { identifier: this.name || proc.pid, path: this.path }
     const paths = getLoggingPaths(options)
     // relay SIGINT to process
     process.once('SIGINT', /* istanbul ignore next: SIGINT is only emitted at Ctrl+C on windows */ () => {

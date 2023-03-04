@@ -8,7 +8,10 @@ const getLoggingPaths = require('@clinic/clinic-common').getLoggingPaths('doctor
 const ProcessStatEncoder = require('../format/process-stat-encoder.js')
 
 // create encoding files and directory
-const paths = getLoggingPaths({ path: process.env.NODE_CLINIC_DOCTOR_DATA_PATH, identifier: process.pid })
+const paths = getLoggingPaths({
+  path: process.env.NODE_CLINIC_DOCTOR_DATA_PATH,
+  identifier: process.env.NODE_CLINIC_DOCTOR_NAME || process.pid
+})
 
 makeDir.sync(paths['/'])
 
