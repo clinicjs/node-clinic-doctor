@@ -45,7 +45,7 @@ class ClinicDoctor extends events.EventEmitter {
     this.path = dest
 
     // cannot calculate ELU on these node versions
-    this.collectLoopUtilization = semver.gt(process.version, 'v14.10.0')
+    this.collectLoopUtilization = semver.gt(process.version, 'v16.0.0')
   }
 
   collect (args, callback) {
