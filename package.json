@@ -2,7 +2,7 @@
   "name": "@clinic/doctor",
   "description": "Programmable interface to Clinic.js Doctor",
   "repository": "clinicjs/node-clinic-doctor",
-  "version": "10.0.0",
+  "version": "10.1.0",
   "scripts": {
     "visualize-watch": "node debug/visualize-watch.js",
     "visualize-all": "node debug/visualize-all.js",
