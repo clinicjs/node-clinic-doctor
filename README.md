@@ -8,6 +8,10 @@ Programmable interface to [Clinic.js][clinic-url] Doctor. Learn more about Clini
 
 ![Screenshot](screenshot.png)
 
+## Issues
+
+To open an issue, please use the [main repository](https://github.com/clinicjs/node-clinic) with the `doctor` label.
+
 ## Installation
 
 ```console
