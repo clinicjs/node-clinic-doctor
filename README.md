@@ -20,7 +20,7 @@ npm i -S @clinic/doctor
 
 ## Supported node versions
 
-* Node.js 14 and above
+* Node.js 16 and above
 
 ## Example
 
