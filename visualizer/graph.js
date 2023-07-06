@@ -1,6 +1,6 @@
 'use strict'
 
-const d3 = require('./d3.js')
+const d3 = require('./d3')
 const EventEmitter = require('events')
 const SubGraph = require('./sub-graph')
 
