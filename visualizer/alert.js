@@ -1,6 +1,6 @@
 'use strict'
 
-const d3 = require('./d3.js')
+const d3 = require('./d3')
 const icons = require('./icons.js')
 const categories = require('./categories.js')
 const EventEmitter = require('events')
